@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+}
 span {
     &.math {
         display: none;
@@ -22,6 +26,16 @@ span {
     word-break: normal;
     font-family: 'Courier New', Courier, monospace;
     user-select: text;
+    color: black;
+    background-color: lightgrey;
+    &.warn {
+        color: sienna;
+        background-color: burlywood;
+    }
+    &.error {
+        color: red;
+        background-color: lighpink;
+    }
 }
 body {
     width: 100%;
@@ -30,11 +44,11 @@ body {
     scroll-behavior: smooth;
     margin: 0;
 }
-.footer {
-    margin: 0 1em;
-    float: bottom;
+footer {
+    margin-bottom: 0;
+    margin-top: auto;
     height: fit-content;
-    overflow: none;
+    overflow: hidden;
     & > .credits, .authors {
         display: flex;
         justify-content: center;
@@ -42,5 +56,39 @@ body {
     & > h3 {
         text-align: center;
         margin: 0;
+    }
+}
+nav {
+    width: calc(100% - 30px);
+    margin: 0 15px;
+    height: fit-content;
+    overflow: hidden;
+    font-size: 2.5em;
+    display: flex;
+    justify-content: space-between;
+    user-select: none;
+
+    & > h4 {
+        margin: 0;
+    }
+    & > button[type=button] {
+        font-size: larger;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        height: 100%;
+        width: auto;
+        aspect-ratio: 1;
+        border: none;
+        border-radius: .15em;
+        & > i {
+            font-size: 1.2em;
+        }
+        /*
+        &:hover {
+            color: 
+        }
+        */
     }
 }

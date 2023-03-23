@@ -1,3 +1,8 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+}
+
 span.math {
   display: none;
   width: 100%;
@@ -25,6 +30,16 @@ span.math.loaded {
   -webkit-user-select: text;
      -moz-user-select: text;
           user-select: text;
+  color: black;
+  background-color: lightgrey;
+}
+.log.warn {
+  color: sienna;
+  background-color: burlywood;
+}
+.log.error {
+  color: red;
+  background-color: lighpink;
 }
 
 body {
@@ -36,18 +51,55 @@ body {
   margin: 0;
 }
 
-.footer {
-  margin: 0 1em;
-  float: bottom;
+footer {
+  margin-bottom: 0;
+  margin-top: auto;
   height: -moz-fit-content;
   height: fit-content;
-  overflow: none;
+  overflow: hidden;
 }
-.footer > .credits, .footer .authors {
+footer > .credits, footer .authors {
   display: flex;
   justify-content: center;
 }
-.footer > h3 {
+footer > h3 {
   text-align: center;
   margin: 0;
+}
+
+nav {
+  width: calc(100% - 30px);
+  margin: 0 15px;
+  height: -moz-fit-content;
+  height: fit-content;
+  overflow: hidden;
+  font-size: 2.5em;
+  display: flex;
+  justify-content: space-between;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+nav > h4 {
+  margin: 0;
+}
+nav > button[type=button] {
+  font-size: larger;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 100%;
+  width: auto;
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 0.15em;
+  /*
+  &:hover {
+      color: 
+  }
+  */
+}
+nav > button[type=button] > i {
+  font-size: 1.2em;
 }/*# sourceMappingURL=index.css.map */
