@@ -8,4 +8,46 @@ span.math {
 }
 span.math.loaded {
   display: block;
+}
+
+.log {
+  font-size: inherit;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid;
+  height: -moz-fit-content;
+  height: fit-content;
+  word-wrap: break-word;
+  word-break: normal;
+  font-family: "Courier New", Courier, monospace;
+  -webkit-user-select: text;
+     -moz-user-select: text;
+          user-select: text;
+}
+
+body {
+  width: 100%;
+  height: -moz-fit-content;
+  height: fit-content;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  margin: 0;
+}
+
+.footer {
+  margin: 0 1em;
+  float: bottom;
+  height: -moz-fit-content;
+  height: fit-content;
+  overflow: none;
+}
+.footer > .credits, .footer .authors {
+  display: flex;
+  justify-content: center;
+}
+.footer > h3 {
+  text-align: center;
+  margin: 0;
 }/*# sourceMappingURL=index.css.map */

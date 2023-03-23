@@ -13,6 +13,7 @@
     <meta name="description" content="Simulazione di massa in movimento su un tavolo con Three.js">
 
     <title>Simulazione</title>
+
     <!--Necessari per ridurre latency della mole di script-->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com/" crossorigin />
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com/">
@@ -20,13 +21,14 @@
 
     <!--Styles-->
 
-    <link rel="stylesheet" href="assets/page/index.min.css" media="all">
-    <link rel="stylesheet" href="assets/page/menu.min.css" media="all">
+    <link rel="stylesheet" href="assets/page/index.css" media="all">
+    <link rel="stylesheet" href="assets/page/menu.css" media="all">
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" media="print" onload="this.media = 'all'"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" media="print" onload="this.media='all'">
+
     <!--Scripts-->
 
-    <script src="assets/page/log.js"></script>
+    <script defer src="assets/page/log.js"></script>
 
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.4.3/decimal.min.js"></script>
     <script defer src="assets/simulation/engine.js"></script>
@@ -34,13 +36,18 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.150.1/three.min.js"></script>
     <script defer src="assets/simulation/three-setup.js"></script>
     <script defer src="assets/simulation/controls.js"></script>
+    <script defer src="assets/simulation/simulation.js"></script>
 
-    <!--<script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>-->
+    <!--[if lt IE 7]>
+        <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <![endif]-->
     <script src="assets/page/math-setup.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.0.0-alpha.1/es5/tex-chtml.min.js"></script>
-    
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-    <script defer src="assets/page/script-setup.js"></script>
+
+    <!--
+        <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+        <script defer src="assets/page/script-setup.js"></script>
+    -->
 </head>
 <body>
     <noscript>
@@ -68,27 +75,52 @@
         
     </div>
     <div class="banner">
+        <div class="log-container" id="logs">
 
+        </div>
     </div>
     <div class="screen-container">
         <canvas id="screen"></canvas>
     </div>
-    <footer>
-        Librerie impiegate
-        <ul>
-            <li>
-                <a href="">Decimal.js</a>
-            </li>
-            <li>
-                <a href="">Three.js</a>
-            </li>
-            <li>
-                <a href="">MathJax</a>
-            </li>
-            <li>
-                <a href="">PyScript.js</a>
-            </li>
-        </ul>
+    <footer class="grid two footer">
+        
+        <h3>
+            Librerie impiegate
+        </h3>
+        
+        <h3>
+            Autori <small>(in ordine alfabetico)</small>
+        </h3>
+
+        <div class="credits">
+            <ul>
+                <li>
+                    <a href="https://mikemcl.github.io/decimal.js/" target="_blank">Decimal.js</a>
+                </li>
+                <li>
+                    <a href="https://threejs.org/" target="_blank">Three.js</a>
+                </li>
+                <li>
+                    <a href="https://www.mathjax.org/" target="_blank">MathJax</a>
+                </li>
+                <li>
+                    <a href="https://pyscript.net/" target="_blank">PyScript.js</a>
+                </li>
+                <li>
+                    <a href="https://fonts.googleapis.com" target="_blank">Material Icons</a>
+                </li>
+            </ul>
+        </div>
+        <div class="authors">
+            <ul>
+                <li>
+                    <a href="https://www.richie314.it/" target="_blank">Ciucci Riccardo</a>
+                </li>
+                <li>
+                    <a href="" target="_blank">Leoncini Lorenzo</a>
+                </li>
+            </ul>
+        </div>
     </footer>
 </body>
 </html>

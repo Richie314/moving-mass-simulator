@@ -10,3 +10,37 @@ span {
         }
     }
 }
+.log {
+    font-size: inherit;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    margin: 0;
+    border: 1px solid;
+    height: fit-content;
+    word-wrap: break-word;
+    word-break: normal;
+    font-family: 'Courier New', Courier, monospace;
+    user-select: text;
+}
+body {
+    width: 100%;
+    height:fit-content;
+    min-height: 100vh;
+    scroll-behavior: smooth;
+    margin: 0;
+}
+.footer {
+    margin: 0 1em;
+    float: bottom;
+    height: fit-content;
+    overflow: none;
+    & > .credits, .authors {
+        display: flex;
+        justify-content: center;
+    }
+    & > h3 {
+        text-align: center;
+        margin: 0;
+    }
+}

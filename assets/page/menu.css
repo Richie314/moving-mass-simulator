@@ -1,1 +1,22 @@
-/*# sourceMappingURL=menu.css.map */
+.grid {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  width: 100%;
+  height: -moz-fit-content;
+  height: fit-content;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.grid.two {
+  grid-template-columns: repeat(2, 1fr);
+}
+.grid.three {
+  grid-template-columns: repeat(3, 1fr);
+}
+.grid.four {
+  grid-template-columns: repeat(4, 1fr);
+}
+.grid.five {
+  grid-template-columns: repeat(5, 1fr);
+}/*# sourceMappingURL=menu.css.map */
