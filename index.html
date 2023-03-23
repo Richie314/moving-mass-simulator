@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="it-it">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Riccardo Ciucci, Lorenzo Leoncini">
+    
+    <meta name="application-name" content="Simulazione massa in movimento" />
+
+    <meta name="keywords" content="Riccardo Ciucci, Lorenzo Leoncini, fisica, massa, corda, Lagrange, lagrangiana, simulazione, molla, attrito, three.js, mathjax">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="Simulazione di massa in movimento su un tavolo con Three.js">
+
+    <title>Simulazione</title>
+    <!--Necessari per ridurre latency della mole di script-->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com/" crossorigin />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com/">
+    
+
+    <!--Styles-->
+
+    <link rel="stylesheet" href="assets/page/index.min.css" media="all">
+    <link rel="stylesheet" href="assets/page/menu.min.css" media="all">
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" media="print" onload="this.media = 'all'"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" media="print" onload="this.media='all'">
+    <!--Scripts-->
+
+    <script src="assets/page/log.js"></script>
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.4.3/decimal.min.js"></script>
+    <script defer src="assets/simulation/engine.js"></script>
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.150.1/three.min.js"></script>
+    <script defer src="assets/simulation/three-setup.js"></script>
+    <script defer src="assets/simulation/controls.js"></script>
+
+    <!--<script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>-->
+    <script src="assets/page/math-setup.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/4.0.0-alpha.1/es5/tex-chtml.min.js"></script>
+    
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <script defer src="assets/page/script-setup.js"></script>
+</head>
+<body>
+    <noscript>
+        <h1>Abilita Javascript per far funzionare la simulazione</h1>
+    </noscript>
+    <nav class="banner">
+        <button type="button" id="play-pause" title="Avvia">
+            <i class="material-icons">play_arrow</i>
+            <!--<i class="material-icons">pause</i>-->
+        </button>
+        <button type="button" id="restart" title="Resetta">
+            <i class="material-icons">autorenew</i>
+        </button>
+        <button type="button" id="" title="Shell">
+            Script
+        </button>
+        <button type="button" id="" title="Matematica">
+            <i class="material-icons">functions</i>
+        </button>
+    </nav>
+    <div class="pop-up" id="math">
+
+    </div>
+    <div class="pop-up" id="shell">
+        
+    </div>
+    <div class="banner">
+
+    </div>
+    <div class="screen-container">
+        <canvas id="screen"></canvas>
+    </div>
+    <footer>
+        Librerie impiegate
+        <ul>
+            <li>
+                <a href="">Decimal.js</a>
+            </li>
+            <li>
+                <a href="">Three.js</a>
+            </li>
+            <li>
+                <a href="">MathJax</a>
+            </li>
+            <li>
+                <a href="">PyScript.js</a>
+            </li>
+        </ul>
+    </footer>
+</body>
+</html>

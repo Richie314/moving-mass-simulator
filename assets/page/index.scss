@@ -1,0 +1,12 @@
+span {
+    &.math {
+        display: none;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        height: fit-content;
+        &.loaded {
+            display: block;
+        }
+    }
+}

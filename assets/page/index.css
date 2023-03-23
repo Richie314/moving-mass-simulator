@@ -1,0 +1,11 @@
+span.math {
+  display: none;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+span.math.loaded {
+  display: block;
+}/*# sourceMappingURL=index.css.map */
