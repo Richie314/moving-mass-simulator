@@ -64,18 +64,37 @@
         <button type="button" id="restart" title="Resetta">
             <i class="material-icons">autorenew</i>
         </button>
-        <button type="button" id="" title="Esegui codice">
+        <button type="button" id="show-terminal-btn" title="Esegui codice">
             <i class="material-icons">terminal</i>
         </button>
-        <button type="button" id="" title="Matematica">
+        <button type="button" id="show-math-btn" title="Matematica">
             <i class="material-icons">functions</i>
         </button>
     </nav>
     <div class="pop-up" id="math">
-
+        <h2>
+            Equazioni del moto
+        </h2>
+        <button type="button" onclick="document.getElementById('math').classList.remove('show')">
+            <i class="material-icons">close</i>
+        </button>
+        <div class="equations">
+            
+        <span class="math">
+            $$\pi$$
+        </span>
+        <span class="math">
+            $$ a + b $$
+        </span>
+        </div>
     </div>
     <div class="pop-up" id="shell">
-        
+        <h2>
+            Console script
+        </h2>
+        <button type="button" onclick="document.getElementById('shell').classList.remove('show')">
+            <i class="material-icons">close</i>
+        </button>
     </div>
     <div class="banner">
         <div class="log-container" id="logs">

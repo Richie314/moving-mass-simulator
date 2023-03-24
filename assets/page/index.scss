@@ -2,6 +2,9 @@
     box-sizing: border-box;
     padding: 0;
 }
+button[type=button] {
+    cursor: pointer;
+}
 span {
     &.math {
         display: none;
@@ -76,7 +79,6 @@ nav {
         display: flex;
         justify-content: center;
         align-items: center;
-        cursor: pointer;
         height: 100%;
         width: auto;
         aspect-ratio: 1;
@@ -90,5 +92,47 @@ nav {
             color: 
         }
         */
+    }
+}
+.pop-up {
+    position: absolute;
+    z-index: 100;
+    display: none;
+    width: 90%;
+    margin: 1em 5% auto 5%;
+    height: fit-content;
+    grid-template-columns: 90% 10%;
+    grid-template-rows: 1.5em auto;
+    gap: 0;
+
+    &.show {
+        display: grid;
+    }
+    & > .equations {
+        grid-row-start: 2;
+        grid-column-start: 1;
+
+        grid-row-end: 3;
+        grid-column-end: 3;
+    }
+}
+.screen-container {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    margin: 0;
+    border: 1px solid red;
+    & > canvas {
+        aspect-ratio: 16 / 9 !important;
+        width: 100%;
+        border: 1px solid green;
+    }
+}
+@media screen and (min-aspect-ratio: 16 / 9) {
+    .screen-container {
+        width: auto;
+        height: fit-content;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
