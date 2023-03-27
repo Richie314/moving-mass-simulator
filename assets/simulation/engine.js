@@ -1,87 +1,37 @@
-if (!'Decimal' in window) {
-    throw Error('Decimal.js not loaded properly');
-}
-class Vector3
-{
-    /**
-     * 
-     * @param {Decimal} x 
-     * @param {Decimal} y 
-     * @param {Decimal} z 
-     */
-    constructor(x, y, z)
-    {
-        if (!Decimal.IsDecimal(x))
-        {
-            x = new Decimal(x);
-        }
-        if (!Decimal.IsDecimal(y))
-        {
-            y = new Decimal(y);
-        }
-        if (!Decimal.IsDecimal(z))
-        {
-            z = new Decimal(z);
-        }
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-    /**
-     * 
-     * @param {Vector3} vec 
-     */
-    add(vec)
-    {
-        this.x = this.x.plus(vec.x);
-        this.y = this.y.plus(vec.y);
-        this.z = this.z.plus(vec.z);
-        return this;
-    }
-    /**
-     * 
-     * @param {Vector3} vec 
-     */
-    sub(vec)
-    {
-        this.x = this.x.minus(vec.x);
-        this.y = this.y.minus(vec.y);
-        this.z = this.z.minus(vec.z);
-        return this;
-    }
-    /**
-     * 
-     * @param {Decimal} scalar
-     */
-    mult(scalar)
-    {
-        this.x = this.x.times(scalar);
-        this.y = this.y.times(scalar);
-        this.z = this.z.times(scalar);
-        return this;
-    }
-    /**
-     * 
-     */
-    module()
-    {
-        return ( this.x.times(this.x).plus( this.y.times(this.y) ).plus( this.z.times(this.z) ) ).sqrt();
-    }
-    normalize()
-    {
-        return this.mult( ( new Decimal(1) ).div( this.module() ) );
-    }
-}
-class PolarVector
-{
-    constructor(r, theta)
-    {
 
+class MassFallingObject
+{
+    /**
+     * 
+     * @param {Decimal} mass 
+     * @param {Vector3} position 
+     * @param {Vector3} speed 
+     * @param {Vector3} acceleration 
+     */
+    constructor(mass, position, speed, acceleration)
+    {
+        this.mass = mass;
+        this.position = position;
+        this.speed = speed;
+        this.acceleration = acceleration;
     }
 }
-class MassObject
+class MassRotatingObject
 {
-
+    /**
+     * 
+     * @param {Decimal} mass 
+     * @param {PolarVector} position 
+     * @param {PolarVector} speed 
+     * @param {PolarVector} acceleration 
+     */
+    constructor(mass, position, speed, acceleration)
+    {
+        this.mass = mass;
+        this.position = position;
+        this.speed = speed;
+        this.acceleration = acceleration;
+    }
 }
 class Engine
 {
@@ -90,9 +40,40 @@ class Engine
 
     }
 
+    /**
+     * @param {MassRotatingObject} corpse 
+     * @param {Vector3|PolarVector} impulse 
+     */
+    #applyImpulseRotating(corpse, impulse)
+    {
+        if (impulse instanceof PolarVector)
+        {
+            return corpse.speed.add(impulse.mult((new Decimal(1)).div(corpse.mass)));
+        }
+    }
+
+    /**
+     * @param {MassRotatingObject} corpse 
+     * @param {Vector3} impulse 
+     */
+    #applyImpulseFalling(corpse, impulse)
+    {
+        return corpse.speed.add(impulse.mult((new Decimal(1)).div(corpse.mass)));
+    }
+
     applyImpulse(corpse, impulse)
     {
+        if (corpse instanceof MassFallingObject)
+        {
+            return this.#applyImpulseFalling(corpse, impulse);
+        }
 
+        if (corpse instanceof MassRotatingObject)
+        {
+            return this.#applyImpulseRotating(corpse, impulse);
+        }
+
+        throw new Error('corpse was not of a valid type!');
     }
 
     applyForce(corpse, force, duration)
