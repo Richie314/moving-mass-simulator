@@ -1,80 +1,14 @@
+'use strict';
 
-class MassFallingObject
+class EngineBase
 {
-    /**
-     * 
-     * @param {Decimal} mass 
-     * @param {Vector3} position 
-     * @param {Vector3} speed 
-     * @param {Vector3} acceleration 
-     */
-    constructor(mass, position, speed, acceleration)
-    {
-        this.mass = mass;
-        this.position = position;
-        this.speed = speed;
-        this.acceleration = acceleration;
-    }
-    
-    /**
-     * The acceleration multiplied by the mass
-     * @returns {Vector3}
-     */
-    force()
-    {
-        return this.acceleration.times(this.mass);
-    }
 
-    /**
-     * The speed multiplied by the mass
-     * @returns {Vector3}
-     */
-    momentum()
-    {
-        return this.speed.times(this.mass);
-    }
-
-    /**
+    /********************************************
      * 
-     * @returns {Decimal} the kinetic energy: 1/2 m v^2
-     */
-    kinetic()
-    {
-        return this.speed.squared().times(this.mass).div(2);
-    }
-}
-class MassRotatingObject
-{
-    /**
+     *         Apply impulse to corpse
+     *    (increase/decrease its momentum)
      * 
-     * @param {Decimal} mass 
-     * @param {PolarVector} position 
-     * @param {PolarVector} speed 
-     * @param {PolarVector} acceleration 
-     */
-    constructor(mass, position, speed, acceleration)
-    {
-        this.mass = mass;
-        this.position = position;
-        this.speed = speed;
-        this.acceleration = acceleration;
-    }
-
-}
-class Engine
-{
-    /**
-     * 
-     * @param {Decimal|number} dt 
-     */
-    constructor(dt)
-    {
-        if (!Decimal.IsDecimal(dt))
-        {
-            dt = new Decimal(dt);
-        }
-        this.dt = dt;
-    }
+    ********************************************/
 
     /**
      * @param {MassRotatingObject} corpse 
@@ -86,6 +20,8 @@ class Engine
         {
             return corpse.speed.add(impulse.mult((new Decimal(1)).div(corpse.mass)));
         }
+
+        throw new Error('impulse was not a PolarVector');
     }
 
     /**
@@ -97,6 +33,11 @@ class Engine
         return corpse.speed.add(impulse.times((new Decimal(1)).div(corpse.mass)));
     }
 
+    /**
+     * @param {MassFallingObject|MassRotatingObject} corpse 
+     * @param {Vector3|PolarVector} impulse 
+     * @returns {Vector3|PolarVector}
+     */
     applyImpulse(corpse, impulse)
     {
         if (corpse instanceof MassFallingObject)
@@ -112,10 +53,70 @@ class Engine
         throw new Error('corpse was not of a valid type!');
     }
 
+    
     applyForce(corpse, force, duration)
     {
         return this.applyImpulse(corpse, force.times(duration));
     }
+
+    /********************************************
+     * 
+     *       Apply acceleration to corpse
+     *          (speed it up or down)
+     * 
+    ********************************************/
+
+    /**
+     * @param {MassRotatingObject} corpse 
+     * @param {Vector3|PolarVector} speedVariation 
+     */
+    #applyAccelerationRotating(corpse, speedVariation)
+    {
+        if (impulse instanceof PolarVector)
+        {
+            return corpse.speed.add(speedVariation);
+        }
+
+        throw new Error('speedVariation was not a PolarVector');
+    }
+
+    /**
+     * @param {MassRotatingObject} corpse 
+     * @param {Vector3} speedVariation
+     */
+    #applyAccelerationFalling(corpse, speedVariation)
+    {
+        return corpse.speed.add(speedVariation);
+    }
+
+    /**
+     * 
+     * @param {MassFallingObject|MassRotatingObject} corpse 
+     * @param {Vector3|PolarVector} acc 
+     * @param {Decimal|number} duration 
+     */
+    applyAcceleration(corpse, acc, duration)
+    {
+        if (corpse instanceof MassFallingObject)
+        {
+            return this.#applyAccelerationFalling(corpse, acc.times(duration));
+        }
+
+        if (corpse instanceof MassRotatingObject)
+        {
+            return this.#applyAccelerationRotating(corpse, acc.times(duration));
+        }
+
+        throw new Error('corpse was not of a valid type');
+    }
+
+    
+    /********************************************
+     * 
+     *           Apply speed to corpse
+     *               (move it)
+     * 
+    ********************************************/
 
     /**
      * @param {MassFallingObject} corpse 
@@ -158,17 +159,22 @@ class Engine
         throw new Error('corpse was not of a valid type!');
     }
 
+}
+
+class Engine extends EngineBase
+{
     /**
-     * @param {MassFallingObject|MassRotatingObject} corpse 
-     * @param {Vector3|PolarVector} momentum 
-     * @param {Decimal|number} duration 
+     * 
+     * @param {Decimal|number} dt 
      */
-    applyMomentum(corpse, momentum, duration)
+    constructor(dt)
     {
-        return this.applySpeed( corpse, momentum.times( (new Decimal(1)).div(corpse.mass) ), duration );
+        if (!Decimal.IsDecimal(dt))
+        {
+            dt = new Decimal(dt);
+        }
+        this.dt = dt;
     }
-
-
 
     #inverteTimeFlow()
     {
@@ -188,7 +194,8 @@ class Engine
         }
         for (let i = 0; i < numAbs; i++)
         {
-            this.executeSingleIteration();
+            this.applySpeedsAndForces();
+            this.getNewAccelerations();
         }
         if (num !== numAbs)
         {
@@ -201,28 +208,57 @@ class Engine
 class NoFrictionFixedLengthEngine extends Engine
 {
     /**
-     * 
      * @param {MassRotatingObject} tableMass 
      * @param {MassFallingObject} fallingMass 
+     * @param {Decimal|number} cableLength
      * @param {Decimal|number} dt 
      */
-    constructor (tableMass, fallingMass, dt)
+    constructor (tableMass, fallingMass, cableLength, dt)
     {
         super(dt);
         this.tableMass = tableMass;
         this.fallingMass = fallingMass;
+        if (!Decimal.IsDecimal(cableLength))
+        {
+            cableLength = new Decimal(cableLength);
+        }
+        this.cableLength = cableLenth;
     }
 
-    executeSingleIteration()
+    applySpeedsAndForces()
     {
-
         //Apply speeds: update position
-        //this.applySpeed(this.tableMass, this.tableMass.speed, this.dt);
+        this.applySpeed(this.tableMass, this.tableMass.speed, this.dt);
         this.applySpeed(this.fallingMass, this.fallingMass.speed, this.dt);
 
-        //Apply force: update speeds
-        //this.applyForce(this.tableMass, this.tableMass.force(), this.dt);
-        this.applyForce(this.fallingMass, this.fallingMass.force(), this.dt);
+        //Apply accelerations: update speeds
+        this.applyAcceleration(this.tableMass, this.tableMass.acceleration, this.dt);
+        this.applyAcceleration(this.fallingMass, this.fallingMass.acceleration, this.dt);
+    }
+
+    getNewAccelerations()
+    {
+        //Prevent values from diverging
+        this.tableMass.rPrime = this.fallingMass.speed.y;
+        //cableLength = r + height
+        this.tableMass.r = this.cableLength.minus(this.fallingMass.height);
+
+        if (!this.tableMass.r.isZero())
+        {
+            // ..       . .
+            //  0 = - 2 R 0 / R
+            this.tableMass.thetaDoublePrime = new Decimal(-2).times( this.fallingMass.speed.y ).times( this.tableMass.rPrime ).div( this.tableMass.r );
+        } else {
+            //With radius of zero there no such rotation. We set it to zero to avoid further errors
+            this.tableMass.thetaDoublePrime = new Decimal(0);
+        }
+
+        // ..       .
+        //  R = ( m 0^2 + M g ) / (m + M)
+        this.tableMass.rDoublePrime = this.fallingMass.acceleration.y = ( 
+            ( this.tableMass.mass.times(this.tableMass.thetaPrime).times(this.tableMass.thetaPrime) ).plus(
+                this.fallingMass.mass.times(g)
+            ) ).div( this.tableMass.mass.plus(this.fallingMass.mass) );
     }
 }
 class FrictionFixedLengthEngine extends Engine
