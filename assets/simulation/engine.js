@@ -261,6 +261,7 @@ class NoFrictionFixedLengthEngine extends Engine
             ) ).div( this.tableMass.mass.plus(this.fallingMass.mass) );
     }
 }
+
 class FrictionFixedLengthEngine extends Engine
 {
     
