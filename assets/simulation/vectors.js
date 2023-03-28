@@ -51,7 +51,7 @@ class Vector3
     }
 
     /**
-     * @param {Decimal} scalar
+     * @param {Decimal|number} scalar
      */
     mult(scalar)
     {
@@ -66,7 +66,7 @@ class Vector3
      */
     module()
     {
-        return ( this.x.times(this.x).plus( this.y.times(this.y) ).plus( this.z.times(this.z) ) ).sqrt();
+        return this.squared().sqrt();
     }
 
     /**
@@ -96,6 +96,25 @@ class Vector3
     fromArray(arr)
     {
         return new Vector3(arr[0], arr[1], arr[2]);
+    }
+
+    /**
+     * @param {Decimal|number} scalar 
+     * @returns {Vector3}
+     */
+    times(scalar)
+    {
+        const other = new Vector3(this.x, this.y, this.z);
+        return other.mult(scalar);
+    }
+
+    /**
+     * 
+     * @returns {Decimal}
+     */
+    squared()
+    {
+        return this.x.times(this.x).plus( this.y.times(this.y) ).plus( this.z.times(this.z) );
     }
 }
 
@@ -129,15 +148,39 @@ class PolarVector
         this.theta = this.theta.plus(vec.theta);
         return this;
     }
-    
+
     /**
-     * @param {Decimal} scalar
-     * @returns {PolarVector} 
+     * Scales just the radius
+     * @param {Decimal|number} scalar
+     * @returns {PolarVector} this
      */
-    mult(scalar)
+    scale(scalar)
     {
         this.r = this.r.times(scalar);
         return this;
+    }
+
+    /**
+     * Scales just the radius
+     * @param {Decimal|number} scalar
+     * @returns {PolarVector} a new vector, with the radius scaled
+     */
+    scaled(scalar)
+    {
+        const other = new PolarVector(this.r, this.theta);
+        return other.scale(scalar);
+    }
+
+    /**
+     * Scales just the radius
+     * @param {Decimal|number} scalar
+     * @returns {PolarVector} 
+     */
+    times(scalar)
+    {
+        const other = this.scaled(scalar);
+        other.theta = other.theta.times(scalar);
+        return other;
     }
 
     /**
