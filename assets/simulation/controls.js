@@ -5,7 +5,7 @@ if (!pauseBtn)
 {
     throw new Error('Internal error: can\'t start or stop the simulation');
 }
-pauseBtn.onlick = () => {
+pauseBtn.onclick = () => {
     isRunning = !isRunning;
     if (isRunning) {
         pauseBtn.innerHTML = '<i class="material-icons">pause</i>';

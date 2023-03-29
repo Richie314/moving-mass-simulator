@@ -110,6 +110,7 @@ nav {
     &.show {
         display: grid;
     }
+
     & > .equations {
         grid-row-start: 2;
         grid-column-start: 1;
@@ -121,14 +122,37 @@ nav {
 .screen-container {
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 9;
+
+    &.full-screen {
+        aspect-ratio: 16 / 9;
+    }
+    &.half-screen {
+        aspect-ratio: 3;
+    }
     margin: 0;
     border: 1px solid red;
+
     & > canvas {
-        aspect-ratio: 16 / 9 !important;
-        width: 100%;
+        width: 100% !important;
         border: 1px solid green;
+        cursor: crosshair;
     }
+}
+#d3-container {
+    & > canvas {
+        height: 100% !important;
+    }
+}
+#d2-container {
+    grid-template-columns: 2fr 1fr;
+}
+#size-view {
+    cursor: none;
+    aspect-ratio: 1 !important;
+}
+#top-view {
+    cursor: grab;
+    aspect-ratio: 2 !important;
 }
 @media screen and (min-aspect-ratio: 16 / 9) {
     .screen-container {

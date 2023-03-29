@@ -115,6 +115,8 @@ nav > button[type=button] > i {
   margin: 1em 5% auto 5%;
   height: -moz-fit-content;
   height: fit-content;
+  color: black;
+  background-color: white;
   grid-template-columns: 90% 10%;
   grid-template-rows: 1.5em auto;
   gap: 0;
@@ -132,14 +134,37 @@ nav > button[type=button] > i {
 .screen-container {
   width: 100%;
   height: auto;
-  aspect-ratio: 16/9;
   margin: 0;
   border: 1px solid red;
 }
+.screen-container.full-screen {
+  aspect-ratio: 16/9;
+}
+.screen-container.half-screen {
+  aspect-ratio: 3;
+}
 .screen-container > canvas {
-  aspect-ratio: 16/9 !important;
-  width: 100%;
+  width: 100% !important;
   border: 1px solid green;
+  cursor: crosshair;
+}
+
+#d3-container > canvas {
+  height: 100% !important;
+}
+
+#d2-container {
+  grid-template-columns: 2fr 1fr;
+}
+
+#size-view {
+  cursor: none;
+  aspect-ratio: 1 !important;
+}
+
+#top-view {
+  cursor: grab;
+  aspect-ratio: 2 !important;
 }
 
 @media screen and (min-aspect-ratio: 16/9) {
