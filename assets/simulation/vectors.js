@@ -12,15 +12,15 @@ class Vector3
      */
     constructor(x = 0, y = 0, z = 0)
     {
-        if (!Decimal.IsDecimal(x))
+        if (!Decimal.isDecimal(x))
         {
             x = new Decimal(x);
         }
-        if (!Decimal.IsDecimal(y))
+        if (!Decimal.isDecimal(y))
         {
             y = new Decimal(y);
         }
-        if (!Decimal.IsDecimal(z))
+        if (!Decimal.isDecimal(z))
         {
             z = new Decimal(z);
         }
@@ -203,11 +203,11 @@ class PolarVector
      */
     constructor(r, theta)
     {
-        if (!Decimal.IsDecimal(r))
+        if (!Decimal.isDecimal(r))
         {
             r = new Decimal(r);
         }
-        if (!Decimal.IsDecimal(theta))
+        if (!Decimal.isDecimal(theta))
         {
             theta = new Decimal(theta);
         }

@@ -6,6 +6,6 @@ class Simulation
      */
     constructor(engine)
     {
-        this.#Engine = engine;
+        this.Engine = engine;
     }
 }

@@ -1,5 +1,5 @@
 'use strict';
-if ('THREE' in window)
+if ( !('THREE' in window) )
 {
     throw new Error('THREE.js not loaded properly');
 }

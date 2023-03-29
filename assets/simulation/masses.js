@@ -8,7 +8,7 @@ class MassObject
      */
     constructor(mass)
     {
-        if (!Decimal.IsDecimal(mass))
+        if (!Decimal.isDecimal(mass))
         {
             mass = new Decimal(mass);
         }

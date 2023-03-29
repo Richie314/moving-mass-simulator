@@ -169,7 +169,7 @@ class Engine extends EngineBase
      */
     constructor(dt)
     {
-        if (!Decimal.IsDecimal(dt))
+        if (!Decimal.isDecimal(dt))
         {
             dt = new Decimal(dt);
         }
@@ -218,7 +218,7 @@ class NoFrictionFixedLengthEngine extends Engine
         super(dt);
         this.tableMass = tableMass;
         this.fallingMass = fallingMass;
-        if (!Decimal.IsDecimal(cableLength))
+        if (!Decimal.isDecimal(cableLength))
         {
             cableLength = new Decimal(cableLength);
         }
