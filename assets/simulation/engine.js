@@ -164,6 +164,16 @@ class EngineBase
 class Engine extends EngineBase
 {
     /**
+     * @type {MassRotatingObject}
+     */
+    tableMass;
+
+    /**
+     * @type {MassFallingObject}
+     */
+    fallingMass;
+
+    /**
      * 
      * @param {Decimal|number} dt 
      */
