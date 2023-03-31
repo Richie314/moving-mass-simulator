@@ -19,4 +19,39 @@
 }
 .grid.five {
   grid-template-columns: repeat(5, 1fr);
+}
+.grid > .span-2 {
+  -moz-column-span: 2;
+       column-span: 2;
+}
+.grid > .span-3 {
+  -moz-column-span: 3;
+       column-span: 3;
+}
+.grid > .span-4 {
+  -moz-column-span: 4;
+       column-span: 4;
+}
+
+label {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.form input {
+  height: 1.1em;
+  padding: 0.05em 0.3em;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.form .show-if-checked {
+  height: 0 !important;
+  width: 100%;
+  padding: 0.3em;
+}
+.form input[type=checkbox]:checked + .show-if-checked {
+  height: -moz-fit-content !important;
+  height: fit-content !important;
 }/*# sourceMappingURL=menu.css.map */

@@ -30,3 +30,21 @@
         column-span: 4;
     }
 }
+label {
+    user-select: none;
+}
+.form {
+    input {
+        height: 1.1em;
+        padding: .05em .3em;
+        user-select: none;
+    }
+    .show-if-checked {
+        height: 0 !important;
+        width: 100%;
+        padding: .3em;
+    }
+    input[type=checkbox]:checked + .show-if-checked {
+        height: fit-content !important;
+    }
+}

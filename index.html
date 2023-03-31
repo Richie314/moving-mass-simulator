@@ -98,17 +98,21 @@
                 Attrito:
             </label>
             <input type="checkbox" checked id="friction">
-            <div id="friction-settings" class="span-2">
+            <div class="show-if-checked" class="span-2">
                 <h4>
                     Impostazioni attrito
                 </h4>
+                <label for="friction-value">
+                    &mu;<sub>d</sub>: <output id="friction-value-display">0.5</output>
+                </label>
+                <input type="range" id="friction-value" value="0.5" min="0" max="1">
             </div>
 
             <label for="cable">
                 Filo estendibile:
             </label>
             <input type="checkbox" checked id="cable">
-            <div id="cable-settings" class="span-2 grid two">
+            <div class="show-if-checked" class="span-2 grid two">
                 <label for="hooke">
                     Costante elastica [N/m]:
                 </label>
