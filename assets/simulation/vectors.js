@@ -267,6 +267,15 @@ class PolarVector
     {
         return (new Vector3(theta.cos(), theta.sin(), 0)).times(this.r);
     }
+
+    toNumbers()
+    {
+        return {
+            x: this.x.toNumber(),
+            y: this.y.toNumber(),
+            z: this.z.toNumber()
+        };
+    }
 }
 
 const g = new Decimal(-9.81);

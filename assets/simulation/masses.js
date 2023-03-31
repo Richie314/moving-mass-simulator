@@ -15,6 +15,7 @@ class MassObject
         this.mass = mass;
     }
 }
+
 class MassFallingObject extends MassObject
 {
     /**
@@ -79,12 +80,32 @@ class MassFallingObject extends MassObject
 
     get height()
     {
-        return this.position.y;
+        return this.position.z;
     }
 
     set height(value)
     {
-        return this.position.y = value;
+        return this.position.z = value;
+    }
+
+    get heightPrime()
+    {
+        return this.speed.z;
+    }
+
+    set heightPrime(value)
+    {
+        return this.speed.z = value;
+    }
+
+    get heightDoublePrime()
+    {
+        return this.acceleration.z;
+    }
+
+    set heightDoublePrime(value)
+    {
+        return this.acceleration.z = value;
     }
 
     get gravityPotential()
