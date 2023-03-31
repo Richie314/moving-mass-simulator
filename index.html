@@ -68,6 +68,9 @@
         <button type="button" id="restart" title="Resetta">
             <i class="material-icons">autorenew</i>
         </button>
+        <button type="button" id="show-settings" title="Modifica">
+            <span class="material-icons-outlined">settings</span>
+        </button>
         <button type="button" id="show-terminal-btn" title="Esegui codice">
             <i class="material-icons">terminal</i>
         </button>
@@ -75,6 +78,57 @@
             <i class="material-icons">functions</i>
         </button>
     </nav>
+    <div class="pop-up" id="settings">
+        <h2>
+            Parametri della simulazione
+        </h2>
+        <button type="button" id="close-settings">
+            <i class="material-icons">close</i>
+        </button>
+        <fieldset class="form grid two">
+
+            <label for="dt-number">
+                <i>dt</i>:
+            </label>
+            <div>
+                <input type="number" id="dt-number" value="1">
+            </div>
+
+            <label for="friction">
+                Attrito:
+            </label>
+            <input type="checkbox" checked id="friction">
+            <div id="friction-settings" class="span-2">
+                <h4>
+                    Impostazioni attrito
+                </h4>
+            </div>
+
+            <label for="cable">
+                Filo estendibile:
+            </label>
+            <input type="checkbox" checked id="cable">
+            <div id="cable-settings" class="span-2 grid two">
+                <label for="hooke">
+                    Costante elastica [N/m]:
+                </label>
+                <input type="number" id="hooke" value="1" min="0">
+            </div>
+
+            <label for="interactions">
+                Interazioni:
+            </label>
+            <input type="checkbox" checked id="interactions">
+        </fieldset>
+    </div>
+    <div class="pop-up" id="shell">
+        <h2>
+            Console script
+        </h2>
+        <button type="button" onclick="document.getElementById('shell').classList.remove('show')">
+            <i class="material-icons">close</i>
+        </button>
+    </div>
     <div class="pop-up" id="math">
         <h2>
             Equazioni del moto
@@ -94,14 +148,6 @@
             </span>
         </div>
     </div>
-    <div class="pop-up" id="shell">
-        <h2>
-            Console script
-        </h2>
-        <button type="button" onclick="document.getElementById('shell').classList.remove('show')">
-            <i class="material-icons">close</i>
-        </button>
-    </div>
     <div class="banner">
         <div class="log-container" id="logs">
 
@@ -112,7 +158,7 @@
     </div>
     <div class="screen-container grid half-screen" id="d2-container">
         <canvas id="top-view" width="1800" height="900"></canvas>
-        <canvas id="size-view" width="900" height="900"></canvas>
+        <canvas id="side-view" width="900" height="900"></canvas>
     </div>
     <footer class="grid two">
         

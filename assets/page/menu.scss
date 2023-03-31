@@ -19,4 +19,14 @@
     &.five {
         grid-template-columns: repeat(5, 1fr);
     }
+
+    & > .span-2 {
+        column-span: 2;
+    }
+    & > .span-3 {
+        column-span: 3;
+    }
+    & > .span-4 {
+        column-span: 4;
+    }
 }

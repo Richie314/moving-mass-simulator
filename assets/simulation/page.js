@@ -1,7 +1,7 @@
 'use strict';
 
-const topViewCanvas = document.getElementById('');
-const sideViewCanvas = document.getElementById('');
+const topViewCanvas = document.getElementById('top-view');
+const sideViewCanvas = document.getElementById('side-view');
 
 const VerySimpleEngine = new NoFrictionFixedLengthEngine();
 var TableMeasures = new Vector3(1800, 900, 900);
