@@ -120,15 +120,21 @@ nav > button[type=button] > i {
   grid-template-columns: 90% 10%;
   grid-template-rows: 1.5em auto;
   gap: 0;
+  border: 1px solid;
 }
 .pop-up.show {
   display: grid;
 }
-.pop-up > .equations {
-  grid-row-start: 2;
+.pop-up > :is(.equations, .form) {
   grid-column-start: 1;
-  grid-row-end: 3;
   grid-column-end: 3;
+}
+.pop-up > :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0;
+  text-align: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
 .screen-container {

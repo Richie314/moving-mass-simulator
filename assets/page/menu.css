@@ -21,16 +21,16 @@
   grid-template-columns: repeat(5, 1fr);
 }
 .grid > .span-2 {
-  -moz-column-span: 2;
-       column-span: 2;
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
 .grid > .span-3 {
-  -moz-column-span: 3;
-       column-span: 3;
+  grid-column-start: 1;
+  grid-column-end: 4;
 }
 .grid > .span-4 {
-  -moz-column-span: 4;
-       column-span: 4;
+  grid-column-start: 1;
+  grid-column-end: 5;
 }
 
 label {
@@ -39,6 +39,10 @@ label {
           user-select: none;
 }
 
+.form {
+  width: 100%;
+  margin-top: 1em;
+}
 .form input {
   height: 1.1em;
   padding: 0.05em 0.3em;
@@ -49,9 +53,20 @@ label {
 .form .show-if-checked {
   height: 0 !important;
   width: 100%;
-  padding: 0.3em;
+  overflow: hidden;
+  border-radius: 5px;
+  transition: height ease-in-out 0.4s;
+}
+.form .show-if-checked > :is(h1, h2, h3, h4, h5, h6) {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  text-align: center;
+  margin: 0;
 }
 .form input[type=checkbox]:checked + .show-if-checked {
   height: -moz-fit-content !important;
   height: fit-content !important;
+  padding: 0.3em;
+  border: 1px solid;
 }/*# sourceMappingURL=menu.css.map */

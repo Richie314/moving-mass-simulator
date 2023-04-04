@@ -21,19 +21,24 @@
     }
 
     & > .span-2 {
-        column-span: 2;
+        grid-column-start: 1;
+        grid-column-end: 3;
     }
     & > .span-3 {
-        column-span: 3;
+        grid-column-start: 1;
+        grid-column-end: 4;
     }
     & > .span-4 {
-        column-span: 4;
+        grid-column-start: 1;
+        grid-column-end: 5;
     }
 }
 label {
     user-select: none;
 }
 .form {
+    width: 100%;
+    margin-top: 1em;
     input {
         height: 1.1em;
         padding: .05em .3em;
@@ -42,9 +47,18 @@ label {
     .show-if-checked {
         height: 0 !important;
         width: 100%;
-        padding: .3em;
+        overflow: hidden;
+        border-radius: 5px;
+        transition: height ease-in-out .4s;
+        & > :is(h1, h2, h3, h4, h5, h6) {
+            user-select: none;
+            text-align: center;
+            margin: 0;
+        }
     }
     input[type=checkbox]:checked + .show-if-checked {
         height: fit-content !important;
+        padding: .3em;
+        border: 1px solid;
     }
 }

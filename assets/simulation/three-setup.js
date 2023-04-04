@@ -14,15 +14,19 @@ camera.lookAt( 0, 0, 0 );
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( screenContainer.clientWidth, screenContainer.clientHeight );
 
-const light = new THREE.AmbientLight( 0x505050 );
-scene.add( light );
-
 screenContainer.appendChild( renderer.domElement );
 screenContainer.addEventListener('resize', () => {
     camera.aspect = screenContainer.clientWidth / screenContainer.clientHeight;
     camera.updateProjectionMatrix();
     renderer.setSize( screenContainer.clientWidth, screenContainer.clientHeight );
 }, false);
+
+const light = new THREE.AmbientLight( 0x505050 );
+scene.add( light );
+
+const axesHelper = new THREE.AxesHelper( 5 );
+scene.add( axesHelper );
+
 
 const tableMesh = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 const massesMesh = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
@@ -34,10 +38,10 @@ function threeAnimate()
 {
     if (!isRunning)
     {
-        //Will check again in two secs
-        return setTimeout(threeAnimate, 2000);
+        //Will check again in one second
+        return setTimeout(threeAnimate, 1000);
     }
-
+    simulation.iterateAndDraw(1);
 
 
 
