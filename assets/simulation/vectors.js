@@ -2,6 +2,7 @@
 if (!('Decimal' in window)) {
     throw Error('Decimal.js not loaded properly');
 }
+Decimal.set( { precision: 50 } );
 
 class Vector3
 {
@@ -232,6 +233,19 @@ class PolarVector
     {
         this.r = this.r.plus(vec.r);
         this.theta = this.theta.plus(vec.theta);
+        while (this.theta.isNegative())
+        {
+            this.theta = this.theta.plus(doublePi);
+        }
+        while (this.theta.greaterThan(doublePi))
+        {
+            this.theta = this.theta.minus(doublePi);
+        }
+        if (this.r.isNegative())
+        {
+            this.r = this.r.neg();
+            this.theta = this.theta.plus(pi);
+        }
         return this;
     }
 
@@ -274,10 +288,12 @@ class PolarVector
      */
     toVec3()
     {
-        return (new Vector3(theta.cos(), theta.sin(), 0)).times(this.r);
+        return (new Vector3(this.theta.cos(), this.theta.sin(), 0)).times(this.r);
     }
 
 }
 
 const g = new Decimal(-9.81);
 const gravity = new Vector3(0, 0, g);
+const pi = Decimal.acos(-1);
+const doublePi = pi.times(2);

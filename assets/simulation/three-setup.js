@@ -1,9 +1,6 @@
-'use strict';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-if ( !('THREE' in window) )
-{
-    throw new Error('THREE.js not loaded properly');
-}
 const screenContainer = document.getElementById('d3-container');
 
 const scene = new THREE.Scene();
@@ -26,7 +23,7 @@ scene.add( light );
 
 const axesHelper = new THREE.AxesHelper( 5 );
 scene.add( axesHelper );
-
+const controls = new OrbitControls( camera, renderer.domElement );
 
 const tableMesh = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 const massesMesh = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
@@ -53,3 +50,4 @@ function threeAnimate(simulation)
 	renderer.render( scene, camera );
     return requestAnimationFrame(()=> threeAnimate(simulation));
 }
+window.threeAnimate = threeAnimate;

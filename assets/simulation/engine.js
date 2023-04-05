@@ -72,7 +72,7 @@ class EngineBase
      */
     #applyAccelerationRotating(corpse, speedVariation)
     {
-        if (impulse instanceof PolarVector)
+        if (speedVariation instanceof PolarVector)
         {
             return corpse.speed.add(speedVariation);
         }
@@ -259,17 +259,19 @@ class NoFrictionFixedLengthEngine extends Engine
             // ..       . .
             //  0 = - 2 R 0 / R
             this.tableMass.thetaDoublePrime = new Decimal(-2).times( this.tableMass.rPrime ).times( this.tableMass.thetaPrime ).div( this.tableMass.r );
+        
         } else {
             //With radius of zero there no such rotation. We set it to zero to avoid further errors
             this.tableMass.thetaDoublePrime = new Decimal(0);
+            //this.tableMass.rDoublePrime = this.
         }
-
         // ..       .
         //  R = ( m 0^2 + M g ) / (m + M)
         this.tableMass.rDoublePrime = this.fallingMass.heightDoublePrime = ( 
             ( this.tableMass.mass.times(this.tableMass.thetaPrime).times(this.tableMass.thetaPrime) ).plus(
                 this.fallingMass.mass.times(g)
             ) ).div( this.tableMass.mass.plus(this.fallingMass.mass) );
+
     }
 }
 

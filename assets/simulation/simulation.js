@@ -26,9 +26,16 @@ class Simulation
 
         this.topCanvas.width = this.w.toNumber();
         this.topCanvas.height = this.l.toNumber();
+        this.topCanvasDrawOffSet = {
+            x: this.topCanvas.width / 2,
+            y: this.topCanvas.height / 2,
+        };
 
-        this.sideCanvas.width = this.topCanvas.width;
-        this.sideCanvas.height = this.h.toNumber();
+        this.sideCanvas.width = this.sideCanvas.height = this.h.toNumber();
+        this.sideCanvasDrawOffSet = {
+            x: this.sideCanvas.width / 2,
+            y: 10,
+        };
 
         this.TwoPi = 2 * Math.PI;
 
@@ -44,7 +51,7 @@ class Simulation
      */
     #drawCircle(ctx, r, x, y, color)
     {
-        cxt.beginPath();
+        ctx.beginPath();
         ctx.fillStyle = color;
         ctx.arc(x, y, r, 0, this.TwoPi);
         ctx.fill();
@@ -65,9 +72,11 @@ class Simulation
     #drawLine(ctx, p1x, p1y, p2x, p2y, color = '#000000')
     {
         ctx.strokeStyle = color;
+        ctx.beginPath();
         ctx.moveTo(p1x, p1y);
         ctx.lineWidth = 2;
         ctx.lineTo(p2x, p2y);
+        ctx.stroke();
     }
 
     #drawTopView()
@@ -92,8 +101,18 @@ class Simulation
         this.topCtx.clearRect(0, 0, this.topCanvas.width, this.topCanvas.height);
         const massPos = this.Engine.tableMass.position.toVec3().toNumbers();
 
-        this.#drawLine(this.topCtx, this.center.x, this.center.y, massPos.x, massPos.y);
-        this.#drawCircle(this.topCtx, 50, massPos.x, massPos.y, '#ff0000');
+        this.#drawLine(
+            this.topCtx, 
+            this.topCanvasDrawOffSet.x, 
+            this.topCanvasDrawOffSet.y,
+            massPos.x + this.topCanvasDrawOffSet.x, 
+            massPos.y + this.topCanvasDrawOffSet.y);
+        this.#drawCircle(
+            this.topCtx, 
+            20, 
+            massPos.x + this.topCanvasDrawOffSet.x, 
+            massPos.y + this.topCanvasDrawOffSet.y,
+            '#ff0000');
     }
 
     #drawSideView()
@@ -119,8 +138,18 @@ class Simulation
         this.sideCtx.clearRect(0, 0, this.sideCanvas.width, this.sideCanvas.height);
         const massPos = this.Engine.fallingMass.position.toNumbers();
 
-        this.#drawLine(this.sideCtx, this.center.x, 0, massPos.x, -massPos.z);
-        this.#drawCircle(this.sideCtx, 40, massPos.x, -massPos.z, '#00ff00');
+        this.#drawLine(
+            this.sideCtx, 
+            this.sideCanvasDrawOffSet.x, 
+            this.sideCanvasDrawOffSet.y, 
+            this.sideCanvasDrawOffSet.x + massPos.x,
+            this.sideCanvasDrawOffSet.y -massPos.z);
+        this.#drawCircle(
+            this.sideCtx, 
+            25, 
+            this.sideCanvasDrawOffSet.x, 
+            this.sideCanvasDrawOffSet.y - massPos.z, 
+            '#00ff00');
 
         this.sideCtx.fillStyle = '#2f2312';
         this.sideCtx.fillRect(0, 0, this.sideCanvas.width, 10);
