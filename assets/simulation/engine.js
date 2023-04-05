@@ -233,7 +233,7 @@ class NoFrictionFixedLengthEngine extends Engine
         {
             cableLength = new Decimal(cableLength);
         }
-        this.cableLength = cableLenth;
+        this.cableLength = cableLength;
     }
 
     applySpeedsAndForces()
