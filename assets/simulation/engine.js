@@ -249,7 +249,7 @@ class NoFrictionFixedLengthEngine extends Engine
 
     getNewAccelerations()
     {
-        //this.tableMass.position.reboundPositive();
+        
         //Prevent values from diverging
         this.tableMass.rPrime = this.fallingMass.heightPrime;
         //cableLength = r + height
@@ -264,6 +264,8 @@ class NoFrictionFixedLengthEngine extends Engine
             this.fallingMass.heightPrime = this.tableMass.rPrime = totalCableMomentum.div( this.tableMass.mass.plus(this.fallingMass.mass) );
             return;
         }
+        this.tableMass.position.reboundPositive();
+
 
         // ..       . .
         //  0 = - 2 R 0 / R
