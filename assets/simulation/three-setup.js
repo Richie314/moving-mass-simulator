@@ -5,7 +5,7 @@ const screenContainer = document.getElementById('d3-container');
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, screenContainer.clientWidth / screenContainer.clientHeight, 0.1, 1000 );
-camera.position.set( 100, 100, 100 );
+camera.position.set( 200, 200, 200 );
 camera.lookAt( 0, 0, 0 );
 
 const renderer = new THREE.WebGLRenderer();
@@ -21,8 +21,12 @@ screenContainer.addEventListener('resize', () => {
 const light = new THREE.AmbientLight( 0x505050 );
 scene.add( light );
 
-const axesHelper = new THREE.AxesHelper( 5 );
+const axesHelper = new THREE.AxesHelper( 1000 );
 scene.add( axesHelper );
+
+const gridHelper = new THREE.GridHelper(1000, 100);
+scene.add( gridHelper );
+
 const controls = new OrbitControls( camera, renderer.domElement );
 
 const tableMesh = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );

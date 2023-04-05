@@ -249,23 +249,25 @@ class NoFrictionFixedLengthEngine extends Engine
 
     getNewAccelerations()
     {
-        this.tableMass.position.reboundPositive();
+        //this.tableMass.position.reboundPositive();
         //Prevent values from diverging
         this.tableMass.rPrime = this.fallingMass.heightPrime;
         //cableLength = r + height
-        this.tableMass.r = this.cableLength.minus(this.fallingMass.height.neg());
+        this.tableMass.r = this.cableLength.minus(this.fallingMass.height.abs());
 
-        if (!this.tableMass.r.isZero())
+        if (this.tableMass.r.isZero())
         {
-            // ..       . .
-            //  0 = - 2 R 0 / R
-            this.tableMass.thetaDoublePrime = new Decimal(-2).times( this.tableMass.rPrime ).times( this.tableMass.thetaPrime ).div( this.tableMass.r );
-        
-        } else {
             //With radius of zero there no such rotation. We set it to zero to avoid further errors
             this.tableMass.thetaDoublePrime = new Decimal(0);
-            this.tableMass.speed.reboundPositive();
+            this.tableMass.rDoublePrime = g;
+            const totalCableMomentum = this.fallingMass.momentum.z + this.tableMass.speed.r.times( this.tableMass.mass );
+            this.fallingMass.heightPrime = this.tableMass.rPrime = totalCableMomentum.div( this.tableMass.mass.plus(this.fallingMass.mass) );
+            return;
         }
+
+        // ..       . .
+        //  0 = - 2 R 0 / R
+        this.tableMass.thetaDoublePrime = new Decimal(-2).times( this.tableMass.rPrime ).times( this.tableMass.thetaPrime ).div( this.tableMass.r );
         // ..       .
         //  R = ( m 0^2 + M g ) / (m + M)
         this.tableMass.rDoublePrime = this.fallingMass.heightDoublePrime = ( 

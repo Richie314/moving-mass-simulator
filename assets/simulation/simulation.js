@@ -22,16 +22,15 @@ class Simulation
         this.w = tableMeasures.x;
         this.l = tableMeasures.y;
         this.h = tableMeasures.z;
-        this.center = tableMeasures.times(0.5).toNumbers();
 
-        this.topCanvas.width = this.w.toNumber();
-        this.topCanvas.height = this.l.toNumber();
+        //this.topCanvas.width = this.w.toNumber();
+        //this.topCanvas.height = this.l.toNumber();
         this.topCanvasDrawOffSet = {
             x: this.topCanvas.width / 2,
             y: this.topCanvas.height / 2,
         };
 
-        this.sideCanvas.width = this.sideCanvas.height = this.h.toNumber();
+        //this.sideCanvas.width = this.sideCanvas.height = this.h.toNumber();
         this.sideCanvasDrawOffSet = {
             x: this.sideCanvas.width / 2,
             y: 10,

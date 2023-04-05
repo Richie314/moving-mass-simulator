@@ -157,6 +157,10 @@ nav > button[type=button] > i {
 
 #d3-container > canvas {
   height: 100% !important;
+  cursor: grab;
+}
+#d3-container > canvas:active {
+  cursor: grabbing;
 }
 
 #d2-container {
@@ -171,6 +175,9 @@ nav > button[type=button] > i {
 #top-view {
   cursor: grab;
   aspect-ratio: 2 !important;
+}
+#top-view:active {
+  cursor: grabbing;
 }
 
 @media screen and (min-aspect-ratio: 16/9) {

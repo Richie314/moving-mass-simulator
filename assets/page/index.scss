@@ -145,6 +145,10 @@ nav {
 #d3-container {
     & > canvas {
         height: 100% !important;
+        cursor: grab;
+        &:active {
+            cursor: grabbing;
+        }
     }
 }
 #d2-container {
@@ -156,6 +160,9 @@ nav {
 }
 #top-view {
     cursor: grab;
+    &:active {
+        cursor: grabbing;
+    }
     aspect-ratio: 2 !important;
 }
 @media screen and (min-aspect-ratio: 16 / 9) {
