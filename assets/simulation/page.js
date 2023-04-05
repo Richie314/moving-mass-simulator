@@ -10,7 +10,7 @@ const sideViewCanvas = document.getElementById('side-view');
 
 const tableMass = new MassRotatingObject(
     new Decimal(1),
-    new PolarVector(90, 0), //Initial position
+    new PolarVector(90, pi), //Initial position
     new PolarVector(0, 0),  //Initial radial and angular speed
     new PolarVector(0, 0)); //Initial acceleration doesn't really count
 

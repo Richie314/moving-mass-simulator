@@ -77,6 +77,7 @@ class Simulation
         ctx.lineWidth = 2;
         ctx.lineTo(p2x, p2y);
         ctx.stroke();
+        ctx.closePath();
     }
 
     #drawTopView()
@@ -99,6 +100,8 @@ class Simulation
          ****************************************/
         this.topCtx.fillStyle = '#ffffff';
         this.topCtx.clearRect(0, 0, this.topCanvas.width, this.topCanvas.height);
+        this.#drawCircle(this.topCtx, 4, 
+            this.topCanvasDrawOffSet.x, this.topCanvasDrawOffSet.y, '#000000');
         const massPos = this.Engine.tableMass.position.toVec3().toNumbers();
 
         this.#drawLine(

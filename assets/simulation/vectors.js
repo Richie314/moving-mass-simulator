@@ -233,6 +233,16 @@ class PolarVector
     {
         this.r = this.r.plus(vec.r);
         this.theta = this.theta.plus(vec.theta);
+        return this;
+    }
+
+    reboundPositive()
+    {
+        if (this.r.isNegative())
+        {
+            this.r = this.r.neg();
+            this.theta = this.theta.plus(pi);
+        }
         while (this.theta.isNegative())
         {
             this.theta = this.theta.plus(doublePi);
@@ -241,14 +251,9 @@ class PolarVector
         {
             this.theta = this.theta.minus(doublePi);
         }
-        if (this.r.isNegative())
-        {
-            this.r = this.r.neg();
-            this.theta = this.theta.plus(pi);
-        }
         return this;
     }
-
+    
     /**
      * Scales just the radius
      * @param {Decimal|number} scalar

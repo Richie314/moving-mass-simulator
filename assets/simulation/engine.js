@@ -249,10 +249,11 @@ class NoFrictionFixedLengthEngine extends Engine
 
     getNewAccelerations()
     {
+        this.tableMass.position.reboundPositive();
         //Prevent values from diverging
         this.tableMass.rPrime = this.fallingMass.heightPrime;
         //cableLength = r + height
-        this.tableMass.r = this.cableLength.minus(this.fallingMass.height);
+        this.tableMass.r = this.cableLength.minus(this.fallingMass.height.neg());
 
         if (!this.tableMass.r.isZero())
         {
@@ -263,7 +264,7 @@ class NoFrictionFixedLengthEngine extends Engine
         } else {
             //With radius of zero there no such rotation. We set it to zero to avoid further errors
             this.tableMass.thetaDoublePrime = new Decimal(0);
-            //this.tableMass.rDoublePrime = this.
+            this.tableMass.speed.reboundPositive();
         }
         // ..       .
         //  R = ( m 0^2 + M g ) / (m + M)
