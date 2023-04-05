@@ -179,6 +179,7 @@ class Engine extends EngineBase
      */
     constructor(dt)
     {
+        super();
         if (!Decimal.isDecimal(dt))
         {
             dt = new Decimal(dt);
