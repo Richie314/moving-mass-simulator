@@ -1,5 +1,5 @@
 'use strict';
-if (!'Decimal' in window) {
+if (!('Decimal' in window)) {
     throw Error('Decimal.js not loaded properly');
 }
 
@@ -193,6 +193,15 @@ class Vector3
             return new PolarVector(m, 0);
         return new PolarVector( m, ( this.x.div(m) ).acos() );
     }
+
+    toNumbers()
+    {
+        return {
+            x: this.x.toNumber(),
+            y: this.y.toNumber(),
+            z: this.z.toNumber()
+        };
+    }
 }
 
 class PolarVector
@@ -268,15 +277,7 @@ class PolarVector
         return (new Vector3(theta.cos(), theta.sin(), 0)).times(this.r);
     }
 
-    toNumbers()
-    {
-        return {
-            x: this.x.toNumber(),
-            y: this.y.toNumber(),
-            z: this.z.toNumber()
-        };
-    }
 }
 
 const g = new Decimal(-9.81);
-const gravity = new Vector3(0, g, 0);
+const gravity = new Vector3(0, 0, g);

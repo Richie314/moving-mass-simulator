@@ -13,7 +13,7 @@ const fallingMass = new MassFallingObject(
     new Decimal(2),
     new Vector3(0, 0, -5),
     new Vector3(0, 0, -2),
-    new Vector3(0, 0, -9.81));
+    gravity);
     var dt = new Decimal(0.001);
 
 const VerySimpleEngine = new NoFrictionFixedLengthEngine(tableMass, fallingMass, 17, dt);
