@@ -32,7 +32,7 @@ class Simulation
 
         this.TwoPi = 2 * Math.PI;
 
-        this.#RefreshCallback = () => { };
+        this.RefreshCallback = () => { };
     }
 
     /**
@@ -154,12 +154,12 @@ class Simulation
     {
         if (typeof callback !== 'function')
             return false;
-        this.#RefreshCallback = callback;
+        this.RefreshCallback = callback;
     }
     refresh()
     {
         try {
-            this.#RefreshCallback(this);
+            this.RefreshCallback(this);
         } catch(err) {
             warn(err);
         }
