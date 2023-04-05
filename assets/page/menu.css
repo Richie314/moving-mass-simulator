@@ -69,4 +69,10 @@ label {
   height: fit-content !important;
   padding: 0.3em;
   border: 1px solid;
+}
+.form label {
+  text-align: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }/*# sourceMappingURL=menu.css.map */

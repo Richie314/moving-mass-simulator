@@ -37,3 +37,18 @@ document.getElementById('close-settings').onclick = () => {
     document.getElementById('settings').classList.remove('show');
     ReEnableButtons();
 }
+
+/**********************************************/
+/*              Form inputs                   */
+/**********************************************/
+
+const dtInput = document.getElementById('dt-number');
+const dtExponent = document.getElementById('dt-unit');
+
+function UpdateDt()
+{
+    dt = new Decimal(dtInput.value).times( new Decimal(10).pow(dtExponent.value) );
+}
+
+dtInput.addEventListener('input', UpdateDt);
+dtExponent.addEventListener('input', UpdateDt);

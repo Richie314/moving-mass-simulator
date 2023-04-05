@@ -34,17 +34,22 @@ const lineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
 
 const tableMassGeometry = new THREE.CylinderGeometry( 5, 5, 20, 32 );
 
-function threeAnimate()
+/**
+ * 
+ * @param {Simulation} simulation 
+ * @returns {number}
+ */
+function threeAnimate(simulation)
 {
     if (!isRunning)
     {
         //Will check again in one second
-        return setTimeout(threeAnimate, 1000);
+        return setTimeout(threeAnimate, 1000, simulation);
     }
+    simulation.refresh();
     simulation.iterateAndDraw(1);
 
 
-
 	renderer.render( scene, camera );
-    return requestAnimationFrame(threeAnimate);
+    return requestAnimationFrame(()=> threeAnimate(simulation));
 }

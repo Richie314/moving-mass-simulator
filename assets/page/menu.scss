@@ -61,4 +61,8 @@ label {
         padding: .3em;
         border: 1px solid;
     }
+    label {
+        text-align: center;
+        user-select: none;
+    }
 }

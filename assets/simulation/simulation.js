@@ -31,6 +31,8 @@ class Simulation
         this.sideCanvas.height = this.h.toNumber();
 
         this.TwoPi = 2 * Math.PI;
+
+        this.#RefreshCallback = () => { };
     }
 
     /**
@@ -147,5 +149,46 @@ class Simulation
         {
             this.drawSimulation();
         }
+    }
+    onRefresh(callback)
+    {
+        if (typeof callback !== 'function')
+            return false;
+        this.#RefreshCallback = callback;
+    }
+    refresh()
+    {
+        try {
+            this.#RefreshCallback(this);
+        } catch(err) {
+            warn(err);
+        }
+    }
+
+    /**
+     * @returns {Decimal}
+     */
+    get dt() {
+        return this.Engine.dt;
+    }
+    /**
+     * @param {Decimal} value
+     */
+    set dt(value) {
+        return this.Engine.dt = value;
+    }
+
+    /**
+     * @returns {MassRotatingObject}
+     */
+    get tableMass() {
+        return this.Engine.tableMass;
+    }
+
+    /**
+     * @returns {MassFallingObject}
+     */
+    get fallingMass() {
+        return this.Engine.fallingMass;
     }
 }

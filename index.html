@@ -84,13 +84,20 @@
         <button type="button" id="close-settings">
             <i class="material-icons">close</i>
         </button>
+
         <fieldset class="form grid two">
 
             <label for="dt-number">
                 <i>dt</i>:
             </label>
-            <div>
-                <input type="number" id="dt-number" value="1">
+            <div class="grid" style="grid-template-columns: 65% 35;">
+                <input type="number" id="dt-number" value="1" min="-1000" max="1000">
+                <select id="dt-unit" title="Ordine di grandezza">
+                    <option value="-9" title="Nano secondi">[ns]</option>
+                    <option value="-6" title="Micro secondi">[&mu;s]</option>
+                    <option value="-3" title="Milli secondi" selected="selected">[ms]</option>
+                    <option value="0" title="Secondi">[s]</option>
+                </select>
             </div>
 
             <label for="friction">
