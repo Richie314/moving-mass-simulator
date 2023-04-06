@@ -27,14 +27,17 @@ const ugHtml = document.getElementById('ug-html');
 const ukHtml = document.getElementById('uk-html');
 const tuHtml = document.getElementById('tu-html');
 
+var tableMassMass = new Decimal(1);
+var fallingMassMass = new Decimal(2);
+
 const tableMass = new MassRotatingObject(
-    new Decimal(1),
+    tableMassMass,
     new PolarVector(1, pi.div(4)), //Initial position
     new PolarVector(0, 0),  //Initial radial and angular speed
     new PolarVector(0, 0)); //Initial acceleration doesn't really count
 
 const fallingMass = new MassFallingObject(
-    new Decimal(2),
+    fallingMassMass,
     new Vector3(0, 0, -0.50),
     new Vector3(0, 0, 0),
     gravity);
@@ -53,6 +56,8 @@ function RefreshSimulationParams(sim)
 {
     sim.dt = dt;
     sim.dtCount = dtCount;
+    sim.tableMass.mass = tableMassMass;
+    sim.fallingMass.mass = fallingMassMass;
 
     if (smoothRefresher++ == 4)
     {

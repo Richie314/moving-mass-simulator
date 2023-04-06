@@ -99,4 +99,15 @@ summary > h3 {
 }
 summary::marker {
   width: 1em;
+}
+
+details {
+  width: calc(100% - 2em);
+  margin-inline: 1em;
+}
+details:first-child {
+  margin-top: 1em;
+}
+details:last-child {
+  margin-bottom: 1em;
 }/*# sourceMappingURL=menu.css.map */

@@ -1,7 +1,6 @@
 'use strict';
 var isRunning = false;
 
-const pauseBtn = document.getElementById('play-pause');
 if (!pauseBtn)
 {
     throw new Error('Internal error: can\'t start or stop the simulation');
@@ -25,3 +24,24 @@ function restart()
     pauseBtn.innerHTML = '<i class="material-icons">pause</i>';
     pauseBtn.title = 'Metti in pausa';
 }
+function reset()
+{
+
+}
+function resetUI()
+{
+    pause();
+    if (!confirm('Sei sicuro di voler riavviare la simulazione?'))
+    {
+        restart();
+        return;
+    }
+    pauseBtn.title = 'Avvia';
+    DisableButtons();
+    setTimeout(() => {
+        reset();
+        ReEnableButtons();
+        restart();
+    }, 100);
+}
+resetBtn.onclick = resetUI;

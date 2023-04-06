@@ -88,10 +88,10 @@
         <fieldset class="form grid two">
 
             <label for="dt-number">
-                <i>dt</i>:
+                <i>dt</i>: <output id="dt-value-display">1</output>
             </label>
-            <div class="grid" style="grid-template-columns: 65% 35;">
-                <input type="number" id="dt-number" value="1" min="-1000" max="1000">
+            <div class="grid" style="grid-template-columns: 65% 35%;width: 100%;">
+                <input type="range" id="dt-number" value="1" min="-100" max="100" step="1">
                 <select id="dt-unit" title="Ordine di grandezza">
                     <option value="-9" title="Nano secondi">[ns]</option>
                     <option value="-6" title="Micro secondi">[&mu;s]</option>
@@ -101,9 +101,35 @@
             </div>
 
             <label for="dt-count">
-                Iterazioni per ciclo:
+                Iterazioni per ciclo: <output id="dt-count-value-display">3</output>
             </label>
-            <input type="number" id="dt-count" value="3" min="1" max="20" step="1">
+            <input type="range" id="dt-count" value="3" min="1" max="20" step="1">
+
+            <label for="table-mass">
+                Massa sul tavolo: 
+            </label>
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
+                <input type="range" id="table-mass" value="2" min="1" max="20" step="1">
+                <output id="table-mass-value-display">2</output>
+                <select id="table-mass-unit" title="Ordine di grandezza">
+                    <option value="-3" title="Grammi">[g]</option>
+                    <option value="0" title="Chilogrammi" selected="selected">[kg]</option>
+                    <option value="3" title="Tonnellate" >[t]</option>
+                </select>
+            </div>
+
+            <label for="falling-mass">
+                Massa sotto il tavolo:
+            </label>
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
+                <input type="range" id="falling-mass" value="4" min="1" max="20" step="1">
+                <output id="falling-mass-value-display">4</output>
+                <select id="falling-mass-unit" title="Ordine di grandezza">
+                    <option value="-3" title="Grammi">[g]</option>
+                    <option value="0" title="Chilogrammi" selected="selected">[kg]</option>
+                    <option value="3" title="Tonnellate" >[t]</option>
+                </select>
+            </div>
 
             <label for="friction">
                 Attrito:
@@ -146,6 +172,9 @@
         <button type="button" onclick="document.getElementById('shell').classList.remove('show');ReEnableButtons();">
             <i class="material-icons">close</i>
         </button>
+        <div class="log-container span-2" id="logs">
+
+        </div>  
     </div>
     <div class="pop-up" id="math">
         <h2>
@@ -165,21 +194,51 @@
                     </span>
                 </summary>
                 <p>
-                    Le equazioni vanno qui sotto
+                    Le uniche variabili del sistema sono in questo caso il raggio <i>R</i> e l'angolo <i>&theta;</i>.<br />
+                    L'energia cinetica dei due corpi (m sopra il tavolo ed M sotto) diventa:
                 </p>
                 <span class="math">
-                    $$\pi$$
+                    $$ T = {1 \over 2} (m + M) \dot{R}^2 + {1 \over 2} m (R \dot{\theta})^2 $$
+                </span>
+                <p>
+                    Mentre l'energia potenziale (solo gravitazionale), considerando la lunghezza totale del filo <i>l</i>:
+                </p>
+                <span class="math">
+                    $$ U = M g (l - R) $$
+                </span>
+                <p>
+                    Le equazioni di Lagrange rispetto a <i>R</i> e <i>&theta;</i> sono quindi:
+                </p>
+                <span class="math">
+                    $$ \mathcal{L} = T - U = {1 \over 2} (m + M) \dot{R}^2 + {1 \over 2} m (R \dot{\theta})^2 + M g (R - l) $$
                 </span>
                 <span class="math">
-                    $$ a + b $$
+                    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{R}} - \frac{\partial \mathcal{L}}{\partial R} = 0 $$
+                    
+                    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{\theta}} - \frac{\partial \mathcal{L}}{\partial \theta} = 0 $$
+                </span>
+                <p>
+                    Che portano al sistema
+                </p>
+                <span class="math">
+                    $$ \begin{cases}
+                        (m + M) \ddot{R} - m R \dot{\theta}^2 - M g = 0\\
+                        \ddot{\theta} R^2 + 2 R \dot{R} \dot{\theta} = 0
+                    \end{cases}\ $$
+                </span>
+                <p>
+                    Che, una volta risolto, permette di esprimere le accelerazioni in funzione delle posizioni e delle velocit&agrave;
+                </p>
+                <span class="math">
+                    $$ \begin{cases}
+                        \ddot{R} = \frac{m R \dot{\theta}^2 + M g}{m + M}\\
+                        \ddot{\theta} = - 2 \frac{\dot{R} \dot{\theta}}{R} , R \ne 0
+                    \end{cases}\ $$
                 </span>
             </details>
         </div>
     </div>
     <div class="banner">
-        <div class="log-container" id="logs">
-
-        </div>
     </div>
     <div class="screen-container full-screen" id="d3-container">
         

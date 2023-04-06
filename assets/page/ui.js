@@ -1,3 +1,12 @@
+'use strict';
+/**
+ * @type {HTMLButtonElement}
+ */
+const pauseBtn = document.getElementById('play-pause');
+/**
+ * @type {HTMLButtonElement}
+ */
+const resetBtn = document.getElementById('restart');
 /**
  * @type {HTMLButtonElement}
  */
@@ -11,11 +20,15 @@ const promptShellBtn = document.getElementById('show-terminal-btn');
  */
 const promptSettingsBtn = document.getElementById('show-settings');
 function DisableButtons() {
+    pauseBtn.disabled = true;
+    resetBtn.disabled = true;
     promptMathBtn.disabled = true;
     promptShellBtn.disabled = true;
     promptSettingsBtn.disabled = true;
 }
 function ReEnableButtons() {
+    pauseBtn.disabled = false;
+    resetBtn.disabled = false;
     promptMathBtn.disabled = false;
     promptShellBtn.disabled = false;
     promptSettingsBtn.disabled = false;
@@ -59,9 +72,12 @@ document.getElementById('close-settings').onclick = () => {
 
 const dtInput = document.getElementById('dt-number');
 const dtExponent = document.getElementById('dt-unit');
+const dtCountShow = document.getElementById('dt-count-value-display');
+const dtShow = document.getElementById('dt-value-display');
 
 function UpdateDt()
 {
+    dtShow.innerHTML = dtInput.value;
     dt = new Decimal(dtInput.value).times( new Decimal(10).pow(dtExponent.value) );
 }
 
@@ -71,9 +87,36 @@ dtExponent.addEventListener('input', UpdateDt);
 const dtCountInput = document.getElementById('dt-count');
 dtCountInput.addEventListener('input', () => {
     try {
-        dtCount = dtCountInput.value = Math.floor(dtCountInput.value);
+        dtCountShow.innerHTML = dtCount = Number(dtCountInput.value);
     } catch {
         dtCount = 1;
         dtCountInput.value = 1;
+        dtCountShow.innerHTML = '1';
     }
 });
+
+const tableMassInput = document.getElementById('table-mass');
+const tableMassExponent = document.getElementById('table-mass-unit');
+const tableMassCountShow = document.getElementById('table-mass-value-display');
+
+function UpdateTableMass()
+{
+    tableMassCountShow.innerHTML = tableMassInput.value;
+    tableMassMass = new Decimal(tableMassInput.value).times( new Decimal(10).pow(tableMassExponent.value) );
+}
+
+tableMassInput.addEventListener('input', UpdateTableMass);
+tableMassExponent.addEventListener('input', UpdateTableMass);
+
+const fallingMassInput = document.getElementById('falling-mass');
+const fallingMassExponent = document.getElementById('falling-mass-unit');
+const fallingMassCountShow = document.getElementById('falling-mass-value-display');
+
+function UpdateFallingMass()
+{
+    fallingMassCountShow.innerHTML = fallingMassInput.value;
+    fallingMassMass = new Decimal(fallingMassInput.value).times( new Decimal(10).pow(fallingMassExponent.value) );
+}
+
+fallingMassInput.addEventListener('input', UpdateFallingMass);
+fallingMassExponent.addEventListener('input', UpdateFallingMass);
