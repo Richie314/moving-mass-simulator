@@ -50,6 +50,9 @@ label {
      -moz-user-select: none;
           user-select: none;
 }
+.form output {
+  text-align: center;
+}
 .form .show-if-checked {
   height: 0 !important;
   width: 100%;

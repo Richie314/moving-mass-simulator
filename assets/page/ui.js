@@ -106,7 +106,10 @@ function UpdateTableMass()
 }
 
 tableMassInput.addEventListener('input', UpdateTableMass);
-tableMassExponent.addEventListener('input', UpdateTableMass);
+tableMassExponent.addEventListener('input', () => {
+    UpdateTableMass();
+    resetUI();
+});
 
 const fallingMassInput = document.getElementById('falling-mass');
 const fallingMassExponent = document.getElementById('falling-mass-unit');
@@ -119,4 +122,9 @@ function UpdateFallingMass()
 }
 
 fallingMassInput.addEventListener('input', UpdateFallingMass);
-fallingMassExponent.addEventListener('input', UpdateFallingMass);
+fallingMassExponent.addEventListener('input', () => {
+    UpdateFallingMass();
+    resetUI();
+});
+
+const allowGrabbing = document.getElementById('interactions');

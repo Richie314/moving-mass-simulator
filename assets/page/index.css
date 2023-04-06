@@ -103,11 +103,6 @@ nav > button[type=button] {
   aspect-ratio: 1;
   border: none;
   border-radius: 0.15em;
-  /*
-  &:hover {
-      color: 
-  }
-  */
 }
 nav > button[type=button] > i {
   font-size: 1.2em;
@@ -172,6 +167,7 @@ nav > button[type=button] > i {
 #d3-container > canvas {
   height: 100% !important;
   cursor: grab;
+  border-inline: 1px solid black;
 }
 #d3-container > canvas:active {
   cursor: grabbing;

@@ -44,6 +44,9 @@ label {
         padding: .05em .3em;
         user-select: none;
     }
+    output {
+        text-align: center;
+    }
     .show-if-checked {
         height: 0 !important;
         width: 100%;

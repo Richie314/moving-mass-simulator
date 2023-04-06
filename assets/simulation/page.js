@@ -33,13 +33,13 @@ var fallingMassMass = new Decimal(2);
 const tableMass = new MassRotatingObject(
     tableMassMass,
     new PolarVector(1, pi.div(4)), //Initial position
-    new PolarVector(0, 0),  //Initial radial and angular speed
+    new PolarVector(0.2, 0.8),  //Initial radial and angular speed
     new PolarVector(0, 0)); //Initial acceleration doesn't really count
 
 const fallingMass = new MassFallingObject(
     fallingMassMass,
     new Vector3(0, 0, -0.50),
-    new Vector3(0, 0, 0),
+    new Vector3(0, 0, 0.2),
     gravity);
 var dt = new Decimal(0.001);
 var dtCount = 1;
@@ -84,6 +84,24 @@ function RefreshSimulationParams(sim)
 }
 simulation.onRefresh(RefreshSimulationParams);
 
+var isGrabbing = false;
+topViewCanvas.addEventListener('mousedown', evt => {
+    if (!allowGrabbing.checked) return;
+    pause();
+    const rect = evt.target.getBoundingClientRect();
+    const x = (evt.pageX - rect.left) / evt.target.clientWidth - 0.5;
+    const y = (evt.pageY - rect.top) / evt.target.clientHeight - 0.5;
+    if (isGrabbing) {
+
+        return;
+    }
+});
+topViewCanvas.addEventListener('mouseup', evt => {
+    isGrabbing = false;
+});
+topViewCanvas.addEventListener('mouseleave', evt => {
+    isGrabbing = false;
+});
 //All is loaded:
 //Start the simulation
 window.threeAnimate(simulation);

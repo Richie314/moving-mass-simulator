@@ -17,7 +17,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, screenContainer.clientWidth / screenContainer.clientHeight, 0.1, 1000 );
 camera.position.set( -35, 240, -250 );
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer( { alpha: true, premultipliedAlpha: false } );
 renderer.setSize( screenContainer.clientWidth, screenContainer.clientHeight );
 
 screenContainer.appendChild( renderer.domElement );
@@ -27,7 +27,7 @@ screenContainer.addEventListener('resize', () => {
     renderer.setSize( screenContainer.clientWidth, screenContainer.clientHeight );
 }, false);
 
-const light = new THREE.AmbientLight( 0x909090 );
+const light = new THREE.AmbientLight( 0xf0f0f0 );
 scene.add( light );
 
 //Axis confuse a bit
@@ -52,13 +52,16 @@ const tableThickness = 10;
 camera.lookAt( 0, tableHeight, 0 );
 
 //Materials
-const tableMesh = new THREE.MeshBasicMaterial( { color: 0x2f2312 } );
+const tableMesh = new THREE.MeshLambertMaterial( { color: 0x2f2312, opacity: 0.8, transparent: true } );
 
-const tableMassMesh = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+const tableMassMesh = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
 
-const fallingMesh = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const fallingMesh = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
 
-const lineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+const cableMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+
+const lineTopMaterial = new THREE.LineBasicMaterial( { color: 0xcc0000 } );
+const lineSideMaterial = new THREE.LineBasicMaterial( { color: 0x00cc00 } );
 
 //Geomeries
 const tableGeometry = new THREE.BoxGeometry(tableWidth, tableThickness, tableDepth);
@@ -89,6 +92,20 @@ const fallingLineGeometry = new THREE.BufferGeometry();
 fallingLineGeometry.setAttribute( 'position', new THREE.BufferAttribute( fallingGeometryPoints, 3 ) );
 fallingLineGeometry.setDrawRange( 0, 2 );
 
+const oldTableMassPositionsCount = 300;
+var oldTableMassPositionsUsed = 0;
+const oldTableMassPositions = new Float32Array(3 * oldTableMassPositionsCount);
+const followTopLineGeometry = new THREE.BufferGeometry();
+followTopLineGeometry.setAttribute( 'position', new THREE.BufferAttribute( oldTableMassPositions, 3 ) );
+followTopLineGeometry.setDrawRange( 0, oldTableMassPositionsUsed );
+
+const oldFallingMassPositionsCount = 250;
+var oldFallingMassPositionsUsed = 0;
+const oldFallingMassPositions = new Float32Array(3 * oldFallingMassPositionsCount);
+const followSideLineGeometry = new THREE.BufferGeometry();
+followSideLineGeometry.setAttribute( 'position', new THREE.BufferAttribute( oldFallingMassPositions, 3 ) );
+followSideLineGeometry.setDrawRange( 0, oldFallingMassPositionsUsed );
+
 //Objects
 const tableObject = new THREE.Mesh( tableGeometry, tableMesh );
 tableObject.position.setY(tableHeight - tableThickness)
@@ -100,31 +117,65 @@ scene.add( tableMassObject );
 const fallingObject = new THREE.Mesh( fallingGeometry, fallingMesh );
 scene.add( fallingObject );
 
-const tableLine = new THREE.Line( tableLineGeometry, lineMaterial);
+const tableLine = new THREE.Line( tableLineGeometry, cableMaterial);
 scene.add( tableLine );
 
-const fallingLine = new THREE.Line( fallingLineGeometry, lineMaterial);
+const fallingLine = new THREE.Line( fallingLineGeometry, cableMaterial);
 scene.add( fallingLine );
+
+const followTopLine = new THREE.Line( followTopLineGeometry, lineTopMaterial);
+scene.add( followTopLine );
+
+const followSideLine = new THREE.Line( followSideLineGeometry, lineSideMaterial);
+scene.add( followSideLine );
 
 /**
  * @param {THREE.Vector3} threeV 
  * @param {PolarVector} polarV 
  * @param {THREE.Line} line
+ * @param {THREE.Line} traceLine
+ * @param {bool} updateTraceLine
  */
-function tableCoordsToTHREE(threeV, polarV, line)
+function tableCoordsToTHREE(threeV, polarV, line, traceLine, updateTraceLine)
 {
     const scaled = polarV.scaled(tableWidth / 4);
     threeV.setFromCylindricalCoords(scaled.r.toNumber(), -scaled.theta.toNumber(), tableHeight);
+
     line.geometry.attributes.position.array[3] = threeV.x;
     line.geometry.attributes.position.array[4] = threeV.y;
     line.geometry.attributes.position.array[5] = threeV.z;
     line.geometry.attributes.position.needsUpdate = true;
+
+    if (updateTraceLine)
+    {
+        const traceLineArr = traceLine.geometry.attributes.position.array;
+        let considerLast = 1;
+        if (oldTableMassPositionsUsed < oldTableMassPositionsCount)
+        {
+            oldTableMassPositionsUsed++;
+            traceLine.geometry.setDrawRange( 0, oldTableMassPositionsUsed );
+            considerLast = 2;
+        }
+        
+        for (let i = 0; i < oldTableMassPositionsUsed - considerLast; i++)
+        {
+            traceLineArr[3 * i] = traceLineArr[3 * (i + 1)];
+            traceLineArr[3 * i + 1] = traceLineArr[3 * (i + 1) + 1];
+            traceLineArr[3 * i + 2] = traceLineArr[3 * (i + 1) + 2];
+        }
+        traceLineArr[3 * (oldTableMassPositionsUsed - 1)    ] = threeV.x;
+        traceLineArr[3 * (oldTableMassPositionsUsed - 1) + 1] = threeV.y;
+        traceLineArr[3 * (oldTableMassPositionsUsed - 1) + 2] = threeV.z;
+        traceLine.geometry.attributes.position.needsUpdate = true;
+    }
 }
 /**
  * @param {THREE.Vector3} threeV 
  * @param {Vector3} vec 
+ * @param {THREE.Line} traceLine
+ * @param {bool} updateTraceLine
  */
-function fallingCoordsToTHREE(threeV, vec, line)
+function fallingCoordsToTHREE(threeV, vec, line, traceLine, updateTraceLine)
 {
     const scaled = vec.times(tableWidth / 4);
     threeV.set(scaled.x.toNumber(), tableHeight + scaled.z.toNumber(), scaled.y.toNumber());
@@ -132,6 +183,29 @@ function fallingCoordsToTHREE(threeV, vec, line)
     line.geometry.attributes.position.array[4] = threeV.y;
     line.geometry.attributes.position.array[5] = threeV.z;
     line.geometry.attributes.position.needsUpdate = true;
+
+    if (updateTraceLine)
+    {
+        const traceLineArr = traceLine.geometry.attributes.position.array;
+        let considerLast = 1;
+        if (oldFallingMassPositionsUsed < oldFallingMassPositionsCount)
+        {
+            oldFallingMassPositionsUsed++;
+            traceLine.geometry.setDrawRange( 0, oldFallingMassPositionsUsed );
+            considerLast = 2;
+        }
+        
+        for (let i = 0; i < oldFallingMassPositionsUsed - considerLast; i++)
+        {
+            traceLineArr[3 * i] = traceLineArr[3 * (i + 1)] - 0.5; //Pad on the X
+            traceLineArr[3 * i + 1] = traceLineArr[3 * (i + 1) + 1];
+            traceLineArr[3 * i + 2] = traceLineArr[3 * (i + 1) + 2];
+        }
+        traceLineArr[3 * (oldFallingMassPositionsUsed - 1)    ] = threeV.x;
+        traceLineArr[3 * (oldFallingMassPositionsUsed - 1) + 1] = threeV.y;
+        traceLineArr[3 * (oldFallingMassPositionsUsed - 1) + 2] = threeV.z;
+        traceLine.geometry.attributes.position.needsUpdate = true;
+    }
 }
 /**
  * Main animation rendering function
@@ -140,20 +214,17 @@ function fallingCoordsToTHREE(threeV, vec, line)
  */
 function threeAnimate(simulation)
 {
-    if (!isRunning)
-    {
-        //Will check again in one second
-        return setTimeout(threeAnimate, 1000, simulation);
-    }
 	stats.begin();
-
-    simulation.refresh();
-    simulation.iterateAndDraw(simulation.dtCount);
+    if (isRunning)
+    {
+        simulation.refresh();
+        simulation.iterateAndDraw(simulation.dtCount);
+    } else {
+        simulation.drawSimulation();
+    }
+    tableCoordsToTHREE(tableMassObject.position, simulation.tableMass.position, tableLine, followTopLine, isRunning);
+    fallingCoordsToTHREE(fallingObject.position, simulation.fallingMass.position, fallingLine, followSideLine, isRunning);
     controls.update();
-
-    tableCoordsToTHREE(tableMassObject.position, simulation.tableMass.position, tableLine);
-    fallingCoordsToTHREE(fallingObject.position, simulation.fallingMass.position, fallingLine);
-
 	renderer.render( scene, camera );
 
 	stats.end();

@@ -93,11 +93,6 @@ nav {
         & > i {
             font-size: 1.2em;
         }
-        /*
-        &:hover {
-            color: 
-        }
-        */
     }
 }
 #stats {
@@ -161,6 +156,7 @@ nav {
     & > canvas {
         height: 100% !important;
         cursor: grab;
+        border-inline: 1px solid black;
         &:active {
             cursor: grabbing;
         }

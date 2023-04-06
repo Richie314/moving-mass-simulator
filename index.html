@@ -92,22 +92,25 @@
         <fieldset class="form grid two">
 
             <label for="dt-number">
-                <i>dt</i>: <output id="dt-value-display">1</output>
+                <i>dt</i>: 
             </label>
-            <div class="grid" style="grid-template-columns: 65% 35%;width: 100%;">
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
                 <input type="range" id="dt-number" value="1" min="-100" max="100" step="1">
+                <output id="dt-value-display">1</output>
                 <select id="dt-unit" title="Ordine di grandezza">
                     <option value="-9" title="Nano secondi">[ns]</option>
                     <option value="-6" title="Micro secondi">[&mu;s]</option>
                     <option value="-3" title="Milli secondi" selected="selected">[ms]</option>
-                    <option value="0" title="Secondi">[s]</option>
                 </select>
             </div>
 
             <label for="dt-count">
-                Iterazioni per ciclo: <output id="dt-count-value-display">3</output>
+                Iterazioni per ciclo:
             </label>
-            <input type="range" id="dt-count" value="3" min="1" max="20" step="1">
+            <div class="grid" style="grid-template-columns: 10% 90%;width: 100%;">
+                <output id="dt-count-value-display">3</output>
+                <input type="range" id="dt-count" value="3" min="1" max="20" step="1">
+            </div>
 
             <label for="table-mass">
                 Massa sul tavolo: 
@@ -288,7 +291,7 @@
                     <output id="rp-html"></output><span>[m/s]</span>
                 </td>
                 <td>
-                    <output id="rpp-html"></output><span>[m/s^2]</span>
+                    <output id="rpp-html"></output><span>[m/s<sup>2</sup>]</span>
                 </td>
                 <td>
                     <output id="h-html"></output><span>[m]</span>
@@ -297,7 +300,7 @@
                     <output id="hp-html"></output><span>[m/s]</span>
                 </td>
                 <td>
-                    <output id="hpp-html"></output><span>[m/s^2]</span>
+                    <output id="hpp-html"></output><span>[m/s<sup>2</sup>]</span>
                 </td>
                 <td>
                     <output id="l-html"></output><span>[m]</span>
@@ -339,7 +342,7 @@
                     <output id="thp-html"></output><span>[rad/s]</span>
                 </td>
                 <td>
-                    <output id="thpp-html"></output><span>[rad/s^2]</span>
+                    <output id="thpp-html"></output><span>[rad/s<sup>2</sup>]</span>
                 </td>
                 <td>
                     <output id="t-html"></output><span>[J]</span>
@@ -351,7 +354,7 @@
                     <output id="uk"></output><span>[J]</span>
                 </td>
                 <td>
-                    <output id="tu-html"></output><span></span>
+                    <output id="tu-html"></output><span>[J]</span>
                 </td>
             </tr>
         </tbody>
