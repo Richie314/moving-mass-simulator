@@ -72,6 +72,9 @@ label {
     height: auto;
 }
 .number-table {
+    th {
+        font-style: italic;
+    }
     td {
         text-align: center;
     }

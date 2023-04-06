@@ -110,7 +110,7 @@ class MassFallingObject extends MassObject
 
     get gravityPotential()
     {
-        return this.mass.times(g).times(this.height);
+        return this.mass.times(g).times(this.height).neg();
     }
 }
 class MassRotatingObject extends MassObject

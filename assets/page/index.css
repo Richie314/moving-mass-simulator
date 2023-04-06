@@ -72,9 +72,13 @@ footer > h3 {
 }
 
 nav {
+  top: 0;
+  position: fixed;
   position: sticky;
-  width: calc(100% - 30px);
-  margin: 0 15px;
+  z-index: 1000;
+  width: 100%;
+  margin: 0;
+  padding: 0 15px;
   height: -moz-fit-content;
   height: fit-content;
   overflow: hidden;
@@ -84,6 +88,7 @@ nav {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+  background-color: floralwhite;
 }
 nav > h4 {
   margin: 0;
@@ -142,7 +147,6 @@ nav > button[type=button] > i {
   width: 100%;
   height: auto;
   margin: 0;
-  border: 1px solid red;
 }
 .screen-container.full-screen {
   aspect-ratio: 16/9;
@@ -152,7 +156,6 @@ nav > button[type=button] > i {
 }
 .screen-container > canvas {
   width: 100% !important;
-  border: 1px solid green;
   cursor: crosshair;
 }
 

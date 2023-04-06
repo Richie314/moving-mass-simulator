@@ -22,15 +22,30 @@ function ReEnableButtons() {
 }
 promptMathBtn.onclick = () => {
     document.getElementById('math').classList.add('show');
+    document.getElementById('math').scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'end'
+    });
     DisableButtons();
 }
 promptShellBtn.onclick = () => {
     document.getElementById('shell').classList.add('show');
+    document.getElementById('shell').scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'end'
+    });
     DisableButtons();
 }
 promptSettingsBtn.onclick = () => {
     pause();
     document.getElementById('settings').classList.add('show');
+    document.getElementById('settings').scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'end'
+    });
     DisableButtons();
 }
 document.getElementById('close-settings').onclick = () => {

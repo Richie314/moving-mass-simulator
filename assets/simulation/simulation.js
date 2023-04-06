@@ -86,8 +86,25 @@ class Simulation
         ctx.strokeStyle = color;
         ctx.beginPath();
         ctx.moveTo(p1x, p1y);
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 4;
         ctx.lineTo(p2x, p2y);
+        ctx.stroke();
+        ctx.closePath();
+    }
+    /**
+     * @param {CanvasRenderingContext2D} ctx 
+     * @param {number} x 
+     * @param {number} y
+     * @param {number} r 
+     * @param {number} start
+     * @param {number} end 
+     * @param {string} color
+     */
+    #drawArc(ctx, x, y, r, start, end, color = '#000000')
+    {
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        this.topCtx.arc(x, y, r, -end, start, false);
         ctx.stroke();
         ctx.closePath();
     }
@@ -119,10 +136,46 @@ class Simulation
             x: this.#getTopCanvasCoordX(massPos.x),
             y: this.#getTopCanvasCoordY(massPos.y)
         }
+
+        this.#drawLine(//X axis
+            this.topCtx, 
+            0, this.topCanvasZero.y,
+            this.topCanvas.width, this.topCanvasZero.y);
+        this.#drawLine(
+            this.topCtx, 
+            this.topCanvas.width, this.topCanvasZero.y,
+            this.topCanvas.width - 30, this.topCanvasZero.y - 30);
+        this.#drawLine(
+            this.topCtx, 
+            this.topCanvas.width, this.topCanvasZero.y,
+            this.topCanvas.width - 30, this.topCanvasZero.y + 30);
+        this.topCtx.font = "40px Arial";
+        this.topCtx.fillStyle = '#000000';
+        this.topCtx.fillText('X', this.topCanvas.width - 30, this.topCanvasZero.y - 35, 30);
+
+        this.#drawLine(//Y axis
+            this.topCtx, 
+            this.topCanvasZero.x, 0,
+            this.topCanvasZero.x, this.topCanvas.height);
+        this.#drawLine(
+            this.topCtx, 
+            this.topCanvasZero.x, 0,
+            this.topCanvasZero.x - 30, 30);
+        this.#drawLine(
+            this.topCtx, 
+            this.topCanvasZero.x, 0,
+            this.topCanvasZero.x + 30, 30);
+        this.topCtx.fillText('Y', this.topCanvasZero.x - 60, 35, 30);
+
         this.#drawLine(
             this.topCtx, 
             this.topCanvasZero.x, this.topCanvasZero.y,
-            canvasPos.x, canvasPos.y);
+            canvasPos.x, canvasPos.y, '#0000ff');
+        this.#drawArc(
+            this.topCtx,
+            this.topCanvasZero.x, this.topCanvasZero.y, 
+            35, 0, this.tableMass.position.theta.toNumber(),
+            '#ffa500');
         this.#drawCircle(
             this.topCtx, 
             30, 
@@ -136,7 +189,7 @@ class Simulation
     }
     #getTopCanvasCoordY(simulationY)
     {
-        return this.topCanvasDrawOffSet.y + simulationY * this.topCanvasScaleY;
+        return this.topCanvasDrawOffSet.y - simulationY * this.topCanvasScaleY;
     }
     #drawSideView()
     {
@@ -166,15 +219,12 @@ class Simulation
 
         this.#drawLine(
             this.sideCtx, 
-            this.sideCanvasZero.x, 
-            this.sideCanvasZero.y, 
-            canvasPos.x,
-            canvasPos.y);
+            this.sideCanvasZero.x, this.sideCanvasZero.y, 
+            canvasPos.x, canvasPos.y, '#0000ff');
         this.#drawCircle(
             this.sideCtx, 
             25, 
-            canvasPos.x,
-            canvasPos.y, 
+            canvasPos.x, canvasPos.y, 
             '#00ff00');
 
         this.sideCtx.fillStyle = '#2f2312';

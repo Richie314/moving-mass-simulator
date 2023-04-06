@@ -22,7 +22,6 @@
 
     <link rel="stylesheet" href="assets/page/index.css" media="all">
     <link rel="stylesheet" href="assets/page/menu.css" media="all">
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" media="print" onload="this.media = 'all'"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" media="all" referrerpolicy="no-referrer">
 
     <!--Scripts-->
@@ -53,11 +52,6 @@
     <![endif]-->
     <script src="assets/page/math-setup.js"></script>
     <script defer src="https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js" referrerpolicy="no-referrer"></script>
-
-    <!--
-        <script defer src="https://pyscript.net/latest/pyscript.js" referrerpolicy="no-referrer"></script>
-        <script defer src="assets/page/script-setup.js"></script>
-    -->
 </head>
 <body>
     <noscript>
@@ -190,32 +184,34 @@
     <div class="screen-container full-screen" id="d3-container">
         
     </div>
+    <hr />
     <div class="screen-container grid half-screen" id="d2-container">
         <canvas id="top-view" width="1800" height="900"></canvas>
         <canvas id="side-view" width="900" height="900"></canvas>
     </div>
+    <hr />
     <table class="full-w number-table">
         <thead>
             <tr>
-                <th>
+                <th title="Raggio">
                     R
                 </th>
-                <th>
+                <th title="Velocità radiale">
                     R'
                 </th>
-                <th>
+                <th title="Accelerazione radiale">
                     R''
                 </th>
-                <th>
+                <th title="Altezza dal tavolo">
                     h
                 </th>
-                <th>
+                <th title="Velocità verticale">
                     h'
                 </th>
-                <th>
+                <th title="Accelerazione verticale">
                     h''
                 </th>
-                <th>
+                <th title="Lunghezza filo">
                     l
                 </th>
             </tr>
@@ -245,7 +241,59 @@
                 </td>
             </tr>
         </tbody>
+        
+        <thead>
+            <tr>
+                <th title="Angolo da semiasse X+">
+                    &theta;
+                </th>
+                <th title="Velocità angolare">
+                    &theta;'
+                </th>
+                <th title="Accelerazione angolare">
+                    &theta;''
+                </th>
+                <th title="Energia cinetica">
+                    T
+                </th>
+                <th title="Energia potenziale gravitazionale">
+                    U<sub>g</sub>
+                </th>
+                <th title="Energia potenziale elastica">
+                    U<sub>k</sub>
+                </th>
+                <th title="Energia meccanica sistema">
+                    T + U
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <output id="th-html"></output><span>[rad]</span>
+                </td>
+                <td>
+                    <output id="thp-html"></output><span>[rad/s]</span>
+                </td>
+                <td>
+                    <output id="thpp-html"></output><span>[rad/s^2]</span>
+                </td>
+                <td>
+                    <output id="t-html"></output><span>[J]</span>
+                </td>
+                <td>
+                    <output id="ug-html"></output><span>[J]</span>
+                </td>
+                <td>
+                    <output id="uk"></output><span>[J]</span>
+                </td>
+                <td>
+                    <output id="tu-html"></output><span></span>
+                </td>
+            </tr>
+        </tbody>
     </table>
+    <hr />
     <footer class="grid two">
         
         <h3>
@@ -266,9 +314,6 @@
                 </li>
                 <li>
                     <a href="https://www.mathjax.org/" target="_blank">MathJax</a>
-                </li>
-                <li>
-                    <a href="https://pyscript.net/" target="_blank">PyScript.js</a>
                 </li>
                 <li>
                     <a href="https://fonts.google.com/" target="_blank">Material Icons</a>

@@ -251,6 +251,7 @@ class NoFrictionFixedLengthEngine extends Engine
             this.fallingMass.heightPrime = this.tableMass.rPrime = this.fallingMass.heightPrime.neg();
             
         }
+        this.tableMass.position.reboundAngle();
 
         //Apply accelerations: update speeds
         this.applyAcceleration(this.tableMass, this.tableMass.acceleration, this.dt);

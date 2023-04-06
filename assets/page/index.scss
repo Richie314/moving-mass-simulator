@@ -62,15 +62,20 @@ footer {
     }
 }
 nav {
+    top: 0;
+    position: fixed;
     position: sticky;
-    width: calc(100% - 30px);
-    margin: 0 15px;
+    z-index: 1000;
+    width: 100%;
+    margin: 0;
+    padding: 0 15px;
     height: fit-content;
     overflow: hidden;
     font-size: 2.5em;
     display: flex;
     justify-content: space-between;
     user-select: none;
+    background-color: floralwhite;
 
     & > h4 {
         margin: 0;
@@ -135,11 +140,11 @@ nav {
         aspect-ratio: 3;
     }
     margin: 0;
-    border: 1px solid red;
+    //border: 1px solid red;
 
     & > canvas {
         width: 100% !important;
-        border: 1px solid green;
+        //border: 1px solid green;
         cursor: crosshair;
     }
 }

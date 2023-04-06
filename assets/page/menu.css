@@ -83,6 +83,9 @@ label {
   height: auto;
 }
 
+.number-table th {
+  font-style: italic;
+}
 .number-table td {
   text-align: center;
 }

@@ -243,6 +243,11 @@ class PolarVector
             this.r = this.r.neg();
             this.theta = this.theta.plus(pi);
         }
+        return this.reboundAngle();
+    }
+
+    reboundAngle()
+    {
         while (this.theta.isNegative())
         {
             this.theta = this.theta.plus(doublePi);
