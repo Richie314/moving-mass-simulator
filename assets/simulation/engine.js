@@ -242,40 +242,40 @@ class NoFrictionFixedLengthEngine extends Engine
         this.applySpeed(this.tableMass, this.tableMass.speed, this.dt);
         this.applySpeed(this.fallingMass, this.fallingMass.speed, this.dt);
 
+        if (!this.tableMass.r.isPositive())
+        {
+            //The object just crossed the center of the table
+            this.tableMass.position.reboundPositive();
+            //const totalCableMomentum = this.fallingMass.momentum.z.plus( this.tableMass.speed.r.times( this.tableMass.mass ) );
+            //this.fallingMass.heightPrime = this.tableMass.rPrime = totalCableMomentum.div( this.tableMass.mass.plus(this.fallingMass.mass) );
+            this.fallingMass.heightPrime = this.tableMass.rPrime = this.fallingMass.heightPrime.neg();
+            
+        }
+
         //Apply accelerations: update speeds
         this.applyAcceleration(this.tableMass, this.tableMass.acceleration, this.dt);
         this.applyAcceleration(this.fallingMass, this.fallingMass.acceleration, this.dt);
+
     }
 
     getNewAccelerations()
     {
         
-        //Prevent values from diverging
-        this.tableMass.rPrime = this.fallingMass.heightPrime;
+        //Prevent values from diverging: we set them both to the medium value
+        this.tableMass.rPrime = this.fallingMass.heightPrime = ( this.tableMass.rPrime.plus(this.fallingMass.heightPrime) ).div(2);
         //cableLength = r + height
-        this.tableMass.r = this.cableLength.minus(this.fallingMass.height.abs());
+        //this.tableMass.r = this.cableLength.minus(this.fallingMass.height.abs());
 
-        if (this.tableMass.r.isZero())
-        {
-            //With radius of zero there no such rotation. We set it to zero to avoid further errors
-            this.tableMass.thetaDoublePrime = new Decimal(0);
-            this.tableMass.rDoublePrime = g;
-            const totalCableMomentum = this.fallingMass.momentum.z + this.tableMass.speed.r.times( this.tableMass.mass );
-            this.fallingMass.heightPrime = this.tableMass.rPrime = totalCableMomentum.div( this.tableMass.mass.plus(this.fallingMass.mass) );
-            return;
-        }
-        this.tableMass.position.reboundPositive();
-
-
+        // ..         .
+        //  R = ( m R 0^2 + M g ) / (m + M)
+        this.tableMass.rDoublePrime = this.fallingMass.heightDoublePrime = ( 
+            ( this.tableMass.mass.times(this.tableMass.r).times(this.tableMass.thetaPrime).times(this.tableMass.thetaPrime) ).plus(
+                this.fallingMass.mass.times(g)
+            ) ).div( this.tableMass.mass.plus(this.fallingMass.mass) );
+        
         // ..       . .
         //  0 = - 2 R 0 / R
         this.tableMass.thetaDoublePrime = new Decimal(-2).times( this.tableMass.rPrime ).times( this.tableMass.thetaPrime ).div( this.tableMass.r );
-        // ..       .
-        //  R = ( m 0^2 + M g ) / (m + M)
-        this.tableMass.rDoublePrime = this.fallingMass.heightDoublePrime = ( 
-            ( this.tableMass.mass.times(this.tableMass.thetaPrime).times(this.tableMass.thetaPrime) ).plus(
-                this.fallingMass.mass.times(g)
-            ) ).div( this.tableMass.mass.plus(this.fallingMass.mass) );
 
     }
 }

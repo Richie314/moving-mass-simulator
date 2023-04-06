@@ -8,11 +8,13 @@ class Simulation
      * @param {HTMLCanvasElement} topCanvas
      * @param {HTMLCanvasElement} sideCanvas
      * @param {Vector3} tableMeasures
+     * @param {number} dtCount
      */
-    constructor(engine, topCanvas, sideCanvas, tableMeasures)
+    constructor(engine, topCanvas, sideCanvas, tableMeasures, dtCount)
     {
         this.Engine = engine;
-        
+        this.dtCount = dtCount;
+
         this.topCanvas = topCanvas;
         this.topCtx = this.topCanvas.getContext('2d');
 
@@ -23,18 +25,29 @@ class Simulation
         this.l = tableMeasures.y;
         this.h = tableMeasures.z;
 
-        //this.topCanvas.width = this.w.toNumber();
-        //this.topCanvas.height = this.l.toNumber();
         this.topCanvasDrawOffSet = {
             x: this.topCanvas.width / 2,
             y: this.topCanvas.height / 2,
         };
+        this.topCanvasScaleX = this.topCanvas.width / this.w.toNumber();
+        this.topCanvasScaleY = this.topCanvas.height / this.l.toNumber();
+        this.topCanvasZero = {
+            x: this.#getTopCanvasCoordX(0),
+            y: this.#getTopCanvasCoordY(0)
+        };
 
-        //this.sideCanvas.width = this.sideCanvas.height = this.h.toNumber();
+
         this.sideCanvasDrawOffSet = {
             x: this.sideCanvas.width / 2,
             y: 10,
         };
+        this.sideCanvasScaleX = this.sideCanvas.width / this.l.toNumber();
+        this.sideCanvasScaleY = (this.sideCanvas.height - 10) / this.h.toNumber();
+        this.sideCanvasZero = {
+            x: this.#getSideCanvasCoordX(0),
+            y: this.#getSideCanvasCoordY(0)
+        };
+
 
         this.TwoPi = 2 * Math.PI;
 
@@ -100,26 +113,33 @@ class Simulation
         this.topCtx.fillStyle = '#ffffff';
         this.topCtx.clearRect(0, 0, this.topCanvas.width, this.topCanvas.height);
         this.#drawCircle(this.topCtx, 4, 
-            this.topCanvasDrawOffSet.x, this.topCanvasDrawOffSet.y, '#000000');
+            this.topCanvasZero.x, this.topCanvasZero.y, '#000000');
         const massPos = this.Engine.tableMass.position.toVec3().toNumbers();
-
+        const canvasPos = {
+            x: this.#getTopCanvasCoordX(massPos.x),
+            y: this.#getTopCanvasCoordY(massPos.y)
+        }
         this.#drawLine(
             this.topCtx, 
-            this.topCanvasDrawOffSet.x, 
-            this.topCanvasDrawOffSet.y,
-            massPos.x + this.topCanvasDrawOffSet.x, 
-            massPos.y + this.topCanvasDrawOffSet.y);
+            this.topCanvasZero.x, this.topCanvasZero.y,
+            canvasPos.x, canvasPos.y);
         this.#drawCircle(
             this.topCtx, 
-            20, 
-            massPos.x + this.topCanvasDrawOffSet.x, 
-            massPos.y + this.topCanvasDrawOffSet.y,
+            30, 
+            canvasPos.x, 
+            canvasPos.y,
             '#ff0000');
     }
-
+    #getTopCanvasCoordX(simulationX)
+    {
+        return this.topCanvasDrawOffSet.x + simulationX * this.topCanvasScaleX;
+    }
+    #getTopCanvasCoordY(simulationY)
+    {
+        return this.topCanvasDrawOffSet.y + simulationY * this.topCanvasScaleY;
+    }
     #drawSideView()
     {
-        
         //Draws something like this
         /**************************************
          *####################################*
@@ -139,22 +159,34 @@ class Simulation
         this.sideCtx.fillStyle = '#ffffff';
         this.sideCtx.clearRect(0, 0, this.sideCanvas.width, this.sideCanvas.height);
         const massPos = this.Engine.fallingMass.position.toNumbers();
+        const canvasPos = {
+            x: this.#getSideCanvasCoordX(massPos.y),
+            y: this.#getSideCanvasCoordY(massPos.z)
+        }
 
         this.#drawLine(
             this.sideCtx, 
-            this.sideCanvasDrawOffSet.x, 
-            this.sideCanvasDrawOffSet.y, 
-            this.sideCanvasDrawOffSet.x + massPos.x,
-            this.sideCanvasDrawOffSet.y -massPos.z);
+            this.sideCanvasZero.x, 
+            this.sideCanvasZero.y, 
+            canvasPos.x,
+            canvasPos.y);
         this.#drawCircle(
             this.sideCtx, 
             25, 
-            this.sideCanvasDrawOffSet.x, 
-            this.sideCanvasDrawOffSet.y - massPos.z, 
+            canvasPos.x,
+            canvasPos.y, 
             '#00ff00');
 
         this.sideCtx.fillStyle = '#2f2312';
-        this.sideCtx.fillRect(0, 0, this.sideCanvas.width, 10);
+        this.sideCtx.fillRect(0, 0, this.sideCanvas.width, this.sideCanvasDrawOffSet.y);
+    }
+    #getSideCanvasCoordX(simulationY)
+    {
+        return this.sideCanvasDrawOffSet.x + simulationY * this.sideCanvasScaleX;
+    }
+    #getSideCanvasCoordY(simulationZ)
+    {
+        return this.sideCanvasDrawOffSet.y - simulationZ * this.sideCanvasScaleY;
     }
 
     drawSimulation()

@@ -66,3 +66,24 @@ label {
         user-select: none;
     }
 }
+.full-w {
+    width: 100%;
+    overflow-x: auto;
+    height: auto;
+}
+.number-table {
+    td {
+        text-align: center;
+    }
+}
+summary {
+    cursor: pointer;
+    & > h3 {
+        margin: 0;
+        display: inline-block;
+    }
+
+    &::marker {
+        width: 1em;
+    }
+}

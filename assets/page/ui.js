@@ -52,3 +52,13 @@ function UpdateDt()
 
 dtInput.addEventListener('input', UpdateDt);
 dtExponent.addEventListener('input', UpdateDt);
+
+const dtCountInput = document.getElementById('dt-count');
+dtCountInput.addEventListener('input', () => {
+    try {
+        dtCount = dtCountInput.value = Math.floor(dtCountInput.value);
+    } catch {
+        dtCount = 1;
+        dtCountInput.value = 1;
+    }
+});

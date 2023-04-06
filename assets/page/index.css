@@ -72,6 +72,7 @@ footer > h3 {
 }
 
 nav {
+  position: sticky;
   width: calc(100% - 30px);
   margin: 0 15px;
   height: -moz-fit-content;

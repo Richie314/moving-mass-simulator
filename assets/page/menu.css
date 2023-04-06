@@ -75,4 +75,25 @@ label {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+}
+
+.full-w {
+  width: 100%;
+  overflow-x: auto;
+  height: auto;
+}
+
+.number-table td {
+  text-align: center;
+}
+
+summary {
+  cursor: pointer;
+}
+summary > h3 {
+  margin: 0;
+  display: inline-block;
+}
+summary::marker {
+  width: 1em;
 }/*# sourceMappingURL=menu.css.map */

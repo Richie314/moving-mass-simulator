@@ -16,7 +16,7 @@
 
     <!--Necessari per ridurre latency della mole di script-->
     <link rel="preconnect" href="https://unpkg.com/" crossorigin="anonymous" />
-    <link rel="dns-prefetch" href="https://unpkg.cloudflare.com/" />
+    <link rel="dns-prefetch" href="https://unpkg.com/" />
     
     <!--Styles-->
 
@@ -97,7 +97,7 @@
                 <i>dt</i>:
             </label>
             <div class="grid" style="grid-template-columns: 65% 35;">
-                <input type="number" id="dt-number" value="30" min="-1000" max="1000">
+                <input type="number" id="dt-number" value="1" min="-1000" max="1000">
                 <select id="dt-unit" title="Ordine di grandezza">
                     <option value="-9" title="Nano secondi">[ns]</option>
                     <option value="-6" title="Micro secondi">[&mu;s]</option>
@@ -105,6 +105,11 @@
                     <option value="0" title="Secondi">[s]</option>
                 </select>
             </div>
+
+            <label for="dt-count">
+                Iterazioni per ciclo:
+            </label>
+            <input type="number" id="dt-count" value="3" min="1" max="20" step="1">
 
             <label for="friction">
                 Attrito:
@@ -156,15 +161,25 @@
             <i class="material-icons">close</i>
         </button>
         <div class="equations">
-            <p>
-                Le equazioni vanno qui sotto
-            </p>
-            <span class="math">
-                $$\pi$$
-            </span>
-            <span class="math">
-                $$ a + b $$
-            </span>
+            <details>
+                <summary>
+                    <h3>
+                        Caso semplice
+                    </h3>
+                    <span>
+                        (Nessun attrito e filo inestensibile)
+                    </span>
+                </summary>
+                <p>
+                    Le equazioni vanno qui sotto
+                </p>
+                <span class="math">
+                    $$\pi$$
+                </span>
+                <span class="math">
+                    $$ a + b $$
+                </span>
+            </details>
         </div>
     </div>
     <div class="banner">
@@ -179,6 +194,58 @@
         <canvas id="top-view" width="1800" height="900"></canvas>
         <canvas id="side-view" width="900" height="900"></canvas>
     </div>
+    <table class="full-w number-table">
+        <thead>
+            <tr>
+                <th>
+                    R
+                </th>
+                <th>
+                    R'
+                </th>
+                <th>
+                    R''
+                </th>
+                <th>
+                    h
+                </th>
+                <th>
+                    h'
+                </th>
+                <th>
+                    h''
+                </th>
+                <th>
+                    l
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <output id="r-html"></output><span>[m]</span>
+                </td>
+                <td>
+                    <output id="rp-html"></output><span>[m/s]</span>
+                </td>
+                <td>
+                    <output id="rpp-html"></output><span>[m/s^2]</span>
+                </td>
+                <td>
+                    <output id="h-html"></output><span>[m]</span>
+                </td>
+                <td>
+                    <output id="hp-html"></output><span>[m/s]</span>
+                </td>
+                <td>
+                    <output id="hpp-html"></output><span>[m/s^2]</span>
+                </td>
+                <td>
+                    <output id="l-html"></output><span>[m]</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <footer class="grid two">
         
         <h3>

@@ -29,6 +29,12 @@ scene.add( gridHelper );
 
 const controls = new OrbitControls( camera, renderer.domElement );
 
+controls.mouseButtons = {
+	LEFT: THREE.MOUSE.ROTATE,
+	MIDDLE: THREE.MOUSE.DOLLY,
+	RIGHT: THREE.MOUSE.PAN
+}
+
 const tableMesh = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 const massesMesh = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 const lineMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
@@ -48,8 +54,8 @@ function threeAnimate(simulation)
         return setTimeout(threeAnimate, 1000, simulation);
     }
     simulation.refresh();
-    simulation.iterateAndDraw(1);
-
+    simulation.iterateAndDraw(simulation.dtCount);
+    controls.update();
 
 	renderer.render( scene, camera );
     return requestAnimationFrame(()=> threeAnimate(simulation));

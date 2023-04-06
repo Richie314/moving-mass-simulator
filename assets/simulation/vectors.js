@@ -247,7 +247,7 @@ class PolarVector
         {
             this.theta = this.theta.plus(doublePi);
         }
-        while (this.theta.greaterThan(doublePi))
+        while (this.theta.greaterThanOrEqualTo(doublePi))
         {
             this.theta = this.theta.minus(doublePi);
         }
