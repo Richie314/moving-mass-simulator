@@ -29,11 +29,12 @@
     <script defer src="assets/page/log.js"></script>
     <script defer src="assets/page/ui.js"></script>
 
-    <script defer src="https://unpkg.com/decimal.js@10.4.3/decimal.js"> referrerpolicy="no-referrer"</script>
+    <script defer src="https://unpkg.com/decimal.js@latest/decimal.js"> referrerpolicy="no-referrer"</script>
     <script defer src="assets/simulation/vectors.js"></script>
     <script defer src="assets/simulation/masses.js"></script>
     <script defer src="assets/simulation/engine.js"></script>
 
+    <script defer src="https://unpkg.com/stats-js@latest/build/stats.min.js"></script>
     <script type="importmap">
         {
           "imports": {
@@ -61,6 +62,9 @@
         <h4>
             Simulazione
         </h4>
+        <div id="stats">
+
+        </div>
         <button type="button" id="play-pause" title="Avvia">
             <i class="material-icons">play_arrow</i>
         </button>
@@ -373,6 +377,9 @@
                 </li>
                 <li>
                     <a href="https://www.mathjax.org/" target="_blank">MathJax</a>
+                </li>
+                <li>
+                    <a href="https://github.com/mrdoob/stats.js">Stats.js</a>
                 </li>
                 <li>
                     <a href="https://fonts.google.com/" target="_blank">Material Icons</a>

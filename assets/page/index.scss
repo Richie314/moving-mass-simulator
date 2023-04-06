@@ -100,6 +100,15 @@ nav {
         */
     }
 }
+#stats {
+    position: relative;
+    & > div {
+        left: unset !important;
+        position: unset !important;
+        top: unset !important;
+        z-index: unset !important;
+    }
+}
 .pop-up {
     position: absolute;
     z-index: 100;
@@ -130,7 +139,8 @@ nav {
     }
 }
 .screen-container {
-    width: 100%;
+    width: min(100%, 1200px);
+    margin-inline: auto;
     height: auto;
 
     &.full-screen {
@@ -139,7 +149,6 @@ nav {
     &.half-screen {
         aspect-ratio: 3;
     }
-    margin: 0;
     //border: 1px solid red;
 
     & > canvas {
@@ -170,12 +179,4 @@ nav {
         cursor: grabbing;
     }
     aspect-ratio: 2 !important;
-}
-@media screen and (min-aspect-ratio: 16 / 9) {
-    .screen-container {
-        width: auto;
-        height: fit-content;
-        margin-left: auto;
-        margin-right: auto;
-    }
 }

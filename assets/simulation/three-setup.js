@@ -7,6 +7,10 @@ if ( !WebGL.isWebGLAvailable() ) {
 	throw new Error(WebGL.getWebGLErrorMessage());
 }
 */
+const stats = new Stats();
+stats.showPanel( 0 );
+document.getElementById('stats').appendChild(stats.dom);
+
 const screenContainer = document.getElementById('d3-container');
 
 const scene = new THREE.Scene();
@@ -141,6 +145,8 @@ function threeAnimate(simulation)
         //Will check again in one second
         return setTimeout(threeAnimate, 1000, simulation);
     }
+	stats.begin();
+
     simulation.refresh();
     simulation.iterateAndDraw(simulation.dtCount);
     controls.update();
@@ -149,6 +155,8 @@ function threeAnimate(simulation)
     fallingCoordsToTHREE(fallingObject.position, simulation.fallingMass.position, fallingLine);
 
 	renderer.render( scene, camera );
+
+	stats.end();
     return requestAnimationFrame(()=> threeAnimate(simulation));
 }
 window.threeAnimate = threeAnimate;

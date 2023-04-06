@@ -113,6 +113,16 @@ nav > button[type=button] > i {
   font-size: 1.2em;
 }
 
+#stats {
+  position: relative;
+}
+#stats > div {
+  left: unset !important;
+  position: unset !important;
+  top: unset !important;
+  z-index: unset !important;
+}
+
 .pop-up {
   position: absolute;
   z-index: 100;
@@ -144,9 +154,9 @@ nav > button[type=button] > i {
 }
 
 .screen-container {
-  width: 100%;
+  width: min(100%, 1200px);
+  margin-inline: auto;
   height: auto;
-  margin: 0;
 }
 .screen-container.full-screen {
   aspect-ratio: 16/9;
@@ -182,14 +192,4 @@ nav > button[type=button] > i {
 }
 #top-view:active {
   cursor: grabbing;
-}
-
-@media screen and (min-aspect-ratio: 16/9) {
-  .screen-container {
-    width: auto;
-    height: -moz-fit-content;
-    height: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-  }
 }/*# sourceMappingURL=index.css.map */
