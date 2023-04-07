@@ -33,7 +33,7 @@ var fallingMassMass = new Decimal(2);
 const tableMass = new MassRotatingObject(
     tableMassMass,
     new PolarVector(0.7, pi.div(3)), //Initial position
-    new PolarVector(0, 0),  //Initial radial and angular speed
+    new PolarVector(0, 3),  //Initial radial and angular speed
     new PolarVector(0, 0)); //Initial acceleration doesn't really count
 
 const fallingMass = new MassFallingObject(
@@ -61,19 +61,19 @@ function RefreshSimulationParams(sim)
 
     if (smoothRefresher++ == 4)
     {
-        rHtml.innerHTML = sim.tableMass.r.toSignificantDigits(6, Decimal.ROUND_UP);
-        rpHtml.innerHTML = sim.tableMass.rPrime.toSignificantDigits(6, Decimal.ROUND_UP);
-        rppHtml.innerHTML = sim.tableMass.rDoublePrime.toSignificantDigits(6, Decimal.ROUND_UP);
+        rHtml.innerHTML = sim.tableMass.r.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
+        rpHtml.innerHTML = sim.tableMass.rPrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
+        rppHtml.innerHTML = sim.tableMass.rDoublePrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
     
-        hHtml.innerHTML = sim.fallingMass.height.toSignificantDigits(6, Decimal.ROUND_UP);
-        hpHtml.innerHTML = sim.fallingMass.heightPrime.toSignificantDigits(6, Decimal.ROUND_UP);
-        hppHtml.innerHTML = sim.fallingMass.heightDoublePrime.toSignificantDigits(6, Decimal.ROUND_UP);
+        hHtml.innerHTML = sim.fallingMass.height.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
+        hpHtml.innerHTML = sim.fallingMass.heightPrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
+        hppHtml.innerHTML = sim.fallingMass.heightDoublePrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
     
         lHtml.innerHTML = (sim.fallingMass.height.abs().plus(sim.tableMass.r) ).toSignificantDigits(6, Decimal.ROUND_UP);
 
-        thHtml.innerHTML = sim.tableMass.theta.toSignificantDigits(6, Decimal.ROUND_UP);
-        thpHtml.innerHTML = sim.tableMass.thetaPrime.toSignificantDigits(6, Decimal.ROUND_UP);
-        thppHtml.innerHTML = sim.tableMass.thetaDoublePrime.toSignificantDigits(6, Decimal.ROUND_UP);
+        thHtml.innerHTML = sim.tableMass.theta.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
+        thpHtml.innerHTML = sim.tableMass.thetaPrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
+        thppHtml.innerHTML = sim.tableMass.thetaDoublePrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
     
         const totalT = sim.fallingMass.kinetic.plus( sim.tableMass.kinetic );
         const Ug = sim.fallingMass.gravityPotential;

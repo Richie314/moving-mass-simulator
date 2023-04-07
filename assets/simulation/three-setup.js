@@ -139,7 +139,7 @@ scene.add( followSideLine );
 function tableCoordsToTHREE(threeV, polarV, line, traceLine, updateTraceLine)
 {
     const scaled = polarV.scaled(tableWidth / 4);
-    threeV.setFromCylindricalCoords(scaled.r.toNumber(), -scaled.theta.toNumber(), tableHeight);
+    threeV.setFromCylindricalCoords(scaled.r.toNumber(), (scaled.theta.minus(halfPi)).toNumber(), tableHeight);
 
     line.geometry.attributes.position.array[3] = threeV.x;
     line.geometry.attributes.position.array[4] = threeV.y;

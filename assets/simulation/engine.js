@@ -241,30 +241,18 @@ class NoFrictionFixedLengthEngine extends Engine
         //Apply speeds: update position
         this.applySpeed(this.tableMass, this.tableMass.speed, this.dt);
         this.applySpeed(this.fallingMass, this.fallingMass.speed, this.dt);
-
-        if (!this.tableMass.r.isPositive())
-        {
-            //The object just crossed the center of the table
-            this.tableMass.position.reboundPositive();
-            this.fallingMass.heightPrime = this.tableMass.rPrime = this.fallingMass.heightPrime.neg();
-        //} else {
-            //Apply accelerations: update speeds
-            this.applyAcceleration(this.tableMass, this.tableMass.acceleration, this.dt);
-        }
         this.tableMass.position.reboundAngle();
 
+        //Apply accelerations: update speeds
         this.applyAcceleration(this.fallingMass, this.fallingMass.acceleration, this.dt);
+        this.applyAcceleration(this.tableMass, this.tableMass.acceleration, this.dt);
     }
 
     getNewAccelerations()
     {
-        
         //Prevent values from diverging: we set them both to the medium value
         this.tableMass.rPrime = this.fallingMass.heightPrime = ( this.tableMass.rPrime.plus(this.fallingMass.heightPrime) ).div(2);
-        //Since cableLength = r + height, r + height - cableLength = error
-        const diff = (this.tableMass.r.minus( this.fallingMass.height ).minus( this.cableLength ) ).div(2);
-        this.tableMass.r = this.tableMass.r.minus( diff );
-        this.fallingMass.height = this.fallingMass.height.minus( diff );
+        
 
         // ..         .
         //  R = ( m R 0^2 + M g ) / (m + M)
@@ -273,10 +261,23 @@ class NoFrictionFixedLengthEngine extends Engine
                 this.fallingMass.mass.times(g)
             ) ).div( this.tableMass.mass.plus(this.fallingMass.mass) );
         
+        if (this.tableMass.r.lessThanOrEqualTo(0))
+        {
+            //The object just crossed the center of the table
+            this.tableMass.position.reboundPositive();
+            this.fallingMass.heightPrime = this.tableMass.rPrime = this.fallingMass.heightPrime.neg();
+            this.tableMass.thetaDoublePrime = new Decimal(0);
+            return;
+        }
         // ..       . .
         //  0 = - 2 R 0 / R
         this.tableMass.thetaDoublePrime = new Decimal(-2).times( this.tableMass.rPrime ).times( this.tableMass.thetaPrime ).div( this.tableMass.r );
 
+
+        //Since cableLength = r + height, r + height - cableLength = error
+        const diff = (this.tableMass.r.plus( this.fallingMass.height.abs() ).minus( this.cableLength ) ).div(2);
+        this.tableMass.r = this.tableMass.r.minus( diff );
+        this.fallingMass.height = this.fallingMass.height.plus( diff );
     }
 }
 
