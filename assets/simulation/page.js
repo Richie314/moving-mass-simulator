@@ -32,20 +32,20 @@ var fallingMassMass = new Decimal(2);
 
 const tableMass = new MassRotatingObject(
     tableMassMass,
-    new PolarVector(1, pi.div(4)), //Initial position
-    new PolarVector(0.2, 0.8),  //Initial radial and angular speed
+    new PolarVector(0.7, pi.div(3)), //Initial position
+    new PolarVector(0, 0),  //Initial radial and angular speed
     new PolarVector(0, 0)); //Initial acceleration doesn't really count
 
 const fallingMass = new MassFallingObject(
     fallingMassMass,
-    new Vector3(0, 0, -0.50),
-    new Vector3(0, 0, 0.2),
+    new Vector3(0, 0, -0.40),
+    new Vector3(0, 0, 0),
     gravity);
-var dt = new Decimal(0.001);
-var dtCount = 1;
+var dt = new Decimal(0.00005);
+var dtCount = 10;
 
-const VerySimpleEngine = new NoFrictionFixedLengthEngine(tableMass, fallingMass, 1.5, dt);
-var TableMeasures = new Vector3(4, 2, 2);
+const VerySimpleEngine = new NoFrictionFixedLengthEngine(tableMass, fallingMass, tableMass.r.plus( fallingMass.height.abs() ), dt);
+const TableMeasures = new Vector3(4, 2, 2);
 var simulation = new Simulation(VerySimpleEngine, topViewCanvas, sideViewCanvas, TableMeasures, dtCount);
 
 var smoothRefresher = 0;
@@ -75,9 +75,11 @@ function RefreshSimulationParams(sim)
         thpHtml.innerHTML = sim.tableMass.thetaPrime.toSignificantDigits(6, Decimal.ROUND_UP);
         thppHtml.innerHTML = sim.tableMass.thetaDoublePrime.toSignificantDigits(6, Decimal.ROUND_UP);
     
-        tHtml.innerHTML = sim.fallingMass.kinetic.plus( sim.tableMass.kinetic ).toSignificantDigits(6, Decimal.ROUND_UP);
-        ugHtml.innerHTML = sim.fallingMass.gravityPotential.toSignificantDigits(6, Decimal.ROUND_UP);
-        //tuHtml.innerHTML = sim.fallingMass.heightDoublePrime.toSignificantDigits(6, Decimal.ROUND_UP);
+        const totalT = sim.fallingMass.kinetic.plus( sim.tableMass.kinetic );
+        const Ug = sim.fallingMass.gravityPotential;
+        tHtml.innerHTML = totalT.toSignificantDigits(6, Decimal.ROUND_UP);
+        ugHtml.innerHTML = Ug.toSignificantDigits(6, Decimal.ROUND_UP);
+        tuHtml.innerHTML = (totalT.plus(Ug)).toSignificantDigits(6, Decimal.ROUND_UP);
 
         smoothRefresher = 0;
     }

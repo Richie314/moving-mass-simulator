@@ -246,17 +246,14 @@ class NoFrictionFixedLengthEngine extends Engine
         {
             //The object just crossed the center of the table
             this.tableMass.position.reboundPositive();
-            //const totalCableMomentum = this.fallingMass.momentum.z.plus( this.tableMass.speed.r.times( this.tableMass.mass ) );
-            //this.fallingMass.heightPrime = this.tableMass.rPrime = totalCableMomentum.div( this.tableMass.mass.plus(this.fallingMass.mass) );
             this.fallingMass.heightPrime = this.tableMass.rPrime = this.fallingMass.heightPrime.neg();
-            
+        //} else {
+            //Apply accelerations: update speeds
+            this.applyAcceleration(this.tableMass, this.tableMass.acceleration, this.dt);
         }
         this.tableMass.position.reboundAngle();
 
-        //Apply accelerations: update speeds
-        this.applyAcceleration(this.tableMass, this.tableMass.acceleration, this.dt);
         this.applyAcceleration(this.fallingMass, this.fallingMass.acceleration, this.dt);
-
     }
 
     getNewAccelerations()
@@ -264,8 +261,10 @@ class NoFrictionFixedLengthEngine extends Engine
         
         //Prevent values from diverging: we set them both to the medium value
         this.tableMass.rPrime = this.fallingMass.heightPrime = ( this.tableMass.rPrime.plus(this.fallingMass.heightPrime) ).div(2);
-        //cableLength = r + height
-        //this.tableMass.r = this.cableLength.minus(this.fallingMass.height.abs());
+        //Since cableLength = r + height, r + height - cableLength = error
+        const diff = (this.tableMass.r.minus( this.fallingMass.height ).minus( this.cableLength ) ).div(2);
+        this.tableMass.r = this.tableMass.r.minus( diff );
+        this.fallingMass.height = this.fallingMass.height.minus( diff );
 
         // ..         .
         //  R = ( m R 0^2 + M g ) / (m + M)
