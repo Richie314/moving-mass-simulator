@@ -132,6 +132,11 @@ nav {
         text-align: center;
         user-select: none;
     }
+    & > button[type=button] {
+        color: darkred;
+        background-color: red;
+        cursor: pointer;
+    }
 }
 .screen-container {
     width: min(100%, 1200px);
@@ -171,8 +176,9 @@ nav {
 }
 #top-view {
     cursor: grab;
-    &:active {
+    &.grabbing {
         cursor: grabbing;
+        border: 1px dashed red;
     }
     aspect-ratio: 2 !important;
 }

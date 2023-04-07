@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-//import { WebGL } from 'three/addons/capabilities/WebGL.js';
-/*
+import WebGL from 'three/addons/capabilities/WebGL.js';
+
 if ( !WebGL.isWebGLAvailable() ) {
 
 	throw new Error(WebGL.getWebGLErrorMessage());
 }
-*/
+
 const stats = new Stats();
 stats.showPanel( 0 );
 document.getElementById('stats').appendChild(stats.dom);

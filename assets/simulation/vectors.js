@@ -192,7 +192,12 @@ class Vector3
         const m = this.module();
         if (m.isZero())
             return new PolarVector(m, 0);
-        return new PolarVector( m, ( this.x.div(m) ).acos() );
+        const angle = ( this.x.div(m) ).acos();
+        if (this.y.lessThan(0))
+        {
+            return new PolarVector( m, doublePi.minus(angle) );
+        }
+        return new PolarVector( m, angle );
     }
 
     toNumbers()
@@ -202,6 +207,15 @@ class Vector3
             y: this.y.toNumber(),
             z: this.z.toNumber()
         };
+    }
+
+    /**
+     * Creates a copy of this vector
+     * @returns {Vector3}
+     */
+    copy()
+    {
+        return new Vector3(this.x, this.y, this.z);
     }
 }
 
@@ -301,9 +315,39 @@ class PolarVector
         return (new Vector3(this.theta.cos(), this.theta.sin(), 0)).times(this.r);
     }
 
+    /**
+     * Set from XY coordinates
+     * Setting both x and y to zero results in r of 0 and angle not changed
+     * @param {Decimal|number} x 
+     * @param {Decimal|number} y 
+     */
+    setFromXY(x, y)
+    {
+        if (!Decimal.isDecimal(x))
+        {
+            x = new Decimal(x);
+        }
+        if (!Decimal.isDecimal(y))
+        {
+            y = new Decimal(y);
+        }
+        this.r = ( x.pow(2).plus( y.pow(y) ) ).sqrt();
+        if (this.r.isZero())
+        {
+            return this;
+        }
+        //cos0 = x / r
+        //sin0 = y / r
+        this.theta = Decimal.acos( x.div(this.r) );
+        if (y.lessThan(0))
+        {
+            this.theta = this.theta.neg();
+        }
+        return this;
+    }
 }
 
-const g = new Decimal(-9.81);
+const g = new Decimal(-9.8067);
 const gravity = new Vector3(0, 0, g);
 const pi = Decimal.acos(-1);
 const doublePi = pi.times(2);

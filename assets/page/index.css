@@ -147,6 +147,11 @@ nav > button[type=button] > i {
      -moz-user-select: none;
           user-select: none;
 }
+.pop-up > button[type=button] {
+  color: darkred;
+  background-color: red;
+  cursor: pointer;
+}
 
 .screen-container {
   width: min(100%, 1200px);
@@ -186,6 +191,7 @@ nav > button[type=button] > i {
   cursor: grab;
   aspect-ratio: 2 !important;
 }
-#top-view:active {
+#top-view.grabbing {
   cursor: grabbing;
+  border: 1px dashed red;
 }/*# sourceMappingURL=index.css.map */

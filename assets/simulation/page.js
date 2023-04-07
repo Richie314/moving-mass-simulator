@@ -86,21 +86,57 @@ simulation.onRefresh(RefreshSimulationParams);
 
 var isGrabbing = false;
 topViewCanvas.addEventListener('mousedown', evt => {
+    console.log('mousedown');
     if (!allowGrabbing.checked) return;
     pause();
     const rect = evt.target.getBoundingClientRect();
-    const x = (evt.pageX - rect.left) / evt.target.clientWidth - 0.5;
-    const y = (evt.pageY - rect.top) / evt.target.clientHeight - 0.5;
-    if (isGrabbing) {
-
-        return;
+    const cosine = (evt.clientX - rect.left) / evt.target.clientWidth * 2 - 1;
+    const sine = -( (evt.clientY - rect.top) / evt.target.clientHeight * 2 - 1 );
+    const vec3 = new Vector3(
+        cosine * TableMeasures.x / 2 * simulation.topCanvasScaleX, 
+        sine * TableMeasures.y / 2 * simulation.topCanvasScaleY,
+        0);
+    const canvasPos = simulation.tableMass.position.toVec3();
+    canvasPos.x = canvasPos.x.times(simulation.topCanvasScaleX);
+    canvasPos.y = canvasPos.y.times(simulation.topCanvasScaleY);
+    console.log(vec3.toNumbers(), canvasPos.toNumbers());
+    if ( ( vec3.minus(canvasPos) ).module() < simulation.topCanvasDiscRadius )
+    {
+        isGrabbing = true;
+        topViewCanvas.classList.add('grabbing');
     }
 });
-topViewCanvas.addEventListener('mouseup', evt => {
+function grab(evt)
+{
+    if (!isGrabbing)
+    {
+        return;
+    }
+    console.log('grabbing...');
+    const rect = evt.target.getBoundingClientRect();
+    const cosine = (evt.clientX - rect.left) / evt.target.clientWidth * 2 - 1;
+    const sine = -( (evt.clientY - rect.top) / evt.target.clientHeight * 2 - 1 );
+    const vec3 = new Vector3(
+        cosine * TableMeasures.x / 2, 
+        sine * TableMeasures.y / 2, 0);
+    simulation.tableMass.position = vec3.toPolar();
+}
+function releaseGrab(evt)
+{
+    grab(evt);
+    topViewCanvas.classList.remove('grabbing');
     isGrabbing = false;
+}
+topViewCanvas.addEventListener('mouseup', evt => {
+    console.log('mouseup')
+    releaseGrab(evt);
+});
+topViewCanvas.addEventListener('mousemove', evt => {
+    //console.log('mousemove')
+    grab(evt);
 });
 topViewCanvas.addEventListener('mouseleave', evt => {
-    isGrabbing = false;
+    releaseGrab(evt);
 });
 //All is loaded:
 //Start the simulation

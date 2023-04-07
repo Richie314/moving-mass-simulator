@@ -35,7 +35,7 @@ class Simulation
             x: this.#getTopCanvasCoordX(0),
             y: this.#getTopCanvasCoordY(0)
         };
-
+        this.topCanvasDiscRadius = 30;
 
         this.sideCanvasDrawOffSet = {
             x: this.sideCanvas.width / 2,
@@ -178,7 +178,7 @@ class Simulation
             '#ffa500');
         this.#drawCircle(
             this.topCtx, 
-            30, 
+            this.topCanvasDiscRadius, 
             canvasPos.x, 
             canvasPos.y,
             '#ff0000');
