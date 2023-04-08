@@ -17,6 +17,15 @@ span {
         }
     }
 }
+.log-container {
+    margin-top: .5em;
+    margin-bottom: .7em;
+    margin-inline: .3em;
+    height: fit-content;
+    max-height: 100vh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
 .log {
     font-size: inherit;
     display: block;

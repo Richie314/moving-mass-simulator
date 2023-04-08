@@ -76,3 +76,4 @@ const err = function(...message)
     logData(dotsToStr(...message), 'error');
 }
 document.addEventListener('error', evt => err(evt.message));
+log('Qui riceverai eventuali messaggi di errore o log dell\'applicazione');

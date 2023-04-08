@@ -75,11 +75,42 @@ label {
     height: auto;
 }
 .number-table {
-    th {
-        font-style: italic;
-    }
-    td {
-        text-align: center;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    height: fit-content;
+    justify-content: space-around;
+    gap: 5px;
+    padding-inline: min(1.1em, 7px);
+
+    & > div {
+        width: max(16.66%, 4em);
+        height: fit-content;
+        & > span.math {
+            user-select: none;
+            margin: 0;
+            & > .MathJax {
+                margin: .5em 0;
+            }
+        }
+        & > div {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 64% 36%;
+            grid-template-rows: 1fr;
+            margin: 0;
+            padding: 0;
+            & > output {
+                user-select: text;
+                text-align: left;
+                height: 100%;
+            }
+            & > span {
+                user-select: none;
+                text-align: right;
+                height: 100%;
+            }
+        }
     }
 }
 summary {

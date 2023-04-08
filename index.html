@@ -56,7 +56,7 @@
 </head>
 <body>
     <noscript>
-        <h1>Abilita Javascript per far funzionare la simulazione</h1>
+        <h1>Abilita Javascript per far funzionare la simulazione e dopo <a href="#">ricaricare</a> la pagina</h1>
     </noscript>
     <nav class="banner">
         <h4>
@@ -92,7 +92,7 @@
         <fieldset class="form grid two">
 
             <label for="dt-number">
-                <i>dt</i>: 
+                <span class="math">$$ dt $$</span>
             </label>
             <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
                 <input type="range" id="dt-number" value="50" min="-100" max="100" step="0.5">
@@ -170,6 +170,51 @@
                 Interazioni:
             </label>
             <input type="checkbox" checked id="interactions">
+        </fieldset>
+        <hr />
+        <fieldset class="form grid two">
+            <h3 class="span-2">
+                Valori iniziali
+            </h3>
+            <p class="span-2">
+                Modifiche ai parametri qui sotto avranno effetto solo quando solo dopo il riavvio
+                della simulazione. Per modificare la posizione iniziale della massa superiore trascinarla col mouse 
+                dalla vista dall'alto.
+            </p>
+            <!--Radial initial speed-->
+            <label for="rp-start">
+                <span class="math">$$ \dot{R} $$</span>
+            </label>
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
+                <input type="range" id="rp-start" value="50" min="-100" max="100" step="0.5">
+                <output id="rp-start-display">50</output>
+                <select id="rp-start-unit" title="Ordine di grandezza">
+                    <option value="-2" title="Centimetri secondo">[cm/s]</option>
+                    <option value="0" title="Metri al secondo" selected="selected">[m/s]</option>
+                </select>
+            </div>
+
+            <!--Angular initial speed-->
+            <label for="thetap-start">
+                <span class="math">$$ \dot{\theta} $$</span>
+            </label>
+            <div class="grid" style="grid-template-columns: 65% 35%;width: 100%;">
+                <input type="number" id="thetap-start" value="2" min="-100" max="100" step="0.5">
+                <span>[rad/s]</span>
+            </div>
+
+            <!--Vertical initial speed-->
+            <label for="hp-start">
+                <span class="math">$$ \dot{h} $$</span>
+            </label>
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
+                <input type="range" id="hp-start" value="50" min="-100" max="100" step="0.5">
+                <output id="hp-start-display">50</output>
+                <select id="hp-start-unit" title="Ordine di grandezza">
+                    <option value="-2" title="Centimetri secondo">[cm/s]</option>
+                    <option value="0" title="Metri al secondo" selected="selected">[m/s]</option>
+                </select>
+            </div>
         </fieldset>
     </div>
     <div class="pop-up" id="shell">
@@ -256,109 +301,121 @@
         <canvas id="side-view" width="900" height="900"></canvas>
     </div>
     <hr />
-    <table class="full-w number-table">
-        <thead>
-            <tr>
-                <th title="Raggio">
-                    R
-                </th>
-                <th title="Velocità radiale">
-                    R'
-                </th>
-                <th title="Accelerazione radiale">
-                    R''
-                </th>
-                <th title="Altezza dal tavolo">
-                    h
-                </th>
-                <th title="Velocità verticale">
-                    h'
-                </th>
-                <th title="Accelerazione verticale">
-                    h''
-                </th>
-                <th title="Lunghezza filo">
-                    l
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <output id="r-html"></output><span>[m]</span>
-                </td>
-                <td>
-                    <output id="rp-html"></output><span>[m/s]</span>
-                </td>
-                <td>
-                    <output id="rpp-html"></output><span>[m/s<sup>2</sup>]</span>
-                </td>
-                <td>
-                    <output id="h-html"></output><span>[m]</span>
-                </td>
-                <td>
-                    <output id="hp-html"></output><span>[m/s]</span>
-                </td>
-                <td>
-                    <output id="hpp-html"></output><span>[m/s<sup>2</sup>]</span>
-                </td>
-                <td>
-                    <output id="l-html"></output><span>[m]</span>
-                </td>
-            </tr>
-        </tbody>
-        
-        <thead>
-            <tr>
-                <th title="Angolo da semiasse X+">
-                    &theta;
-                </th>
-                <th title="Velocità angolare">
-                    &theta;'
-                </th>
-                <th title="Accelerazione angolare">
-                    &theta;''
-                </th>
-                <th title="Energia cinetica">
-                    T
-                </th>
-                <th title="Energia potenziale gravitazionale">
-                    U<sub>g</sub>
-                </th>
-                <th title="Energia potenziale elastica">
-                    U<sub>k</sub>
-                </th>
-                <th title="Energia meccanica sistema">
-                    T + U
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <output id="th-html"></output><span>[rad]</span>
-                </td>
-                <td>
-                    <output id="thp-html"></output><span>[rad/s]</span>
-                </td>
-                <td>
-                    <output id="thpp-html"></output><span>[rad/s<sup>2</sup>]</span>
-                </td>
-                <td>
-                    <output id="t-html"></output><span>[J]</span>
-                </td>
-                <td>
-                    <output id="ug-html"></output><span>[J]</span>
-                </td>
-                <td>
-                    <output id="uk"></output><span>[J]</span>
-                </td>
-                <td>
-                    <output id="tu-html"></output><span>[J]</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="full-w number-table">
+        <div title="Raggio">
+            <span class="math">
+                $$ R $$
+            </span>
+            <div>
+                <output id="r-html">0</output><span>[m]</span>
+            </div>
+        </div>
+        <div title="Velocità radiale">
+            <span class="math">
+                $$ \dot{R} $$
+            </span>
+            <div>
+                <output id="rp-html">0</output><span>[m/s]</span>
+            </div>
+        </div>
+        <div title="Accelerazione radiale">
+            <span class="math">
+                $$ \ddot{R} $$
+            </span>
+            <div>
+                <output id="rpp-html">0</output><span>[m/s<sup>2</sup>]</span>
+            </div>
+        </div>
+        <div title="Altezza dal tavolo">
+            <span class="math">
+                $$ h $$
+            </span>
+            <div>
+                <output id="h-html">0</output><span>[m]</span>
+            </div>
+        </div>
+        <div title="Velocità verticale">
+            <span class="math">
+                $$ \dot{h} $$
+            </span>
+            <div>
+                <output id="hp-html">0</output><span>[m/s]</span>
+            </div>
+        </div>
+        <div title="Accelerazione verticale">
+            <span class="math">
+                $$ \ddot{h} $$
+            </span>
+            <div>
+                <output id="hpp-html">0</output><span>[m/s<sup>2</sup>]</span>
+            </div>
+        </div>
+        <div title="Lunghezza filo">
+            <span class="math">
+                $$ l $$
+            </span>
+            <div>
+                <output id="l-html">0</output><span>[m]</span>
+            </div>
+        </div>
+
+        <div title="Angolo da semiasse X+">
+            <span class="math">
+                $$  \theta $$
+            </span>
+            <div>
+                <output id="th-html">0</output><span>[rad]</span>
+            </div>
+        </div>
+        <div title="Velocità angolare">
+            <span class="math">
+                $$ \dot{\theta} $$
+            </span>
+            <div>
+                <output id="thp-html">0</output><span>[rad/s]</span>
+            </div>
+        </div>
+        <div title="Accelerazione angolare">
+            <span class="math">
+                $$ \ddot{\theta} $$
+            </span>
+            <div>
+                <output id="thpp-html">0</output><span>[rad/s<sup>2</sup>]</span>
+            </div>
+        </div>
+        <div title="Energia cinetica sistema">
+            <span class="math">
+                $$ T $$
+            </span>
+            <div>
+                <output id="t-html">0</output><span>[J]</span>
+            </div>
+        </div>
+        <div title="Energia potenziale gravitazionale">
+            <span class="math">
+                $$ U_g $$
+            </span>
+            <div>
+                <output id="ug-html">0</output><span>[J]</span>
+            </div>
+        </div>
+        <div title="Energia potenziale elastica">
+            <span class="math">
+                $$ U_k $$
+            </span>
+            <div>
+                <output id="uk-html">0</output><span>[J]</span>
+            </div>
+        </div>
+        <div title="Energia meccanica sistema">
+            <span class="math">
+                $$ T + U $$
+            </span>
+            <div>
+                <output id="tu-html">0</output><span>[J]</span>
+            </div>
+        </div>
+    </div>
     <hr />
     <footer class="grid two">
         

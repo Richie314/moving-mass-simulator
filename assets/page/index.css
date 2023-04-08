@@ -19,6 +19,17 @@ span.math.loaded {
   display: block;
 }
 
+.log-container {
+  margin-top: 0.5em;
+  margin-bottom: 0.7em;
+  margin-inline: 0.3em;
+  height: -moz-fit-content;
+  height: fit-content;
+  max-height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
 .log {
   font-size: inherit;
   display: block;

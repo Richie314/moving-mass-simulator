@@ -86,11 +86,51 @@ label {
   height: auto;
 }
 
-.number-table th {
-  font-style: italic;
+.number-table {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  height: -moz-fit-content;
+  height: fit-content;
+  justify-content: space-around;
+  gap: 5px;
+  padding-inline: min(1.1em, 7px);
 }
-.number-table td {
-  text-align: center;
+.number-table > div {
+  width: max(16.66%, 4em);
+  height: -moz-fit-content;
+  height: fit-content;
+}
+.number-table > div > span.math {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  margin: 0;
+}
+.number-table > div > span.math > .MathJax {
+  margin: 0.5em 0;
+}
+.number-table > div > div {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 64% 36%;
+  grid-template-rows: 1fr;
+  margin: 0;
+  padding: 0;
+}
+.number-table > div > div > output {
+  -webkit-user-select: text;
+     -moz-user-select: text;
+          user-select: text;
+  text-align: left;
+  height: 100%;
+}
+.number-table > div > div > span {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  text-align: right;
+  height: 100%;
 }
 
 summary {
