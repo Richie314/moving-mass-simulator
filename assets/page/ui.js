@@ -128,7 +128,7 @@ fallingMassExponent.addEventListener('input', () => {
     resetUI();
 });
 
-const isFixedLength = document.getElementById('cable');
+const isNotFixedLength = document.getElementById('cable');
 
 const allowGrabbing = document.getElementById('interactions');
 
@@ -144,7 +144,7 @@ function SetInitialRPrime()
 {
     InitialRPrime = new Decimal(rPrimeStartHtml.value).times( Ten.pow(rPrimeExponent.value) );
     rPrimeStartShow.innerHTML = rPrimeStartHtml.value;
-    if (isFixedLength.checked)
+    if (isNotFixedLength.checked)
     { //Mirror, as the two values cannot diverge
         InitialHPrime = InitialRPrime;
         hPrimeStartHtml.value = rPrimeStartHtml.value;
