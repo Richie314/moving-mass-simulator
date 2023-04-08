@@ -42,7 +42,7 @@ const fallingMass = new MassFallingObject(
     new Vector3(0, 0, 0),
     gravity);
 var dt = new Decimal(0.00005);
-var dtCount = 10;
+var dtCount = 15;
 
 const VerySimpleEngine = new NoFrictionFixedLengthEngine(tableMass, fallingMass, tableMass.r.plus( fallingMass.height.abs() ), dt);
 const TableMeasures = new Vector3(4, 2, 2);
