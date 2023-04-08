@@ -30,16 +30,20 @@ const tuHtml = document.getElementById('tu-html');
 var tableMassMass = new Decimal(1);
 var fallingMassMass = new Decimal(2);
 
+var InitialRPrime = new Decimal(0);
+var InitialThetaPrime = new Decimal(0);
+var InitialHPrime = new Decimal(0);
+
 const tableMass = new MassRotatingObject(
     tableMassMass,
     new PolarVector(0.7, pi.div(3)), //Initial position
-    new PolarVector(0, 3),  //Initial radial and angular speed
+    new PolarVector(InitialRPrime, InitialThetaPrime),  //Initial radial and angular speed
     new PolarVector(0, 0)); //Initial acceleration doesn't really count
 
 const fallingMass = new MassFallingObject(
     fallingMassMass,
     new Vector3(0, 0, -0.40),
-    new Vector3(0, 0, 0),
+    new Vector3(0, 0, InitialHPrime),
     gravity);
 var dt = new Decimal(0.00005);
 var dtCount = 15;

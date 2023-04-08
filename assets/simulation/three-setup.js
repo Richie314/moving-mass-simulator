@@ -30,10 +30,6 @@ screenContainer.addEventListener('resize', () => {
 const light = new THREE.AmbientLight( 0xf0f0f0 );
 scene.add( light );
 
-//Axis confuse a bit
-//const axesHelper = new THREE.AxesHelper( 1000 );
-//scene.add( axesHelper );
-
 const gridHelper = new THREE.GridHelper( 400, 50);
 scene.add( gridHelper );
 
