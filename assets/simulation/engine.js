@@ -163,21 +163,13 @@ class EngineBase
 
 class Engine extends EngineBase
 {
-    /**
-     * @type {MassRotatingObject}
-     */
-    tableMass;
 
     /**
-     * @type {MassFallingObject}
-     */
-    fallingMass;
-
-    /**
-     * 
+     * @param {MassRotatingObject} tableMass 
+     * @param {MassFallingObject} fallingMass 
      * @param {Decimal|number} dt 
      */
-    constructor(dt)
+    constructor(tableMass, fallingMass, dt)
     {
         super();
         if (!Decimal.isDecimal(dt))
@@ -185,6 +177,8 @@ class Engine extends EngineBase
             dt = new Decimal(dt);
         }
         this.dt = dt;
+        this.tableMass = tableMass;
+        this.fallingMass = fallingMass;
     }
 
     #inverteTimeFlow()
@@ -214,6 +208,18 @@ class Engine extends EngineBase
         }
         return this;
     }
+    
+    applySpeedsAndForces()
+    {
+        //Apply speeds: update position
+        this.applySpeed(this.tableMass, this.tableMass.speed, this.dt);
+        this.applySpeed(this.fallingMass, this.fallingMass.speed, this.dt);
+        this.tableMass.position.reboundAngle();
+
+        //Apply accelerations: update speeds
+        this.applyAcceleration(this.fallingMass, this.fallingMass.acceleration, this.dt);
+        this.applyAcceleration(this.tableMass, this.tableMass.acceleration, this.dt);
+    }
 }
 
 class NoFrictionFixedLengthEngine extends Engine
@@ -226,9 +232,7 @@ class NoFrictionFixedLengthEngine extends Engine
      */
     constructor (tableMass, fallingMass, cableLength, dt)
     {
-        super(dt);
-        this.tableMass = tableMass;
-        this.fallingMass = fallingMass;
+        super(tableMass, fallingMass, dt);
         if (!Decimal.isDecimal(cableLength))
         {
             cableLength = new Decimal(cableLength);
@@ -236,24 +240,12 @@ class NoFrictionFixedLengthEngine extends Engine
         this.cableLength = cableLength;
     }
 
-    applySpeedsAndForces()
-    {
-        //Apply speeds: update position
-        this.applySpeed(this.tableMass, this.tableMass.speed, this.dt);
-        this.applySpeed(this.fallingMass, this.fallingMass.speed, this.dt);
-        this.tableMass.position.reboundAngle();
-
-        //Apply accelerations: update speeds
-        this.applyAcceleration(this.fallingMass, this.fallingMass.acceleration, this.dt);
-        this.applyAcceleration(this.tableMass, this.tableMass.acceleration, this.dt);
-    }
 
     getNewAccelerations()
     {
         //Prevent values from diverging: we set them both to the medium value
         this.tableMass.rPrime = this.fallingMass.heightPrime = ( this.tableMass.rPrime.plus(this.fallingMass.heightPrime) ).div(2);
         
-
         // ..         .
         //  R = ( m R 0^2 + M g ) / (m + M)
         this.tableMass.rDoublePrime = this.fallingMass.heightDoublePrime = ( 
@@ -281,11 +273,33 @@ class NoFrictionFixedLengthEngine extends Engine
     }
 }
 
-class FrictionFixedLengthEngine extends Engine
+class NoFrictionVariableLengthEngine extends Engine
 {
-    
-}
-class FrictionVariableLengthEngine extends Engine
-{
-    
+    /**
+     * @param {MassRotatingObject} tableMass 
+     * @param {MassFallingObject} fallingMass 
+     * @param {Decimal|number} cableStartLength
+     * @param {Decimal|number} k 
+     * @param {Decimal|number} dt 
+     */
+    constructor (tableMass, fallingMass, cableStartLength, k, dt)
+    {
+        super(tableMass, fallingMass, dt);
+        if (!Decimal.isDecimal(cableStartLength))
+        {
+            cableStartLength = new Decimal(cableStartLength);
+        }
+        this.cableStartLength = cableStartLength;
+        if (!Decimal.isDecimal(k))
+        {
+            k = new Decimal(k);
+        }
+        this.k = k;
+    }
+
+
+    getNewAccelerations()
+    {
+        
+    }
 }
