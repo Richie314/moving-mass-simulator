@@ -48,7 +48,7 @@ const tableThickness = 10;
 camera.lookAt( 0, tableHeight, 0 );
 
 //Materials
-const tableMesh = new THREE.MeshLambertMaterial( { color: 0x2f2312, opacity: 0.8, transparent: true } );
+const tableMesh = new THREE.MeshLambertMaterial( { color: 0x62CDFF, opacity: 0.8, transparent: true } );
 
 const tableMassMesh = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
 
@@ -239,6 +239,6 @@ function threeAnimate(simulation)
 	renderer.render( scene, camera );
 
 	stats.end();
-    return requestAnimationFrame(()=> threeAnimate(simulation));
+    return requestAnimationFrame(() => threeAnimate(simulation));
 }
 window.threeAnimate = threeAnimate;

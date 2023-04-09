@@ -227,7 +227,7 @@ class Simulation
             canvasPos.x, canvasPos.y, 
             '#00ff00');
 
-        this.sideCtx.fillStyle = '#2f2312';
+        this.sideCtx.fillStyle = '#62CDFF';
         this.sideCtx.fillRect(0, 0, this.sideCanvas.width, this.sideCanvasDrawOffSet.y);
     }
     #getSideCanvasCoordX(simulationY)
