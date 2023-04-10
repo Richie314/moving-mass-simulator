@@ -34,6 +34,22 @@ var InitialRPrime = new Decimal(0.5);
 var InitialThetaPrime = new Decimal(1.3);
 var InitialHPrime = new Decimal(0.2);
 
+var springRelaxLength = 1.5;
+var springConstant = 300;
+
+var dt = new Decimal(0.00005);
+var dtCount = 15;
+
+function LoadInitialVariables()
+{
+    SetInitialRPrime();
+    SetInitialHPrime();
+    UpdateFallingMass();
+    UpdateTableMass();
+    UpdateDtCount();
+    UpdateDt();
+}
+
 const tableMass = new MassRotatingObject(
     tableMassMass,
     new PolarVector(0.7, pi.div(3)), //Initial position
@@ -45,8 +61,6 @@ const fallingMass = new MassFallingObject(
     new Vector3(0, 0, -0.40),
     new Vector3(0, 0, InitialHPrime),
     gravity);
-var dt = new Decimal(0.00005);
-var dtCount = 15;
 
 const CinematicEngine = new NoFrictionFixedLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), dt);
 const ConservativeEngine = new NoFrictionVariableLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), 300, dt);
@@ -67,6 +81,7 @@ function RefreshSimulationParams(sim)
     sim.dtCount = dtCount;
     sim.tableMass.mass = tableMassMass;
     sim.fallingMass.mass = fallingMassMass;
+    sim.UpdateSpring(springConstant, springRelaxLength);
 
     if (smoothRefresher++ == 4)
     {
@@ -99,7 +114,7 @@ simulation.onRefresh(RefreshSimulationParams);
 
 var isGrabbing = false;
 topViewCanvas.addEventListener('mousedown', evt => {
-    console.log('mousedown');
+    //console.log('mousedown');
     if (!allowGrabbing.checked) return;
     pause();
     const rect = evt.target.getBoundingClientRect();
@@ -125,7 +140,7 @@ function grab(evt)
     {
         return;
     }
-    console.log('grabbing...');
+    //console.log('grabbing...');
     const rect = evt.target.getBoundingClientRect();
     const cosine = (evt.clientX - rect.left) / evt.target.clientWidth * 2 - 1;
     const sine = -( (evt.clientY - rect.top) / evt.target.clientHeight * 2 - 1 );
@@ -141,7 +156,7 @@ function releaseGrab(evt)
     isGrabbing = false;
 }
 topViewCanvas.addEventListener('mouseup', evt => {
-    console.log('mouseup')
+    //console.log('mouseup')
     releaseGrab(evt);
 });
 topViewCanvas.addEventListener('mousemove', evt => {

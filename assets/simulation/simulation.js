@@ -326,4 +326,24 @@ class Simulation
 
         return this.refresh();
     }
+
+    updateSpring(newK, newStartLength)
+    {
+        if (!Decimal.isDecimal(newK))
+        {
+            newK = new Decimal(newK);
+        }
+        if (!Decimal.isDecimal(newStartLength))
+        {
+            newStartLength = new Decimal(newStartLength);
+        }
+        if ('k' in this.Engine)
+        {
+            this.Engine.k = newK;
+        }
+        if ('cableStartLength' in this.Engine)
+        {
+            this.Engine.cableStartLength = newStartLength;
+        }
+    }
 }

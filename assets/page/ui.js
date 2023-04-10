@@ -85,7 +85,8 @@ dtInput.addEventListener('input', UpdateDt);
 dtExponent.addEventListener('input', UpdateDt);
 
 const dtCountInput = document.getElementById('dt-count');
-dtCountInput.addEventListener('input', () => {
+function UpdateDtCount()
+{
     try {
         dtCount = Number(dtCountInput.value);
     } catch {
@@ -94,7 +95,8 @@ dtCountInput.addEventListener('input', () => {
     } finally {
         dtCountShow.innerHTML = dtCount;
     }
-});
+}
+dtCountInput.addEventListener('input', UpdateDt);
 
 const tableMassInput = document.getElementById('table-mass');
 const tableMassExponent = document.getElementById('table-mass-unit');
@@ -158,3 +160,22 @@ function SetInitialRPrime()
 }
 rPrimeStartHtml.addEventListener('input', SetInitialRPrime);
 rPrimeExponent.addEventListener('input', SetInitialRPrime);
+
+function SetInitialHPrime()
+{
+    hPrimeStartShow.innerHTML = hPrimeStartHtml.value;
+    InitialHPrime = new Decimal(hPrimeStartHtml.value).times( Ten.pow(hPrimeExponent.value) );
+}
+
+const springHtml = document.getElementById('hooke');
+const springRelaxHtml = document.getElementById('spring-relax');
+const springRelaxShow = document.getElementById('spring-relax-value-show');
+
+function UpdateSpringValue()
+{
+    springConstant = new Decimal(springHtml.value);
+    springRelaxLength = new Decimal(springRelaxHtml.value);
+    springRelaxShow.innerHTML = springRelaxHtml.value;
+}
+springHtml.addEventListener('input', UpdateSpringValue);
+springRelaxHtml.addEventListener('input', UpdateSpringValue);

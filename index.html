@@ -20,9 +20,9 @@
     
     <!--Styles-->
 
-    <link rel="stylesheet" href="assets/page/index.css" media="all">
-    <link rel="stylesheet" href="assets/page/menu.css" media="all">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" media="all" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="assets/page/index.css" media="all" />
+    <link rel="stylesheet" href="assets/page/menu.css" media="all" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" media="all" referrerpolicy="no-referrer" />
 
     <!--Scripts-->
 
@@ -56,7 +56,7 @@
 </head>
 <body>
     <noscript>
-        <h1>Abilita Javascript per far funzionare la simulazione e dopo <a href="#">ricaricare</a> la pagina</h1>
+        <h1>Abilita Javascript per far funzionare la simulazione e dopo <a href="#">ricarica</a> la pagina</h1>
     </noscript>
     <nav class="banner">
         <h4>
@@ -146,7 +146,7 @@
                 <h4 class="span-2">
                     Impostazioni attrito
                 </h4>
-                <label for="friction-value">
+                <label for="friction-value" title="Coefficiente di attrito dinamico">
                     &mu;<sub>d</sub>: <output id="friction-value-display">0.5</output>
                 </label>
                 <input type="range" id="friction-value" value="0.5" min="0" max="1" step="0.01">
@@ -155,15 +155,24 @@
             <label for="cable">
                 Filo estendibile:
             </label>
-            <input type="checkbox" id="cable">
+            <input type="checkbox" id="cable" checked>
             <div class="show-if-checked span-2 grid two">
                 <h4 class="span-2">
                     Impostazioni molla
                 </h4>
+
                 <label for="hooke">
                     Costante elastica [N/m]:
                 </label>
                 <input type="number" id="hooke" value="1" min="0">
+
+                <label for="spring-relax">
+                    Lunghezza a riposo [m]:
+                </label>
+                <div class="grid" style="grid-template-columns: 65% 35%;width: 100%;">
+                    <input type="range" id="spring-relax" value="1.5" min="0.5" max="3" step=".1">
+                    <output id="spring-relax-value-display">1.5</output>
+                </div>
             </div>
 
             <label for="interactions">
