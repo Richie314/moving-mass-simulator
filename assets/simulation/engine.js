@@ -221,6 +221,10 @@ class Engine extends EngineBase
         this.applySpeed(tableMass, tableMass.speed, this.dt);
         this.applySpeed(fallingMass, fallingMass.speed, this.dt);
         tableMass.position.reboundAngle();
+        if (fallingMass.height.greaterThan(0))
+        {
+            throw new Error('Simulazione incoerente, collisione avvenuta');
+        }
 
         //Apply accelerations: update speeds
         this.applyAcceleration(fallingMass, fallingMass.acceleration, this.dt);
@@ -318,8 +322,7 @@ class NoFrictionVariableLengthEngine extends Engine
         const kx = (fallingMass.height.abs().plus(tableMass.r).minus(this.cableStartLength)).times(this.k);
         // ..     .
         //  R = R 0^2 - k / m (h + R - l)
-        tableMass.rDoublePrime = tableMass.r.times( tableMass.thetaPrime.pow(2) ).minus(
-            kx.div(tableMass.mass) );
+        tableMass.rDoublePrime = tableMass.r.times( tableMass.thetaPrime.pow(2) ).minus( kx.div(tableMass.mass) );
         
         // ..
         //  h = - g + k / M (h + R - l)

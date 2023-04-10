@@ -87,16 +87,10 @@ dtExponent.addEventListener('input', UpdateDt);
 const dtCountInput = document.getElementById('dt-count');
 function UpdateDtCount()
 {
-    try {
-        dtCount = Number(dtCountInput.value);
-    } catch {
-        dtCount = 1;
-        dtCountInput.value = 1;
-    } finally {
-        dtCountShow.innerHTML = dtCount;
-    }
+    dtCount = Number(dtCountInput.value);
+    dtCountShow.innerHTML = dtCount;
 }
-dtCountInput.addEventListener('input', UpdateDt);
+dtCountInput.addEventListener('input', UpdateDtCount);
 
 const tableMassInput = document.getElementById('table-mass');
 const tableMassExponent = document.getElementById('table-mass-unit');
@@ -166,6 +160,14 @@ function SetInitialHPrime()
 {
     hPrimeStartShow.innerHTML = hPrimeStartHtml.value;
     InitialHPrime = new Decimal(hPrimeStartHtml.value).times( Ten.pow(hPrimeExponent.value) );
+}
+hPrimeStartHtml.addEventListener('input', SetInitialHPrime);
+hPrimeExponent.addEventListener('input', SetInitialHPrime);
+
+const thetaPStartHtml = document.getElementById('thetap-start');
+function SetInitialThetaPrime()
+{
+    InitialThetaPrime = new Decimal(thetaPStartHtml.value);
 }
 
 const springHtml = document.getElementById('hooke');

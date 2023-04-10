@@ -35,7 +35,7 @@ var InitialRPrime = new Decimal(0.5);
 var InitialThetaPrime = new Decimal(1.3);
 var InitialHPrime = new Decimal(0.2);
 
-var springRelaxLength = new Decimal(1.5);
+var springRelaxLength = new Decimal(1.1);
 var springConstant = new Decimal(300);
 
 var dt = new Decimal(0.00005);
@@ -45,6 +45,7 @@ function LoadInitialVariables()
 {
     SetInitialRPrime();
     SetInitialHPrime();
+    SetInitialThetaPrime();
 
     UpdateFallingMass();
     UpdateTableMass();
