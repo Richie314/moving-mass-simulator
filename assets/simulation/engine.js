@@ -165,11 +165,9 @@ class Engine extends EngineBase
 {
 
     /**
-     * @param {MassRotatingObject} tableMass 
-     * @param {MassFallingObject} fallingMass 
      * @param {Decimal|number} dt 
      */
-    constructor(tableMass, fallingMass, dt)
+    constructor(dt)
     {
         super();
         if (!Decimal.isDecimal(dt))
@@ -177,8 +175,6 @@ class Engine extends EngineBase
             dt = new Decimal(dt);
         }
         this.dt = dt;
-        this.tableMass = tableMass;
-        this.fallingMass = fallingMass;
     }
 
     #inverteTimeFlow()
@@ -187,10 +183,11 @@ class Engine extends EngineBase
     }
 
     /**
-     * 
+     * @param {MassRotatingObject} tableMass
+     * @param {MassFallingObject} fallingMass
      * @param {number} num Integer
      */
-    executeIterations(num)
+    executeIterations(num, tableMass, fallingMass)
     {
         const numAbs = Math.abs(num);
         if (num !== numAbs)
@@ -199,8 +196,8 @@ class Engine extends EngineBase
         }
         for (let i = 0; i < numAbs; i++)
         {
-            this.applySpeedsAndForces();
-            this.getNewAccelerations();
+            this.applySpeedsAndForces(tableMass, fallingMass);
+            this.getNewAccelerations(tableMass, fallingMass);
         }
         if (num !== numAbs)
         {
@@ -209,30 +206,32 @@ class Engine extends EngineBase
         return this;
     }
     
-    applySpeedsAndForces()
+    /**
+     * @param {MassRotatingObject} tableMass 
+     * @param {MassFallingObject} fallingMass 
+     */
+    applySpeedsAndForces(tableMass, fallingMass)
     {
         //Apply speeds: update position
-        this.applySpeed(this.tableMass, this.tableMass.speed, this.dt);
-        this.applySpeed(this.fallingMass, this.fallingMass.speed, this.dt);
-        this.tableMass.position.reboundAngle();
+        this.applySpeed(tableMass, tableMass.speed, this.dt);
+        this.applySpeed(fallingMass, fallingMass.speed, this.dt);
+        tableMass.position.reboundAngle();
 
         //Apply accelerations: update speeds
-        this.applyAcceleration(this.fallingMass, this.fallingMass.acceleration, this.dt);
-        this.applyAcceleration(this.tableMass, this.tableMass.acceleration, this.dt);
+        this.applyAcceleration(fallingMass, fallingMass.acceleration, this.dt);
+        this.applyAcceleration(tableMass, tableMass.acceleration, this.dt);
     }
 }
 
 class NoFrictionFixedLengthEngine extends Engine
 {
     /**
-     * @param {MassRotatingObject} tableMass 
-     * @param {MassFallingObject} fallingMass 
      * @param {Decimal|number} cableLength
      * @param {Decimal|number} dt 
      */
-    constructor (tableMass, fallingMass, cableLength, dt)
+    constructor (cableLength, dt)
     {
-        super(tableMass, fallingMass, dt);
+        super(dt);
         if (!Decimal.isDecimal(cableLength))
         {
             cableLength = new Decimal(cableLength);
@@ -241,50 +240,52 @@ class NoFrictionFixedLengthEngine extends Engine
     }
 
 
-    getNewAccelerations()
+    /**
+     * @param {MassRotatingObject} tableMass 
+     * @param {MassFallingObject} fallingMass 
+     */
+    getNewAccelerations(tableMass, fallingMass)
     {
         //Prevent values from diverging: we set them both to the medium value
-        this.tableMass.rPrime = this.fallingMass.heightPrime = ( this.tableMass.rPrime.plus(this.fallingMass.heightPrime) ).div(2);
+        tableMass.rPrime = fallingMass.heightPrime = ( tableMass.rPrime.plus(fallingMass.heightPrime) ).div(2);
         
         // ..         .
         //  R = ( m R 0^2 + M g ) / (m + M)
-        this.tableMass.rDoublePrime = this.fallingMass.heightDoublePrime = ( 
-            ( this.tableMass.mass.times(this.tableMass.r).times(this.tableMass.thetaPrime).times(this.tableMass.thetaPrime) ).plus(
-                this.fallingMass.mass.times(g)
-            ) ).div( this.tableMass.mass.plus(this.fallingMass.mass) );
+        tableMass.rDoublePrime = fallingMass.heightDoublePrime = ( 
+            ( tableMass.mass.times(tableMass.r).times( tableMass.thetaPrime.pow(2) ) ).plus(
+                fallingMass.mass.times(g)
+            ) ).div( tableMass.mass.plus(fallingMass.mass) );
         
-        if (this.tableMass.r.lessThanOrEqualTo(0))
+        if (tableMass.r.lessThanOrEqualTo(0))
         {
             //The object just crossed the center of the table
-            this.tableMass.position.reboundPositive();
-            this.fallingMass.heightPrime = this.tableMass.rPrime = this.fallingMass.heightPrime.neg();
-            this.tableMass.thetaDoublePrime = new Decimal(0);
+            tableMass.position.reboundPositive();
+            fallingMass.heightPrime = tableMass.rPrime = fallingMass.heightPrime.neg();
+            tableMass.thetaDoublePrime = new Decimal(0);
             return;
         }
         // ..       . .
         //  0 = - 2 R 0 / R
-        this.tableMass.thetaDoublePrime = new Decimal(-2).times( this.tableMass.rPrime ).times( this.tableMass.thetaPrime ).div( this.tableMass.r );
+        tableMass.thetaDoublePrime = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
 
 
         //Since cableLength = r + height, r + height - cableLength = error
-        const diff = (this.tableMass.r.plus( this.fallingMass.height.abs() ).minus( this.cableLength ) ).div(2);
-        this.tableMass.r = this.tableMass.r.minus( diff );
-        this.fallingMass.height = this.fallingMass.height.plus( diff );
+        const diff = (tableMass.r.plus( fallingMass.height.abs() ).minus( this.cableLength ) ).div(2);
+        tableMass.r = tableMass.r.minus( diff );
+        fallingMass.height = fallingMass.height.plus( diff );
     }
 }
 
 class NoFrictionVariableLengthEngine extends Engine
 {
     /**
-     * @param {MassRotatingObject} tableMass 
-     * @param {MassFallingObject} fallingMass 
      * @param {Decimal|number} cableStartLength
      * @param {Decimal|number} k 
      * @param {Decimal|number} dt 
      */
-    constructor (tableMass, fallingMass, cableStartLength, k, dt)
+    constructor (cableStartLength, k, dt)
     {
-        super(tableMass, fallingMass, dt);
+        super(dt);
         if (!Decimal.isDecimal(cableStartLength))
         {
             cableStartLength = new Decimal(cableStartLength);
@@ -297,9 +298,33 @@ class NoFrictionVariableLengthEngine extends Engine
         this.k = k;
     }
 
-
-    getNewAccelerations()
+    /**
+     * @param {MassRotatingObject} tableMass 
+     * @param {MassFallingObject} fallingMass 
+     */
+    getNewAccelerations(tableMass, fallingMass)
     {
+        const kx = (fallingMass.height.abs().plus(tableMass.r).minus(this.cableStartLength)).times(this.k);
+        // ..     .
+        //  R = R 0^2 - k / m (h + R - l)
+        tableMass.rDoublePrime = tableMass.r.times( tableMass.thetaPrime.pow(2) ).minus(
+            kx.div(tableMass.mass) );
         
+        // ..
+        //  h = - g + k / M (h + R - l)
+        fallingMass.heightDoublePrime = g.plus( kx.div(fallingMass.mass) );
+
+        if (tableMass.r.lessThanOrEqualTo(0))
+        {
+            //The object just crossed the center of the table
+            tableMass.position.reboundPositive();
+            tableMass.rPrime = tableMass.rPrime.neg();
+            tableMass.thetaDoublePrime = new Decimal(0);
+            return;
+        }
+        // ..       . .
+        //  0 = - 2 R 0 / R
+        tableMass.thetaDoublePrime = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
+
     }
 }

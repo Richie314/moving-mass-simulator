@@ -79,6 +79,9 @@ label {
      -moz-user-select: none;
           user-select: none;
 }
+.form h3 {
+  margin: 0;
+}
 
 .full-w {
   width: 100%;

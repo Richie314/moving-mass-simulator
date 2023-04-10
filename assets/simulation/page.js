@@ -27,12 +27,12 @@ const ugHtml = document.getElementById('ug-html');
 const ukHtml = document.getElementById('uk-html');
 const tuHtml = document.getElementById('tu-html');
 
-var tableMassMass = new Decimal(1);
+var tableMassMass = new Decimal(1.5);
 var fallingMassMass = new Decimal(2);
 
-var InitialRPrime = new Decimal(0);
-var InitialThetaPrime = new Decimal(0);
-var InitialHPrime = new Decimal(0);
+var InitialRPrime = new Decimal(0.5);
+var InitialThetaPrime = new Decimal(1.3);
+var InitialHPrime = new Decimal(0.2);
 
 const tableMass = new MassRotatingObject(
     tableMassMass,
@@ -48,9 +48,14 @@ const fallingMass = new MassFallingObject(
 var dt = new Decimal(0.00005);
 var dtCount = 15;
 
-const VerySimpleEngine = new NoFrictionFixedLengthEngine(tableMass, fallingMass, tableMass.r.plus( fallingMass.height.abs() ), dt);
+const CinematicEngine = new NoFrictionFixedLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), dt);
+const ConservativeEngine = new NoFrictionVariableLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), 300, dt);
 const TableMeasures = new Vector3(4, 2, 2);
-var simulation = new Simulation(VerySimpleEngine, topViewCanvas, sideViewCanvas, TableMeasures, dtCount);
+var simulation = new Simulation(
+    ConservativeEngine, 
+    tableMass, fallingMass,
+    topViewCanvas, sideViewCanvas, 
+    TableMeasures, dtCount);
 
 var smoothRefresher = 0;
 /**

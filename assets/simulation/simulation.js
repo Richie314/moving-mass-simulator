@@ -3,16 +3,31 @@
 class Simulation
 {
     /**
-     * 
      * @param {Engine} engine 
+     * @param {MassRotatingObject} tableMass
+     * @param {MassFallingObject} fallingMass
      * @param {HTMLCanvasElement} topCanvas
      * @param {HTMLCanvasElement} sideCanvas
      * @param {Vector3} tableMeasures
-     * @param {number} dtCount
+     * @param {number|Decimal|BigInt} dtCount
      */
-    constructor(engine, topCanvas, sideCanvas, tableMeasures, dtCount)
+    constructor(engine, tableMass, fallingMass, topCanvas, sideCanvas, tableMeasures, dtCount)
     {
+        if (!(tableMass instanceof MassRotatingObject))
+        {
+            throw new Error('Invalid parameter "tableMass"');
+        }
+        if (!(fallingMass instanceof MassFallingObject))
+        {
+            throw new Error('Invalid parameter "fallingMass"');
+        }
+        if (!Decimal.isDecimal(dtCount) && typeof dtCount !== 'number' && !(dtCount instanceof BigInt))
+        {
+            throw new Error('Invalid parameter "dtCount"');
+        }
         this.Engine = engine;
+        this.tableMass = tableMass;
+        this.fallingMass = fallingMass;
         this.dtCount = dtCount;
 
         this.topCanvas = topCanvas;
@@ -131,7 +146,7 @@ class Simulation
         this.topCtx.clearRect(0, 0, this.topCanvas.width, this.topCanvas.height);
         this.#drawCircle(this.topCtx, 4, 
             this.topCanvasZero.x, this.topCanvasZero.y, '#000000');
-        const massPos = this.Engine.tableMass.position.toVec3().toNumbers();
+        const massPos = this.tableMass.position.toVec3().toNumbers();
         const canvasPos = {
             x: this.#getTopCanvasCoordX(massPos.x),
             y: this.#getTopCanvasCoordY(massPos.y)
@@ -211,7 +226,7 @@ class Simulation
          **************************************/
         this.sideCtx.fillStyle = '#ffffff';
         this.sideCtx.clearRect(0, 0, this.sideCanvas.width, this.sideCanvas.height);
-        const massPos = this.Engine.fallingMass.position.toNumbers();
+        const massPos = this.fallingMass.position.toNumbers();
         const canvasPos = {
             x: this.#getSideCanvasCoordX(massPos.y),
             y: this.#getSideCanvasCoordY(massPos.z)
@@ -248,7 +263,7 @@ class Simulation
     executeIterations(num)
     {
         try {
-            this.Engine.executeIterations(num);
+            this.Engine.executeIterations(num, this.tableMass, this.fallingMass);
         } catch (err) {
             warn(err);
             return false;
@@ -268,6 +283,7 @@ class Simulation
         if (typeof callback !== 'function')
             return false;
         this.RefreshCallback = callback;
+        return true;
     }
     refresh()
     {
@@ -275,6 +291,8 @@ class Simulation
             this.RefreshCallback(this);
         } catch(err) {
             warn(err);
+        } finally {
+            return this;
         }
     }
 
@@ -292,16 +310,20 @@ class Simulation
     }
 
     /**
-     * @returns {MassRotatingObject}
+     * Changes the current engine, copying the actual values of masses and positions
+     * @param {Engine} newEngine The new engine
+     * @returns {Simulation} this object
      */
-    get tableMass() {
-        return this.Engine.tableMass;
+    changeEngine(newEngine)
+    {
+        this.Engine = newEngine;
+        return this.refresh();
     }
 
-    /**
-     * @returns {MassFallingObject}
-     */
-    get fallingMass() {
-        return this.Engine.fallingMass;
+    restart()
+    {
+        //TODO: Add code
+
+        return this.refresh();
     }
 }
