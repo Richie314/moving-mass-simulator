@@ -327,4 +327,15 @@ class NoFrictionVariableLengthEngine extends Engine
         tableMass.thetaDoublePrime = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
 
     }
+
+    /**
+     * @param {MassRotatingObject} tableMass 
+     * @param {MassFallingObject} fallingMass 
+     * @returns {Decimal}
+     */
+    SpringEnergy(tableMass, fallingMass)
+    {
+        const x = fallingMass.height.abs().plus(tableMass.r).minus(this.cableStartLength);
+        return this.k.div(2).times(x.times(x));
+    }
 }

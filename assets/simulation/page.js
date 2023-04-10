@@ -86,9 +86,11 @@ function RefreshSimulationParams(sim)
     
         const totalT = sim.fallingMass.kinetic.plus( sim.tableMass.kinetic );
         const Ug = sim.fallingMass.gravityPotential;
+        const Uk = sim.Engine.SpringEnergy ? sim.Engine.SpringEnergy(sim.tableMass, sim.fallingMass) : 0;
         tHtml.innerHTML = totalT.toSignificantDigits(6, Decimal.ROUND_UP);
-        ugHtml.innerHTML = Ug.toSignificantDigits(6, Decimal.ROUND_UP);
-        tuHtml.innerHTML = (totalT.plus(Ug)).toSignificantDigits(6, Decimal.ROUND_UP);
+        ugHtml.innerHTML = Ug.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
+        ukHtml.innerHTML = Uk.toSignificantDigits(6, Decimal.ROUND_HANF_EVEN);
+        tuHtml.innerHTML = (totalT.plus(Ug).plus(Uk)).toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
 
         smoothRefresher = 0;
     }
