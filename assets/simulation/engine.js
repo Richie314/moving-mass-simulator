@@ -186,10 +186,12 @@ class Engine extends EngineBase
      * @param {MassRotatingObject} tableMass
      * @param {MassFallingObject} fallingMass
      * @param {number} num Integer
+     * @returns {boolean}
      */
     executeIterations(num, tableMass, fallingMass)
     {
         const numAbs = Math.abs(num);
+        let ret = true;
         if (num !== numAbs)
         {
             this.#inverteTimeFlow();
@@ -197,13 +199,16 @@ class Engine extends EngineBase
         for (let i = 0; i < numAbs; i++)
         {
             this.applySpeedsAndForces(tableMass, fallingMass);
-            this.getNewAccelerations(tableMass, fallingMass);
+            if (!this.getNewAccelerations(tableMass, fallingMass))
+            {
+                ret = false;
+            }
         }
         if (num !== numAbs)
         {
             this.#inverteTimeFlow();
         }
-        return this;
+        return ret;
     }
     
     /**
@@ -262,17 +267,23 @@ class NoFrictionFixedLengthEngine extends Engine
             tableMass.position.reboundPositive();
             fallingMass.heightPrime = tableMass.rPrime = fallingMass.heightPrime.neg();
             tableMass.thetaDoublePrime = new Decimal(0);
-            return;
+            return true;
         }
-        // ..       . .
-        //  0 = - 2 R 0 / R
-        tableMass.thetaDoublePrime = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
-
+        try {
+                    
+            // ..       . .
+            //  0 = - 2 R 0 / R
+            tableMass.thetaDoublePrime = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
+        } catch (err) {
+            console.warn(err);
+            return false;
+        }
 
         //Since cableLength = r + height, r + height - cableLength = error
         const diff = (tableMass.r.plus( fallingMass.height.abs() ).minus( this.cableLength ) ).div(2);
         tableMass.r = tableMass.r.minus( diff );
         fallingMass.height = fallingMass.height.plus( diff );
+        return true;
     }
 }
 
@@ -319,13 +330,18 @@ class NoFrictionVariableLengthEngine extends Engine
             //The object just crossed the center of the table
             tableMass.position.reboundPositive();
             tableMass.rPrime = tableMass.rPrime.neg();
-            tableMass.thetaDoublePrime = new Decimal(0);
-            return;
+        } else {
+            try {
+                    
+                // ..       . .
+                //  0 = - 2 R 0 / R
+                tableMass.thetaDoublePrime = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
+            } catch (err) {
+                console.warn(err);
+                return false;
+            }
         }
-        // ..       . .
-        //  0 = - 2 R 0 / R
-        tableMass.thetaDoublePrime = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
-
+        return true;
     }
 
     /**

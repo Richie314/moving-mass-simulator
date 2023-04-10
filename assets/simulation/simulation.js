@@ -263,7 +263,8 @@ class Simulation
     executeIterations(num)
     {
         try {
-            this.Engine.executeIterations(num, this.tableMass, this.fallingMass);
+            if (!this.Engine.executeIterations(num, this.tableMass, this.fallingMass))
+                return false;
         } catch (err) {
             warn(err);
             return false;
@@ -276,7 +277,9 @@ class Simulation
         if (this.executeIterations(num))
         {
             this.drawSimulation();
+            return true;
         }
+        return false;
     }
     onRefresh(callback)
     {

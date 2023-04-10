@@ -191,4 +191,9 @@ class MassRotatingObject extends MassObject
     {
         return this.acceleration.theta = value;
     }
+
+    get momentum()
+    {
+        return this.mass.times(this.thetaPrime).times(this.r.pow(2));
+    }
 }

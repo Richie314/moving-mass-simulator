@@ -55,7 +55,8 @@ label {
 }
 .form .show-if-checked {
   height: 0 !important;
-  width: 100%;
+  width: 90%;
+  margin-inline: 5%;
   overflow: hidden;
   border-radius: 5px;
   transition: height ease-in-out 0.4s;

@@ -116,8 +116,8 @@
                 Massa sul tavolo: 
             </label>
             <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
-                <input type="range" id="table-mass" value="2" min="1" max="20" step="1">
-                <output id="table-mass-value-display">2</output>
+                <input type="range" id="table-mass" value="3" min="1" max="20" step="1">
+                <output id="table-mass-value-display"></output>
                 <select id="table-mass-unit" title="Ordine di grandezza">
                     <option value="-3" title="Grammi">[g]</option>
                     <option value="0" title="Chilogrammi" selected="selected">[kg]</option>
@@ -129,8 +129,8 @@
                 Massa sotto il tavolo:
             </label>
             <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
-                <input type="range" id="falling-mass" value="4" min="1" max="20" step="1">
-                <output id="falling-mass-value-display">4</output>
+                <input type="range" id="falling-mass" value="3" min="1" max="20" step="1">
+                <output id="falling-mass-value-display"></output>
                 <select id="falling-mass-unit" title="Ordine di grandezza">
                     <option value="-3" title="Grammi">[g]</option>
                     <option value="0" title="Chilogrammi" selected="selected">[kg]</option>
@@ -164,7 +164,7 @@
                 <label for="hooke">
                     Costante elastica [N/m]:
                 </label>
-                <input type="number" id="hooke" value="1" min="0">
+                <input type="number" id="hooke" value="1000" min="100" max="10000" step="5">
 
                 <label for="spring-relax">
                     Lunghezza a riposo [m]:
@@ -189,13 +189,14 @@
                 della simulazione. Per modificare la posizione iniziale della massa superiore trascinarla col mouse 
                 dalla vista dall'alto.
             </p>
+
             <!--Radial initial speed-->
             <label for="rp-start">
                 <span class="math">$$ \dot{R} $$</span>
             </label>
             <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
-                <input type="range" id="rp-start" value="50" min="-100" max="100" step="0.5">
-                <output id="rp-start-display">50</output>
+                <input type="range" id="rp-start" value="10" min="-100" max="100" step="0.5">
+                <output id="rp-start-display"></output>
                 <select id="rp-start-unit" title="Ordine di grandezza">
                     <option value="-3" title="Millimetri al secondo">[mm/s]</option>
                     <option value="-2" title="Centimetri al secondo" selected="selected">[cm/s]</option>
@@ -208,7 +209,7 @@
                 <span class="math">$$ \dot{\theta} $$</span>
             </label>
             <div class="grid" style="grid-template-columns: 65% 35%;width: 100%;">
-                <input type="number" id="thetap-start" value="2" min="-100" max="100" step="0.5">
+                <input type="number" id="thetap-start" value="4" min="-100" max="100" step="0.5">
                 <span>[rad/s]</span>
             </div>
 
@@ -217,8 +218,8 @@
                 <span class="math">$$ \dot{h} $$</span>
             </label>
             <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
-                <input type="range" id="hp-start" value="50" min="-100" max="100" step="0.5">
-                <output id="hp-start-display">50</output>
+                <input type="range" id="hp-start" value="10" min="-100" max="100" step="0.5">
+                <output id="hp-start-display"></output>
                 <select id="hp-start-unit" title="Ordine di grandezza">
                     <option value="-3" title="Millimetri al secondo">[mm/s]</option>
                     <option value="-2" title="Centimetri al secondo" selected="selected">[cm/s]</option>
@@ -420,6 +421,14 @@
             </span>
             <div>
                 <output id="thpp-html">0</output><span>[rad/s<sup>2</sup>]</span>
+            </div>
+        </div>
+        <div title="Momento angolare">
+            <span class="math">
+                $$ \dot{\theta} r^2 m $$
+            </span>
+            <div>
+                <output id="momentum-html">0</output><span>[J / s]</span>
             </div>
         </div>
         <div title="Energia cinetica sistema">

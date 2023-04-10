@@ -225,7 +225,8 @@ function threeAnimate(simulation)
     if (isRunning)
     {
         simulation.refresh();
-        simulation.iterateAndDraw(simulation.dtCount);
+        if (!simulation.iterateAndDraw(simulation.dtCount))
+            pause();
     } else {
         simulation.drawSimulation();
     }

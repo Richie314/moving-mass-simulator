@@ -17,6 +17,7 @@ const hpHtml = document.getElementById('hp-html');
 const hppHtml = document.getElementById('hpp-html');
 
 const lHtml = document.getElementById('l-html');
+const momentumHtml = document.getElementById('momentum-html');
 
 const thHtml = document.getElementById('th-html');
 const thpHtml = document.getElementById('thp-html');
@@ -34,8 +35,8 @@ var InitialRPrime = new Decimal(0.5);
 var InitialThetaPrime = new Decimal(1.3);
 var InitialHPrime = new Decimal(0.2);
 
-var springRelaxLength = 1.5;
-var springConstant = 300;
+var springRelaxLength = new Decimal(1.5);
+var springConstant = new Decimal(300);
 
 var dt = new Decimal(0.00005);
 var dtCount = 15;
@@ -44,15 +45,19 @@ function LoadInitialVariables()
 {
     SetInitialRPrime();
     SetInitialHPrime();
+
     UpdateFallingMass();
     UpdateTableMass();
+
+    UpdateSpringValue();
+
     UpdateDtCount();
     UpdateDt();
 }
-
+LoadInitialVariables();
 const tableMass = new MassRotatingObject(
     tableMassMass,
-    new PolarVector(0.7, pi.div(3)), //Initial position
+    new PolarVector(0.7, pi.div(6).times(5)), //Initial position
     new PolarVector(InitialRPrime, InitialThetaPrime),  //Initial radial and angular speed
     new PolarVector(0, 0)); //Initial acceleration doesn't really count
 
@@ -63,8 +68,8 @@ const fallingMass = new MassFallingObject(
     gravity);
 
 const CinematicEngine = new NoFrictionFixedLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), dt);
-const ConservativeEngine = new NoFrictionVariableLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), 300, dt);
-const TableMeasures = new Vector3(4, 2, 2);
+const ConservativeEngine = new NoFrictionVariableLengthEngine(springRelaxLength, springConstant, dt);
+const TableMeasures = new Vector3(5, 2.5, 2.5);
 var simulation = new Simulation(
     ConservativeEngine, 
     tableMass, fallingMass,
@@ -81,7 +86,7 @@ function RefreshSimulationParams(sim)
     sim.dtCount = dtCount;
     sim.tableMass.mass = tableMassMass;
     sim.fallingMass.mass = fallingMassMass;
-    sim.UpdateSpring(springConstant, springRelaxLength);
+    sim.updateSpring(springConstant, springRelaxLength);
 
     if (smoothRefresher++ == 4)
     {
@@ -94,6 +99,7 @@ function RefreshSimulationParams(sim)
         hppHtml.innerHTML = sim.fallingMass.heightDoublePrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
     
         lHtml.innerHTML = (sim.fallingMass.height.abs().plus(sim.tableMass.r) ).toSignificantDigits(6, Decimal.ROUND_UP);
+        momentumHtml.innerHTML = sim.tableMass.momentum.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
 
         thHtml.innerHTML = sim.tableMass.theta.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
         thpHtml.innerHTML = sim.tableMass.thetaPrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);

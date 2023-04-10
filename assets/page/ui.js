@@ -146,7 +146,7 @@ function SetInitialRPrime()
 {
     InitialRPrime = new Decimal(rPrimeStartHtml.value).times( Ten.pow(rPrimeExponent.value) );
     rPrimeStartShow.innerHTML = rPrimeStartHtml.value;
-    if (isNotFixedLength.checked)
+    if (!isNotFixedLength.checked)
     { //Mirror, as the two values cannot diverge
         InitialHPrime = InitialRPrime;
         hPrimeStartHtml.value = rPrimeStartHtml.value;
@@ -160,6 +160,7 @@ function SetInitialRPrime()
 }
 rPrimeStartHtml.addEventListener('input', SetInitialRPrime);
 rPrimeExponent.addEventListener('input', SetInitialRPrime);
+isNotFixedLength.addEventListener('change', SetInitialRPrime);
 
 function SetInitialHPrime()
 {
@@ -169,7 +170,7 @@ function SetInitialHPrime()
 
 const springHtml = document.getElementById('hooke');
 const springRelaxHtml = document.getElementById('spring-relax');
-const springRelaxShow = document.getElementById('spring-relax-value-show');
+const springRelaxShow = document.getElementById('spring-relax-value-display');
 
 function UpdateSpringValue()
 {
