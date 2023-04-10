@@ -31,6 +31,9 @@ const tuHtml = document.getElementById('tu-html');
 var tableMassMass = new Decimal(1.5);
 var fallingMassMass = new Decimal(2);
 
+var DefaultR = 0.7;
+var DefaultH = -0.4;
+
 var InitialRPrime = new Decimal(0.5);
 var InitialThetaPrime = new Decimal(1.3);
 var InitialHPrime = new Decimal(0.2);
@@ -58,13 +61,13 @@ function LoadInitialVariables()
 LoadInitialVariables();
 const tableMass = new MassRotatingObject(
     tableMassMass,
-    new PolarVector(0.7, pi.div(6).times(5)), //Initial position
+    new PolarVector(DefaultR, pi.div(6).times(5)), //Initial position
     new PolarVector(InitialRPrime, InitialThetaPrime),  //Initial radial and angular speed
     new PolarVector(0, 0)); //Initial acceleration doesn't really count
 
 const fallingMass = new MassFallingObject(
     fallingMassMass,
-    new Vector3(0, 0, -0.40),
+    new Vector3(0, 0, DefaultH),
     new Vector3(0, 0, InitialHPrime),
     gravity);
 
@@ -108,7 +111,7 @@ function RefreshSimulationParams(sim)
     
         const totalT = sim.fallingMass.kinetic.plus( sim.tableMass.kinetic );
         const Ug = sim.fallingMass.gravityPotential;
-        const Uk = sim.Engine.SpringEnergy ? sim.Engine.SpringEnergy(sim.tableMass, sim.fallingMass) : 0;
+        const Uk = sim.Engine.SpringEnergy ? sim.Engine.SpringEnergy(sim.tableMass, sim.fallingMass) : new Decimal(0);
         tHtml.innerHTML = totalT.toSignificantDigits(6, Decimal.ROUND_UP);
         ugHtml.innerHTML = Ug.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
         ukHtml.innerHTML = Uk.toSignificantDigits(6, Decimal.ROUND_HANF_EVEN);
@@ -118,6 +121,41 @@ function RefreshSimulationParams(sim)
     }
 }
 simulation.onRefresh(RefreshSimulationParams);
+
+function UpdateEngine()
+{
+    if (isNotFixedLength.checked)
+    {
+        simulation.changeEngine(ConservativeEngine);
+    } else {
+        CinematicEngine.cableLength = simulation.tableMass.r.plus( simulation.fallingMass.height.abs() );
+        simulation.changeEngine(CinematicEngine);
+    }
+}
+isNotFixedLength.addEventListener('change', UpdateEngine);
+
+UpdateEngine();
+
+function reset()
+{
+    LoadInitialVariables();
+    const newTableMass = new MassRotatingObject(
+        tableMassMass,
+        new PolarVector(DefaultR, pi.div(6).times(5)), //Initial position
+        new PolarVector(InitialRPrime, InitialThetaPrime),  //Initial radial and angular speed
+        new PolarVector(0, 0)); //Initial acceleration doesn't really count
+    
+    simulation.tableMass = newTableMass;
+    const newFallingMass = new MassFallingObject(
+        fallingMassMass,
+        new Vector3(0, 0, DefaultH),
+        new Vector3(0, 0, InitialHPrime),
+        gravity);
+    simulation.fallingMass = newFallingMass;
+    UpdateEngine();
+    simulation.restart();
+}
+simulation.onRestart(window.EraseTail);
 
 var isGrabbing = false;
 topViewCanvas.addEventListener('mousedown', evt => {

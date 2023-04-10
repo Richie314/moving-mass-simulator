@@ -70,7 +70,13 @@ label {
         user-select: none;
     }
     h3 {
-        margin: 0;
+        width: calc(100% - 2em);
+        margin: 10px 1em 0 1em;
+        text-align: center;
+    }
+    p {
+        padding-inline: 1.6em;
+        user-select: none;
     }
 }
 .full-w {

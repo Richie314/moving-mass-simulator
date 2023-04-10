@@ -323,11 +323,30 @@ class Simulation
         return this.refresh();
     }
 
+    /**
+     * @param {Function} callback 
+     */
+    onRestart(callback)
+    {
+        if (typeof callback === 'function')
+        {
+            this.RestartCallback = callback;
+        }
+    }
+    
     restart()
     {
         //TODO: Add code
-
-        return this.refresh();
+        if (this.RestartCallback)
+        {
+            try {
+                this.RestartCallback(this);
+            } catch (err) {
+                warn(err);
+            }
+        }
+        this.refresh();
+        log('Simulazione riavviata!');
     }
 
     updateSpring(newK, newStartLength)

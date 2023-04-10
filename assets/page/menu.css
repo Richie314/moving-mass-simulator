@@ -81,7 +81,15 @@ label {
           user-select: none;
 }
 .form h3 {
-  margin: 0;
+  width: calc(100% - 2em);
+  margin: 10px 1em 0 1em;
+  text-align: center;
+}
+.form p {
+  padding-inline: 1.6em;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
 .full-w {

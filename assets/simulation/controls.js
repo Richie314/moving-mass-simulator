@@ -24,10 +24,6 @@ function restart()
     pauseBtn.innerHTML = '<i class="material-icons">pause</i>';
     pauseBtn.title = 'Metti in pausa';
 }
-function reset()
-{
-
-}
 function resetUI()
 {
     pause();

@@ -113,6 +113,22 @@ const followSideLineGeometry = new THREE.BufferGeometry();
 followSideLineGeometry.setAttribute( 'position', new THREE.BufferAttribute( oldFallingMassPositions, 3 ) );
 followSideLineGeometry.setDrawRange( 0, oldFallingMassPositionsUsed );
 
+/**
+ * @param {THREE.Line} line 
+ */
+function EraseLine(line)
+{
+    line.geometry.attributes.position.array.fill(0);
+    line.geometry.setDrawRange(0, 0);
+}
+function EraseTail()
+{
+    EraseLine(followTopLine);
+    oldTableMassPositionsUsed = 0;
+    EraseLine(followSideLine);
+    oldFallingMassPositionsUsed = 0;
+}
+window.EraseTail = EraseTail;
 //Objects
 const tableObject = new THREE.Mesh( tableGeometry, tableMesh );
 tableObject.position.setY(tableHeight - tableThickness)
