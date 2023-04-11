@@ -68,6 +68,9 @@ class Simulation
 
         this.drawTail = true;
 
+        this.iterationCount = new Decimal(0);
+        this.elapsedTime = new Decimal(0);
+
         this.RefreshCallback = () => { };
     }
 
@@ -271,6 +274,8 @@ class Simulation
             warn(err);
             return false;
         }
+        this.iterationCount = this.iterationCount.add(num);
+        this.elapsedTime = this.elapsedTime.add(this.dt.times(num));
         return true;
     }
 
@@ -338,7 +343,8 @@ class Simulation
 
     restart()
     {
-        //TODO: Add code
+        this.iterationCount = new Decimal(0);
+        this.elapsedTime = new Decimal(0);
         if (this.RestartCallback)
         {
             try {

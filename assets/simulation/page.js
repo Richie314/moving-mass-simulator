@@ -28,6 +28,9 @@ const ugHtml = document.getElementById('ug-html');
 const ukHtml = document.getElementById('uk-html');
 const tuHtml = document.getElementById('tu-html');
 
+const elapsedTimeHtml = document.getElementById('elapsed-time');
+const itarationCountHtml = document.getElementById('iteration-count');
+
 var tableMassMass = new Decimal(1.5);
 var fallingMassMass = new Decimal(2);
 
@@ -125,6 +128,9 @@ function RefreshSimulationParams(sim)
         ugHtml.innerHTML = Ug.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
         ukHtml.innerHTML = Uk.toSignificantDigits(6, Decimal.ROUND_HANF_EVEN);
         tuHtml.innerHTML = (totalT.plus(Ug).plus(Uk)).toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
+
+        itarationCountHtml.innerHTML = simulation.iterationCount.toExponential(8, Decimal.ROUND_DOWN);
+        elapsedTimeHtml.innerHTML = simulation.elapsedTime.toExponential(9, Decimal.ROUND_DOWN);
 
         smoothRefresher = 0;
     }
