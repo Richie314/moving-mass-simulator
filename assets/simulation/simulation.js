@@ -72,6 +72,9 @@ class Simulation
         this.elapsedTime = new Decimal(0);
 
         this.RefreshCallback = () => { };
+        
+        this.tableStaticFrequencyValue = 0;
+        this.tableStaticFrequencyMax = 10;
     }
 
     /**
@@ -376,5 +379,13 @@ class Simulation
             this.Engine.cableStartLength = newStartLength;
         }
     }
-    
+    TableFrequency()
+    {
+        if (++this.tableStaticFrequencyValue >= this.tableStaticFrequencyMax)
+        {
+            this.tableStaticFrequencyValue = 0;
+            return true;
+        }
+        return false;
+    }
 }

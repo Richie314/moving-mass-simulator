@@ -94,17 +94,6 @@ const oldTableMassPositions = new Float32Array(3 * oldTableMassPositionsCount);
 const followTopLineGeometry = new THREE.BufferGeometry();
 followTopLineGeometry.setAttribute( 'position', new THREE.BufferAttribute( oldTableMassPositions, 3 ) );
 followTopLineGeometry.setDrawRange( 0, oldTableMassPositionsUsed );
-var tableStaticFrequencyValue = 0;
-const tableStaticFrequencyMax = 10;
-function TableFrequency()
-{
-    if (tableStaticFrequencyValue++ === tableStaticFrequencyMax)
-    {
-        tableStaticFrequencyValue = 0;
-        return true;
-    }
-    return false;
-}
 
 const oldFallingMassPositionsCount = 250;
 var oldFallingMassPositionsUsed = 0;
@@ -159,7 +148,7 @@ scene.add( followSideLine );
  * @param {THREE.Line} traceLine
  * @param {bool} updateTraceLine
  */
-function tableCoordsToTHREE(threeV, polarV, line, traceLine, updateTraceLine, frequency)
+function tableCoordsToTHREE(threeV, polarV, line, traceLine, updateTraceLine)
 {
     const scaled = polarV.scaled(tableWidth / 4);
     threeV.setFromCylindricalCoords(scaled.r.toNumber(), (scaled.theta.minus(halfPi)).toNumber(), tableHeight);
@@ -169,7 +158,7 @@ function tableCoordsToTHREE(threeV, polarV, line, traceLine, updateTraceLine, fr
     line.geometry.attributes.position.array[5] = threeV.z;
     line.geometry.attributes.position.needsUpdate = true;
 
-    if (updateTraceLine && frequency())
+    if (updateTraceLine)
     {
         const traceLineArr = traceLine.geometry.attributes.position.array;
         let considerLast = 1;
@@ -248,7 +237,7 @@ function threeAnimate(simulation)
     }
     tableCoordsToTHREE(
         tableMassObject.position, simulation.tableMass.position, 
-        tableLine, followTopLine, isRunning && simulation.drawTail, TableFrequency);
+        tableLine, followTopLine, isRunning && simulation.drawTail && simulation.TableFrequency());
     fallingCoordsToTHREE(
         fallingObject.position, simulation.fallingMass.position, 
         fallingLine, followSideLine, isRunning && simulation.drawTail);

@@ -189,3 +189,13 @@ function UpdateTailSettings()
     drawTail = tailInput.checked;
 }
 tailInput.addEventListener('change', UpdateTailSettings);
+
+const tailFreqHtml = document.getElementById('table-mass-tail-freq');
+const tailFreqShow = document.getElementById('table-mass-tail-freq-show');
+
+function UpdateTailFrequency()
+{
+    tailFreq = Number(tailFreqHtml.value);
+    tailFreqShow.innerHTML = tailFreqHtml.value;
+}
+tailFreqHtml.addEventListener('input', UpdateTailFrequency);

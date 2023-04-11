@@ -48,6 +48,7 @@ var dt = new Decimal(0.00005);
 var dtCount = 15;
 
 var drawTail = true;
+var tailFreq = 1;
 
 function LoadInitialVariables()
 {
@@ -64,6 +65,7 @@ function LoadInitialVariables()
     UpdateDt();
 
     UpdateTailSettings();
+    UpdateTailFrequency();
 }
 LoadInitialVariables();
 const tableMass = new MassRotatingObject(
@@ -102,6 +104,7 @@ function RefreshSimulationParams(sim)
         window.EraseTail();
     }
     sim.drawTail = drawTail;
+    sim.tableStaticFrequencyMax = tailFreq;
     sim.updateSpring(springConstant, springRelaxLength);
 
     if (smoothRefresher++ == 4)

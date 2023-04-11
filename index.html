@@ -184,6 +184,22 @@
                 Disegna scia
             </label>
             <input type="checkbox" checked id="tail">
+            <div class="show-if-checked span-2 grid two">
+                <h4 class="span-2">
+                    Impostazioni scia
+                </h4>
+
+                <label for="table-mass-tail-freq">
+                    Frequenza di campionamento:
+                </label>
+                <div class="grid" style="grid-template-columns: 10% 10% 80%;width: 100%;">
+                    <span>
+                        1 /
+                    </span>
+                    <output id="table-mass-tail-freq-show"></output>
+                    <input type="range" id="table-mass-tail-freq" value="5" min="1" max="300" step="1">
+                </div>
+            </div>
         </fieldset>
         <fieldset class="form grid two">
             <h3 class="span-2">
