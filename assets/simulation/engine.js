@@ -316,10 +316,10 @@ class NoFrictionVariableLengthEngine extends Engine
      */
     getNewAccelerations(tableMass, fallingMass)
     {
-        const kx = (fallingMass.height.abs().plus(tableMass.r).minus(this.cableStartLength)).times(this.k);
+        const kx = ( fallingMass.height.abs().plus(tableMass.r).minus(this.cableStartLength) ).times(this.k);
         // ..     .
         //  R = R 0^2 - k / m (h + R - l)
-        tableMass.rDoublePrime = tableMass.r.times( tableMass.thetaPrime.pow(2) ).minus( kx.div(tableMass.mass) );
+        tableMass.rDoublePrime = ( tableMass.r.times( tableMass.thetaPrime.pow(2) ) ).minus( kx.div(tableMass.mass) );
         
         // ..
         //  h = - g + k / M (h + R - l)

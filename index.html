@@ -53,6 +53,9 @@
     <![endif]-->
     <script src="assets/page/math-setup.js"></script>
     <script defer src="https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js" referrerpolicy="no-referrer"></script>
+
+    <script defer src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script defer src="assets/simulation/export-setup.js"></script>
 </head>
 <body>
     <noscript>
@@ -74,6 +77,9 @@
         <button type="button" id="show-settings" title="Modifica">
             <i class="material-icons">settings</i>
         </button>
+        <button type="button" id="show-export" title="Esporta">
+            <i class="material-icons">file_present</i>
+        </button>
         <button type="button" id="show-terminal-btn" title="Esegui codice">
             <i class="material-icons">terminal</i>
         </button>
@@ -81,6 +87,9 @@
             <i class="material-icons">functions</i>
         </button>
     </nav>
+    
+    <!--Windows that pop-up -->
+
     <div class="pop-up" id="settings">
         <h2>
             Parametri della simulazione
@@ -249,6 +258,45 @@
             </div>
         </fieldset>
     </div>
+    <div class="pop-up" id="export-menu">
+        <h2>
+            Esporta la simulazione
+        </h2>
+        <button type="button" id="close-export">
+            <i class="material-icons">close</i>
+        </button>
+
+        <p class="justify">
+            Questa funzionalit&agrave; permette di esportare le posizioni dei corpi, le velocit&agrave; e 
+            le accelerazioni in una tabella che verr&agrave; poi scaricata.<br />
+            Durante la creazione del file non &egrave; possibile chiudere questa finestra e tantomeno visualizzare
+            la simulazione. Per limitare le dimensioni del file generato le energie saranno escluse.<br />
+            I parametri iniziali impiegati saranno i medesimi della simulazione, e sono controllabili dal men&ugrave;
+            <strong>Impostazioni</strong>.<br />
+            &Egrave; possibile impostare un limite massimo temporale. In caso di errore la procedura terminer&agrave;
+            restituendo le righe apportate per ora
+        </p>
+        <fieldset class="form grid two">
+
+            <label for="max-export">
+                Durata massima
+            </label>
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
+                <input type="range" id="max-export" value="10" min="1" max="1000" step="1">
+                <output id="max-export-value-display"></output>
+                <select id="max-export-unit" title="Ordine di grandezza">
+                    <option value="-6" title="Micro secondi">[&mu;s]</option>
+                    <option value="-3" title="Milli secondi">[ms]</option>
+                    <option value="0" title="Secondi" selected="selected">[s]</option>
+                </select>
+            </div>
+
+            <button type="button" id="export-btn" class="span-2" title="Esporta">
+                Esporta
+            </button>
+
+        </fieldset>
+    </div>
     <div class="pop-up" id="shell">
         <h2>
             Console script
@@ -260,6 +308,7 @@
 
         </div>  
     </div>
+
     <div class="pop-up" id="math">
         <h2>
             Equazioni del moto
@@ -351,6 +400,7 @@
             </details>
         </div>
     </div>
+    
     <div class="banner">
     </div>
     <div class="screen-container full-screen" id="d3-container">
@@ -523,6 +573,9 @@
                 </li>
                 <li>
                     <a href="https://github.com/mrdoob/stats.js" target="_blank">Stats.js</a>
+                </li>
+                <li>
+                    <a href="https://docs.sheetjs.com/" target="_blank">SheetJS</a>
                 </li>
                 <li>
                     <a href="https://fonts.google.com/" target="_blank">Material Icons</a>

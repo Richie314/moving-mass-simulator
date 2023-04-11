@@ -40,7 +40,8 @@ label {
 }
 
 .form {
-  width: 100%;
+  width: calc(100% - 1.5em);
+  margin-inline: 0.75em;
   margin-top: 1em;
 }
 .form input {
@@ -49,6 +50,12 @@ label {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+}
+.form button {
+  margin-inline: 2em;
+  cursor: pointer;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
 }
 .form output {
   text-align: center;
@@ -165,4 +172,8 @@ details:first-child {
 }
 details:last-child {
   margin-bottom: 1em;
+}
+
+.justify {
+  text-align: justify;
 }/*# sourceMappingURL=menu.css.map */

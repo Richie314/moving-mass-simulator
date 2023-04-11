@@ -117,7 +117,7 @@ function RefreshSimulationParams(sim)
         hpHtml.innerHTML = sim.fallingMass.heightPrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
         hppHtml.innerHTML = sim.fallingMass.heightDoublePrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
     
-        lHtml.innerHTML = (sim.fallingMass.height.abs().plus(sim.tableMass.r) ).toSignificantDigits(6, Decimal.ROUND_UP);
+        lHtml.innerHTML = sim.cable.toSignificantDigits(6, Decimal.ROUND_UP);
         momentumHtml.innerHTML = sim.tableMass.momentum.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
 
         thHtml.innerHTML = sim.tableMass.theta.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);

@@ -345,6 +345,11 @@ class PolarVector
         }
         return this;
     }
+
+    copy()
+    {
+        return this.scaled(1);
+    }
 }
 
 const g = new Decimal(-9.8067);

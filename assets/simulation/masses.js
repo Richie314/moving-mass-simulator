@@ -112,6 +112,15 @@ class MassFallingObject extends MassObject
     {
         return this.mass.times(g).times(this.height).neg();
     }
+
+    clone()
+    {
+        return new MassFallingObject(
+            new Decimal(this.mass),
+            this.position.copy(),
+            this.speed.copy(),
+            this.acceleration.copy());
+    }
 }
 class MassRotatingObject extends MassObject
 {
@@ -195,5 +204,14 @@ class MassRotatingObject extends MassObject
     get momentum()
     {
         return this.mass.times(this.thetaPrime).times(this.r.pow(2));
+    }
+
+    clone()
+    {
+        return new MassRotatingObject(
+            new Decimal(this.mass),
+            this.position.copy(),
+            this.speed.copy(),
+            this.acceleration.copy());
     }
 }

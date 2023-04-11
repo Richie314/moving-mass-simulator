@@ -122,7 +122,7 @@ nav {
     height: fit-content;
     color: black;
     background-color: white;
-    grid-template-columns: 90% 10%;
+    grid-template-columns: calc(100% - 1.5em) 1.5em;
     grid-template-rows: 1.5em auto;
     gap: 0;
     border: 1px solid;
@@ -145,6 +145,15 @@ nav {
         color: darkred;
         background-color: red;
         cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    & > p {
+        padding-inline: .9em;
+    }
+    & > :last-child {
+        margin-bottom: 1.3em;
     }
 }
 .screen-container {

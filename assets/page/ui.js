@@ -10,7 +10,11 @@ const resetBtn = document.getElementById('restart');
 /**
  * @type {HTMLButtonElement}
  */
-const promptMathBtn = document.getElementById('show-math-btn');
+const promptSettingsBtn = document.getElementById('show-settings');
+/**
+ * @type {HTMLButtonElement}
+ */
+const promptExportBtn = document.getElementById('show-export');
 /**
  * @type {HTMLButtonElement}
  */
@@ -18,13 +22,16 @@ const promptShellBtn = document.getElementById('show-terminal-btn');
 /**
  * @type {HTMLButtonElement}
  */
-const promptSettingsBtn = document.getElementById('show-settings');
+const promptMathBtn = document.getElementById('show-math-btn');
+
+
 function DisableButtons() {
     pauseBtn.disabled = true;
     resetBtn.disabled = true;
     promptMathBtn.disabled = true;
     promptShellBtn.disabled = true;
     promptSettingsBtn.disabled = true;
+    promptExportBtn.disabled = true;
 }
 function ReEnableButtons() {
     pauseBtn.disabled = false;
@@ -32,6 +39,7 @@ function ReEnableButtons() {
     promptMathBtn.disabled = false;
     promptShellBtn.disabled = false;
     promptSettingsBtn.disabled = false;
+    promptExportBtn.disabled = false;
 }
 promptMathBtn.onclick = () => {
     document.getElementById('math').classList.add('show');
@@ -199,3 +207,36 @@ function UpdateTailFrequency()
     tailFreqShow.innerHTML = tailFreqHtml.value;
 }
 tailFreqHtml.addEventListener('input', UpdateTailFrequency);
+
+
+
+const timeMaxInput = document.getElementById('max-export');
+const timeMaxExponent = document.getElementById('max-export-unit');
+const timeMaxShow = document.getElementById('max-export-value-display');
+
+function UpdateTimeMax()
+{
+    timeMaxShow.innerHTML = timeMaxInput.value;
+    TimeMax = new Decimal(timeMaxInput.value).times( Ten.pow(timeMaxExponent.value) );
+}
+
+timeMaxInput.addEventListener('input', UpdateTimeMax);
+timeMaxExponent.addEventListener('input', UpdateTimeMax);
+
+const hideExport = document.getElementById('close-export');
+const exportPopUp = document.getElementById('export-menu');
+const exportBtn = document.getElementById('export-btn');
+
+promptExportBtn.onclick = () => {
+    exportPopUp.classList.add('show');
+    DisableButtons();
+    exportPopUp.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'end'
+    });
+};
+hideExport.onclick = () => {
+    exportPopUp.classList.remove('show');
+    ReEnableButtons();
+};

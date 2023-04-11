@@ -6,8 +6,8 @@ class Simulation
      * @param {Engine} engine 
      * @param {MassRotatingObject} tableMass
      * @param {MassFallingObject} fallingMass
-     * @param {HTMLCanvasElement} topCanvas
-     * @param {HTMLCanvasElement} sideCanvas
+     * @param {HTMLCanvasElement|null} topCanvas
+     * @param {HTMLCanvasElement|null} sideCanvas
      * @param {Vector3} tableMeasures
      * @param {number|Decimal|BigInt} dtCount
      */
@@ -30,6 +30,24 @@ class Simulation
         this.fallingMass = fallingMass;
         this.dtCount = dtCount;
 
+        this.drawTail = true;
+
+        this.iterationCount = new Decimal(0);
+        this.elapsedTime = new Decimal(0);
+
+        this.RefreshCallback = () => { };
+        
+        this.tableStaticFrequencyValue = 0;
+        this.tableStaticFrequencyMax = 10;
+
+        //
+        //    Canvas part
+        //
+        if (topCanvas == null || sideCanvas == null)
+        {
+            this.drawSimulation = () => {};
+            return;
+        }
         this.topCanvas = topCanvas;
         this.topCtx = this.topCanvas.getContext('2d');
 
@@ -62,19 +80,7 @@ class Simulation
             x: this.#getSideCanvasCoordX(0),
             y: this.#getSideCanvasCoordY(0)
         };
-
-
         this.TwoPi = 2 * Math.PI;
-
-        this.drawTail = true;
-
-        this.iterationCount = new Decimal(0);
-        this.elapsedTime = new Decimal(0);
-
-        this.RefreshCallback = () => { };
-        
-        this.tableStaticFrequencyValue = 0;
-        this.tableStaticFrequencyMax = 10;
     }
 
     /**
@@ -379,6 +385,30 @@ class Simulation
             this.Engine.cableStartLength = newStartLength;
         }
     }
+    get k()
+    {
+        if ('k' in this.Engine)
+        {
+            return this.Engine.k;
+        }
+        return new Decimal(0);
+    }
+    set k(val)
+    {
+        if ('k' in this.Engine)
+        {
+            if (!Decimal.isDecimal(val))
+            {
+                val = new Decimal(val);
+            }
+            this.Engine.k = val;
+        }
+    }
+    get cable()
+    {
+        return this.tableMass.r.plus( this.fallingMass.height.abs() );
+    }
+
     TableFrequency()
     {
         if (++this.tableStaticFrequencyValue >= this.tableStaticFrequencyMax)
