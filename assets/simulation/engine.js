@@ -352,6 +352,6 @@ class NoFrictionVariableLengthEngine extends Engine
     SpringEnergy(tableMass, fallingMass)
     {
         const x = fallingMass.height.abs().plus(tableMass.r).minus(this.cableStartLength);
-        return this.k.div(2).times(x.times(x));
+        return this.k.div(2).times(x.pow(2));
     }
 }
