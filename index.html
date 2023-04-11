@@ -179,6 +179,11 @@
                 Interazioni:
             </label>
             <input type="checkbox" checked id="interactions">
+
+            <label for="tail">
+                Disegna scia
+            </label>
+            <input type="checkbox" checked id="tail">
         </fieldset>
         <fieldset class="form grid two">
             <h3 class="span-2">
@@ -366,6 +371,7 @@
                 <output id="rpp-html">0</output><span>[m/s<sup>2</sup>]</span>
             </div>
         </div>
+        
         <div title="Altezza dal tavolo">
             <span class="math">
                 $$ h $$
@@ -390,15 +396,7 @@
                 <output id="hpp-html">0</output><span>[m/s<sup>2</sup>]</span>
             </div>
         </div>
-        <div title="Lunghezza filo">
-            <span class="math">
-                $$ l $$
-            </span>
-            <div>
-                <output id="l-html">0</output><span>[m]</span>
-            </div>
-        </div>
-
+        
         <div title="Angolo da semiasse X+">
             <span class="math">
                 $$  \theta $$
@@ -423,14 +421,7 @@
                 <output id="thpp-html">0</output><span>[rad/s<sup>2</sup>]</span>
             </div>
         </div>
-        <div title="Momento angolare">
-            <span class="math">
-                $$ \dot{\theta} r^2 m $$
-            </span>
-            <div>
-                <output id="momentum-html">0</output><span>[J / s]</span>
-            </div>
-        </div>
+
         <div title="Energia cinetica sistema">
             <span class="math">
                 $$ T $$
@@ -453,6 +444,23 @@
             </span>
             <div>
                 <output id="uk-html">0</output><span>[J]</span>
+            </div>
+        </div>
+        
+        <div title="Lunghezza filo">
+            <span class="math">
+                $$ l $$
+            </span>
+            <div>
+                <output id="l-html">0</output><span>[m]</span>
+            </div>
+        </div>
+        <div title="Momento angolare">
+            <span class="math">
+                $$ \dot{\theta} r^2 m $$
+            </span>
+            <div>
+                <output id="momentum-html">0</output><span>[J / s]</span>
             </div>
         </div>
         <div title="Energia meccanica sistema">

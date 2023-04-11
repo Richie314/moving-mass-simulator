@@ -44,6 +44,8 @@ var springConstant = new Decimal(300);
 var dt = new Decimal(0.00005);
 var dtCount = 15;
 
+var drawTail = true;
+
 function LoadInitialVariables()
 {
     SetInitialRPrime();
@@ -57,6 +59,8 @@ function LoadInitialVariables()
 
     UpdateDtCount();
     UpdateDt();
+
+    UpdateTailSettings();
 }
 LoadInitialVariables();
 const tableMass = new MassRotatingObject(
@@ -90,6 +94,11 @@ function RefreshSimulationParams(sim)
     sim.dtCount = dtCount;
     sim.tableMass.mass = tableMassMass;
     sim.fallingMass.mass = fallingMassMass;
+    if (sim.drawTail && !drawTail)
+    {
+        window.EraseTail();
+    }
+    sim.drawTail = drawTail;
     sim.updateSpring(springConstant, springRelaxLength);
 
     if (smoothRefresher++ == 4)

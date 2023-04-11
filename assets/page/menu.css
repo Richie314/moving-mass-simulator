@@ -109,7 +109,7 @@ label {
   padding-inline: min(1.1em, 7px);
 }
 .number-table > div {
-  width: max(16.66%, 4em);
+  width: max(15%, 4em);
   height: -moz-fit-content;
   height: fit-content;
 }

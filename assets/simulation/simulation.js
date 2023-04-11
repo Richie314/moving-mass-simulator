@@ -66,6 +66,8 @@ class Simulation
 
         this.TwoPi = 2 * Math.PI;
 
+        this.drawTail = true;
+
         this.RefreshCallback = () => { };
     }
 
@@ -333,7 +335,7 @@ class Simulation
             this.RestartCallback = callback;
         }
     }
-    
+
     restart()
     {
         //TODO: Add code

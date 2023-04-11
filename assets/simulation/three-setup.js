@@ -248,10 +248,10 @@ function threeAnimate(simulation)
     }
     tableCoordsToTHREE(
         tableMassObject.position, simulation.tableMass.position, 
-        tableLine, followTopLine, isRunning, TableFrequency);
+        tableLine, followTopLine, isRunning && simulation.drawTail, TableFrequency);
     fallingCoordsToTHREE(
         fallingObject.position, simulation.fallingMass.position, 
-        fallingLine, followSideLine, isRunning);
+        fallingLine, followSideLine, isRunning && simulation.drawTail);
     controls.update();
 	renderer.render( scene, camera );
 

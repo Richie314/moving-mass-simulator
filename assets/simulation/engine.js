@@ -199,10 +199,7 @@ class Engine extends EngineBase
         for (let i = 0; i < numAbs; i++)
         {
             this.applySpeedsAndForces(tableMass, fallingMass);
-            if (!this.getNewAccelerations(tableMass, fallingMass))
-            {
-                ret = false;
-            }
+            ret = this.getNewAccelerations(tableMass, fallingMass);
         }
         if (num !== numAbs)
         {

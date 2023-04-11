@@ -182,3 +182,10 @@ function UpdateSpringValue()
 }
 springHtml.addEventListener('input', UpdateSpringValue);
 springRelaxHtml.addEventListener('input', UpdateSpringValue);
+
+const tailInput = document.getElementById('tail');
+function UpdateTailSettings()
+{
+    drawTail = tailInput.checked;
+}
+tailInput.addEventListener('change', UpdateTailSettings);
