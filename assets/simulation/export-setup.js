@@ -53,26 +53,7 @@ async function IterateAsync(sim, count)
             v: elem.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
             z: '0.00E+00'
         }
-    })
-    /*.concat([
-        
-        sim.tableMass.cable, //J
-        sim.tableMass.momentum, //K
-
-        t1, //L
-        t2, //M
-        ug, //N
-        uk, //O
-        t1.plus(t2), //P
-        t1.plus(t2).plus(ug).plus(uk)  //Q
-    ].map(elem => {
-        return {
-            t: 'n',
-            v: elem.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-            z: '0.00E+00',
-            f: ''
-        }
-    }));*/
+    });
 }
 
 async function Export ()
@@ -81,6 +62,7 @@ async function Export ()
     hideExport.disabled = true;
     exportBtn.innerHTML = '...';
     exportBtn.disabled = true;
+    simulation.refresh();
 
     let my_sim = new Simulation(simulation.Engine, tableMass.clone(), fallingMass.clone(), null, null, TableMeasures, dtCount);
     const headerRows = [
@@ -206,15 +188,15 @@ async function Export ()
     const worksheet = XLSX.utils.aoa_to_sheet(allRows);
     function matr(letter)
     {
-        return letter + '3:' + letter + String(allRows.length);
+        return `${letter}3:${letter + String(allRows.length)}`;
     }
     XLSX.utils.sheet_set_array_formula(worksheet, matr('J'), matr('A') + '-' + matr('G'));
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('K'), "0.5 * B1 * POWER(" + matr('A') + ", 2) * " + matr('E'));
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('K'), `B1 * POWER(${matr('A')}, 2) * ${matr('E')}`);
     
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('L'), "0.5 * B1 * (POWER(" + matr('B') + ", 2) + POWER(" + matr('A') + "*" + matr('E') + ", 2))");
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('M'), "0.5 * D1 * POWER(" + matr('H') + ", 2)");
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('N'), "J1 * " + matr('G'));
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('O'), "0.5 * H1 * POWER(" + matr('J') + " - F1, 2)");
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('L'), `0.5 * B1 * (POWER(${matr('B')}, 2) + POWER(${matr('A')}*${matr('E')}, 2))`);
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('M'), `0.5 * D1 * POWER(${matr('H')}, 2)`);
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('N'), `J1 * ${matr('G')}`);
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('O'), `0.5 * H1 * POWER(${matr('J')} - F1, 2)`);
     
     XLSX.utils.sheet_set_array_formula(worksheet, matr('P'), [matr('L'), matr('M'), matr('N'), matr('O')].join(" + "));
     const workbook = XLSX.utils.book_new();
