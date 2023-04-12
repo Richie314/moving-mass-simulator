@@ -27,6 +27,7 @@ const tHtml = document.getElementById('t-html');
 const ugHtml = document.getElementById('ug-html');
 const ukHtml = document.getElementById('uk-html');
 const tuHtml = document.getElementById('tu-html');
+const lagrHtml = document.getElementById('lagr-html');
 
 const elapsedTimeHtml = document.getElementById('elapsed-time');
 const itarationCountHtml = document.getElementById('iteration-count');
@@ -131,6 +132,7 @@ function RefreshSimulationParams(sim)
         ugHtml.innerHTML = Ug.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
         ukHtml.innerHTML = Uk.toSignificantDigits(6, Decimal.ROUND_HANF_EVEN);
         tuHtml.innerHTML = (totalT.plus(Ug).plus(Uk)).toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
+        lagrHtml.innerHTML = (totalT.minus(Ug).minus(Uk)).toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
 
         itarationCountHtml.innerHTML = simulation.iterationCount.toExponential(8, Decimal.ROUND_DOWN);
         elapsedTimeHtml.innerHTML = simulation.elapsedTime.toExponential(9, Decimal.ROUND_DOWN);

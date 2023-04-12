@@ -70,7 +70,7 @@ class Vector3
      */
     plus(vec)
     {
-        const other = new Vector3(this.x, this.y, this.z);
+        const other = this.copy();
         return other.add(vec);
     }
 
@@ -92,7 +92,7 @@ class Vector3
      */
     minus(vec)
     {
-        const other = new Vector3(this.x, this.y, this.z);
+        const other = this.copy();
         return other.sub(vec);
     }
 
@@ -114,7 +114,7 @@ class Vector3
      */
     times(scalar)
     {
-        const other = new Vector3(this.x, this.y, this.z);
+        const other = this.copy();
         return other.mult(scalar);
     }
 
@@ -215,7 +215,7 @@ class Vector3
      */
     copy()
     {
-        return new Vector3(this.x, this.y, this.z);
+        return new Vector3(new Decimal(this.x), new Decimal(this.y), new Decimal(this.z));
     }
 }
 
@@ -291,7 +291,7 @@ class PolarVector
      */
     scaled(scalar)
     {
-        const other = new PolarVector(this.r, this.theta);
+        const other = this.copy();
         return other.scale(scalar);
     }
 
@@ -348,7 +348,7 @@ class PolarVector
 
     copy()
     {
-        return this.scaled(1);
+        return new PolarVector(new Decimal(this.r), new Decimal(this.theta));
     }
 }
 

@@ -139,10 +139,13 @@ class MassRotatingObject extends MassObject
         this.acceleration = acceleration;
     }
 
+    /**
+     * @returns {Decimal}
+     */
     get kinetic()
     {
         const rOmega = this.r.times(this.thetaPrime);
-        return this.mass.div(2).times( this.rPrime.times(this.rPrime).plus( rOmega.times(rOmega) ) );
+        return this.mass.div(2).times( this.rPrime.pow(2).plus( rOmega.pow(2) ) );
     }
 
     //Useful getters and setters
@@ -201,6 +204,9 @@ class MassRotatingObject extends MassObject
         return this.acceleration.theta = value;
     }
 
+    /**
+     * @returns {Decimal}
+     */
     get momentum()
     {
         return this.mass.times(this.thetaPrime).times(this.r.pow(2));
