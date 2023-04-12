@@ -214,6 +214,10 @@ class Engine extends EngineBase
      */
     applySpeedsAndForces(tableMass, fallingMass)
     {
+        //Apply accelerations: update speeds
+        this.applyAcceleration(fallingMass, fallingMass.acceleration, this.dt);
+        this.applyAcceleration(tableMass, tableMass.acceleration, this.dt);
+
         //Apply speeds: update position
         this.applySpeed(tableMass, tableMass.speed, this.dt);
         this.applySpeed(fallingMass, fallingMass.speed, this.dt);
@@ -223,9 +227,6 @@ class Engine extends EngineBase
             throw new Error('Simulazione incoerente, collisione avvenuta');
         }
 
-        //Apply accelerations: update speeds
-        this.applyAcceleration(fallingMass, fallingMass.acceleration, this.dt);
-        this.applyAcceleration(tableMass, tableMass.acceleration, this.dt);
     }
 }
 
@@ -316,13 +317,13 @@ class VariableLengthEngine extends Engine
      */
     getNewAccelerations(tableMass, fallingMass)
     {
-        const kx = ( fallingMass.height.abs().plus(tableMass.r).minus(this.cableStartLength) ).times(this.k);
+        const kx = ( tableMass.r.minus(fallingMass.height).minus(this.cableStartLength) ).times(this.k);
         // ..     .
-        //  R = R 0^2 - k / m (h + R - l)
+        //  R = R 0^2 - k x / m
         tableMass.rDoublePrime = ( tableMass.r.times( tableMass.thetaPrime.pow(2) ) ).minus( kx.div(tableMass.mass) );
         
         // ..
-        //  h = - g + k / M (h + R - l)
+        //  h = - g - k x / M 
         fallingMass.heightDoublePrime = g.neg().plus( kx.div(fallingMass.mass) );
 
         if (tableMass.r.lessThanOrEqualTo(0))
@@ -330,7 +331,8 @@ class VariableLengthEngine extends Engine
             //The object just crossed the center of the table
             tableMass.position.reboundPositive();
             tableMass.rPrime = tableMass.rPrime.neg();
-            fallingMass.hPrime = fallingMass.hPrime.neg();
+            //TODO: fix this
+            //fallingMass.hPrime = fallingMass.heightPrime.neg();
         } else {
             try {
                     

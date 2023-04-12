@@ -3,7 +3,10 @@ if (!('Decimal' in window)) {
     throw Error('Decimal.js not loaded properly');
 }
 Decimal.set( { precision: 50 } );
-
+if (Decimal.precision !== 50)
+{
+    throw Error('Decimal.precision was not set correctly');
+}
 class Vector3
 {
     /**

@@ -29,6 +29,7 @@ class Simulation
         this.tableMass = tableMass;
         this.fallingMass = fallingMass;
         this.dtCount = dtCount;
+        this.Engine.getNewAccelerations(tableMass, fallingMass);
 
         this.drawTail = true;
 
