@@ -246,7 +246,7 @@ class Engine extends EngineBase
             tableMass.position.reboundPositive();
             tableMass.rPrime = tableMass.rPrime.neg();
             ///////TODO: fix this
-            fallingMass.hPrime = fallingMass.heightPrime.neg();
+            fallingMass.heightPrime = fallingMass.heightPrime.neg();
         }
 
         this.correctValues(tableMass, fallingMass);
