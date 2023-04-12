@@ -128,7 +128,7 @@ class EngineBase
     {
         const vDeltaT = speed.times(duration);
         const halfADeltaTSquare = acc.times(0.5).times(duration.pow(2)).plus(vDeltaT);
-        return corpse.position.add( halfADeltaTSquare.times(0.29).plus( vDeltaT.times(0.71) ) );
+        return corpse.position.add( halfADeltaTSquare.times(0.25).plus( vDeltaT.times(0.75) ) );
     }
 
     /**
@@ -141,7 +141,7 @@ class EngineBase
     {
         const vDeltaT = speed.times(duration);
         const halfADeltaTSquare = acc.times(0.5).times(duration.pow(2)).plus(vDeltaT);
-        return corpse.position.add( halfADeltaTSquare.times(0.29).plus( vDeltaT.times(0.71) ) );
+        return corpse.position.add( halfADeltaTSquare.times(0.25).plus( vDeltaT.times(0.75) ) );
     }
 
     /**
