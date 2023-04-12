@@ -284,8 +284,8 @@ class Simulation
             warn(err);
             return false;
         }
-        this.iterationCount = this.iterationCount.add(num);
-        this.elapsedTime = this.elapsedTime.add(this.dt.times(num));
+        this.iterationCount = this.iterationCount.plus(num);
+        this.elapsedTime = this.elapsedTime.plus(this.dt.times(num));
         return true;
     }
 

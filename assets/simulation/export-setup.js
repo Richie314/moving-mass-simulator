@@ -1,5 +1,6 @@
 'use strict';
 var TimeMax = new Decimal(1);
+UpdateTimeMax();
 /**
  * 
  * @param {Simulation} sim 
@@ -35,17 +36,19 @@ async function IterateAsync(sim, count)
         throw new Error('End export');
     }
     return [
-        sim.tableMass.r, //A
-        sim.tableMass.rPrime, //B
-        sim.tableMass.rDoublePrime, //C
+        sim.elapsedTime,//A
 
-        sim.tableMass.theta, //D
-        sim.tableMass.thetaPrime, //E
-        sim.tableMass.thetaDoublePrime, //F
+        sim.tableMass.r, //B
+        sim.tableMass.rPrime, //C
+        sim.tableMass.rDoublePrime, //D
+
+        sim.tableMass.theta, //E
+        sim.tableMass.thetaPrime, //F
+        sim.tableMass.thetaDoublePrime, //G
         
-        sim.fallingMass.height, //G
-        sim.fallingMass.heightPrime, //H
-        sim.fallingMass.heightDoublePrime, //I
+        sim.fallingMass.height, //H
+        sim.fallingMass.heightPrime, //I
+        sim.fallingMass.heightDoublePrime, //J
 
     ].map(elem => {
         return {
@@ -58,11 +61,9 @@ async function IterateAsync(sim, count)
 
 async function Export ()
 {
-    pause();
     hideExport.disabled = true;
     exportBtn.innerHTML = '...';
     exportBtn.disabled = true;
-    simulation.refresh();
 
     let my_sim = new Simulation(simulation.Engine, tableMass.clone(), fallingMass.clone(), null, null, TableMeasures, dtCount);
     const headerRows = [
@@ -113,6 +114,10 @@ async function Export ()
             }
         ],
         [
+            {
+                t: 's',
+                v: 'Timestamp [s]'
+            },
             {
                 t: 's',
                 v: 'R [m]'
@@ -181,6 +186,10 @@ async function Export ()
                 t: 's',
                 v: 'T+U [J]'
             },
+            {
+                t: 's',
+                v: 'T-U [J]'
+            },
         ]
     ];
     const dataRows = await CalculateAll(my_sim, TimeMax);
@@ -190,15 +199,16 @@ async function Export ()
     {
         return `${letter}3:${letter + String(allRows.length)}`;
     }
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('J'), matr('A') + '-' + matr('G'));
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('K'), `B1 * POWER(${matr('A')}, 2) * ${matr('E')}`);
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('K'), matr('B') + '-' + matr('H'));
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('L'), `B1 * POWER(${matr('B')}, 2) * ${matr('F')}`);
     
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('L'), `0.5 * B1 * (POWER(${matr('B')}, 2) + POWER(${matr('A')}*${matr('E')}, 2))`);
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('M'), `0.5 * D1 * POWER(${matr('H')}, 2)`);
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('N'), `J1 * ${matr('G')}`);
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('O'), `0.5 * H1 * POWER(${matr('J')} - F1, 2)`);
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('M'), `0.5 * B1 * (POWER(${matr('C')}, 2) + POWER(${matr('B')}*${matr('F')}, 2))`);
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('N'), `0.5 * D1 * POWER(${matr('I')}, 2)`);
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('O'), `J1 * D1 * ${matr('H')}`);
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('P'), `0.5 * H1 * POWER(${matr('K')} - F1, 2)`);
     
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('P'), [matr('L'), matr('M'), matr('N'), matr('O')].join(" + "));
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('Q'), [matr('M'), matr('N'), matr('O'), matr('P')].join(" + "));
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('R'), `${matr('M')}+${matr('N')}-${matr('O')}-${matr('P')}`);
     const workbook = XLSX.utils.book_new();
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "Export");
@@ -208,4 +218,19 @@ async function Export ()
     exportBtn.innerHTML = 'Esporta';
     exportBtn.disabled = false;
 }
-exportBtn.onclick = Export;
+exportBtn.onclick = () => {
+    pause();
+    simulation.refresh();
+    const expectedRows = TimeMax.div(simulation.dt.times(dtCount));
+    if (!confirm(
+        'Stai per avviare il calcolo di un\'intera simulazione.\n' +
+        `Sarà creato un file XLSX con ${expectedRows.toSignificantDigits(7)} righe.\n` +
+        `La pagina potrebbe freezarsi; se il browser ti dovesse chiedere di attendere, cliccare su Attendi fino a fine operazione.\n` + 
+        'Cliccare Ok per iniziare...'))
+        return; 
+    Export().then(() => {
+        log('Export effettuato');
+    }).catch(err => {
+        error(err);
+    });
+};
