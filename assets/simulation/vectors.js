@@ -352,8 +352,8 @@ class PolarVector
     }
 }
 
-const g = new Decimal(-9.8067);
-const gravity = new Vector3(0, 0, g);
+const g = new Decimal(9.8067);
+const gravity = new Vector3(0, 0, g.neg());
 const pi = Decimal.acos(-1);
 const doublePi = pi.times(2);
 const halfPi = pi.div(2);

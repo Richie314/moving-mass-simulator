@@ -256,10 +256,10 @@ class NoFrictionFixedLengthEngine extends Engine
         tableMass.rPrime = fallingMass.heightPrime = ( tableMass.rPrime.plus(fallingMass.heightPrime) ).div(2);
         
         // ..         .
-        //  R = ( m R 0^2 + M g ) / (m + M)
+        //  R = ( m R 0^2 - M g ) / (m + M)
         tableMass.rDoublePrime = fallingMass.heightDoublePrime = ( 
             ( tableMass.mass.times(tableMass.r).times( tableMass.thetaPrime.pow(2) ) ).plus(
-                fallingMass.mass.times(g)
+                fallingMass.mass.times(g.neg())
             ) ).div( tableMass.mass.plus(fallingMass.mass) );
         
         if (tableMass.r.lessThanOrEqualTo(0))
@@ -323,7 +323,7 @@ class NoFrictionVariableLengthEngine extends Engine
         
         // ..
         //  h = - g + k / M (h + R - l)
-        fallingMass.heightDoublePrime = g.plus( kx.div(fallingMass.mass) );
+        fallingMass.heightDoublePrime = g.neg().plus( kx.div(fallingMass.mass) );
 
         if (tableMass.r.lessThanOrEqualTo(0))
         {

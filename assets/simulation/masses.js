@@ -110,7 +110,7 @@ class MassFallingObject extends MassObject
 
     get gravityPotential()
     {
-        return this.mass.times(g).times(this.height).neg();
+        return this.mass.times(g).times(this.height);
     }
 
     clone()
