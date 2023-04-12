@@ -27,7 +27,7 @@ screenContainer.addEventListener('resize', () => {
     renderer.setSize( screenContainer.clientWidth, screenContainer.clientHeight );
 }, false);
 
-const light = new THREE.AmbientLight( 0xf0f0f0 );
+const light = new THREE.AmbientLight( 0xf4f4f4 );
 scene.add( light );
 
 const gridHelper = new THREE.GridHelper( 400, 50);
@@ -48,11 +48,11 @@ const tableThickness = 10;
 camera.lookAt( 0, tableHeight, 0 );
 
 //Materials
-const tableMesh = new THREE.MeshLambertMaterial( { color: 0x62CDFF, opacity: 0.8, transparent: true } );
+const tableMesh = new THREE.MeshBasicMaterial( { color: 0x90e0ef, opacity: 0.85, transparent: true } );
 
 const tableMassMesh = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
 
-const fallingMesh = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
+const fallingMesh = new THREE.MeshLambertMaterial( { color: 0x00ee00 } );
 
 const cableMaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
 
