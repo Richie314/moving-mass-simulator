@@ -80,8 +80,8 @@ const fallingMass = new MassFallingObject(
     new Vector3(0, 0, InitialHPrime),
     gravity);
 
-const CinematicEngine = new NoFrictionFixedLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), dt);
-const ConservativeEngine = new NoFrictionVariableLengthEngine(springRelaxLength, springConstant, dt);
+const CinematicEngine = new FixedLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), dt);
+const ConservativeEngine = new VariableLengthEngine(springRelaxLength, springConstant, dt);
 const TableMeasures = new Vector3(5, 2.5, 2.5);
 var simulation = new Simulation(
     ConservativeEngine, 

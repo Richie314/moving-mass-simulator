@@ -229,7 +229,7 @@ class Engine extends EngineBase
     }
 }
 
-class NoFrictionFixedLengthEngine extends Engine
+class FixedLengthEngine extends Engine
 {
     /**
      * @param {Decimal|number} cableLength
@@ -288,7 +288,7 @@ class NoFrictionFixedLengthEngine extends Engine
     }
 }
 
-class NoFrictionVariableLengthEngine extends Engine
+class VariableLengthEngine extends Engine
 {
     /**
      * @param {Decimal|number} cableStartLength
