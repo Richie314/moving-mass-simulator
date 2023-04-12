@@ -128,7 +128,7 @@ class EngineBase
     {
         const vDeltaT = speed.times(duration);
         const halfADeltaTSquare = acc.times(0.5).times(duration.pow(2)).plus(vDeltaT);
-        return corpse.position.add( halfADeltaTSquare.times(0.25).plus( vDeltaT.times(0.75) ) );
+        return corpse.position.add( halfADeltaTSquare.times(0.29).plus( vDeltaT.times(0.71) ) );
     }
 
     /**
@@ -141,7 +141,7 @@ class EngineBase
     {
         const vDeltaT = speed.times(duration);
         const halfADeltaTSquare = acc.times(0.5).times(duration.pow(2)).plus(vDeltaT);
-        return corpse.position.add( halfADeltaTSquare.times(0.25).plus( vDeltaT.times(0.75) ) );
+        return corpse.position.add( halfADeltaTSquare.times(0.29).plus( vDeltaT.times(0.71) ) );
     }
 
     /**
@@ -221,16 +221,15 @@ class Engine extends EngineBase
      */
     applySpeedsAndForces(tableMass, fallingMass)
     {
+        
         //Apply accelerations: update speeds
         this.applyAcceleration(fallingMass, fallingMass.acceleration, this.dt);
         this.applyAcceleration(tableMass, tableMass.acceleration, this.dt);
 
-        this.correctValues(tableMass, fallingMass);
-
         //Apply speeds: update position
         this.applySpeed(tableMass, tableMass.acceleration, tableMass.speed, this.dt);
         this.applySpeed(fallingMass, fallingMass.acceleration, fallingMass.speed, this.dt);
-
+        
         //For better output
         tableMass.position.reboundAngle();
 
@@ -249,7 +248,8 @@ class Engine extends EngineBase
             ///////TODO: fix this
             fallingMass.hPrime = fallingMass.heightPrime.neg();
         }
-        
+
+        this.correctValues(tableMass, fallingMass);
     }
 }
 
