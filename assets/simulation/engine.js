@@ -331,8 +331,8 @@ class VariableLengthEngine extends Engine
             //The object just crossed the center of the table
             tableMass.position.reboundPositive();
             tableMass.rPrime = tableMass.rPrime.neg();
-            //TODO: fix this
-            //fallingMass.hPrime = fallingMass.heightPrime.neg();
+            ///////TODO: fix this
+            fallingMass.hPrime = fallingMass.heightPrime.neg();
         } else {
             try {
                     
