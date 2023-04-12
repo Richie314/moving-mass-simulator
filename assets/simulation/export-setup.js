@@ -35,24 +35,44 @@ async function IterateAsync(sim, count)
         throw new Error('End export');
     }
     return [
-        sim.tableMass.r.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-        sim.tableMass.rPrime.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-        sim.tableMass.rDoublePrime.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
+        sim.tableMass.r, //A
+        sim.tableMass.rPrime, //B
+        sim.tableMass.rDoublePrime, //C
 
-        sim.tableMass.theta.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-        sim.tableMass.thetaPrime.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-        sim.tableMass.thetaDoublePrime.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
+        sim.tableMass.theta, //D
+        sim.tableMass.thetaPrime, //E
+        sim.tableMass.thetaDoublePrime, //F
         
-        sim.fallingMass.height.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-        sim.fallingMass.heightPrime.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-        sim.fallingMass.heightDoublePrime.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN)
+        sim.fallingMass.height, //G
+        sim.fallingMass.heightPrime, //H
+        sim.fallingMass.heightDoublePrime, //I
+
     ].map(elem => {
         return {
             t: 'n',
-            v: elem,
+            v: elem.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
             z: '0.00E+00'
         }
     })
+    /*.concat([
+        
+        sim.tableMass.cable, //J
+        sim.tableMass.momentum, //K
+
+        t1, //L
+        t2, //M
+        ug, //N
+        uk, //O
+        t1.plus(t2), //P
+        t1.plus(t2).plus(ug).plus(uk)  //Q
+    ].map(elem => {
+        return {
+            t: 'n',
+            v: elem.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
+            z: '0.00E+00',
+            f: ''
+        }
+    }));*/
 }
 
 async function Export ()
@@ -67,7 +87,7 @@ async function Export ()
         [
             {
                 t: 's',
-                v: 'm1:'
+                v: 'm1 [kg]'
             },
             {
                 t: 'n',
@@ -76,7 +96,7 @@ async function Export ()
             },
             {
                 t: 's',
-                v: 'm2:'
+                v: 'm2 [kg]'
             },
             {
                 t: 'n',
@@ -85,7 +105,7 @@ async function Export ()
             },
             {
                 t: 's',
-                v: 'l:'
+                v: 'l [m]'
             },
             {
                 t: 'n',
@@ -94,66 +114,109 @@ async function Export ()
             },
             {
                 t: 's',
-                v: 'k:'
+                v: 'k [N/m]'
             },
             {
                 t: 'n',
                 v: my_sim.k.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
                 z: '0.00E+00'
+            },
+            {
+                t: 's',
+                v: 'g [m/s^2]'
+            },
+            {
+                t: 'n',
+                v: g.toSignificantDigits(5, Decimal.ROUND_HALF_EVEN)
             }
         ],
         [
             {
                 t: 's',
-                v: 'R'
+                v: 'R [m]'
             },
             {
                 t: 's',
-                v: 'R.'
+                v: 'R. [m/s]'
             },
             {
                 t: 's',
-                v: 'R..'
-            },
-
-            {
-                t: 's',
-                v: 'Theta'
-            },
-            {
-                t: 's',
-                v: 'Theta.'
-            },
-            {
-                t: 's',
-                v: 'Theta..'
+                v: 'R.. [m/s^2]'
             },
 
             {
                 t: 's',
-                v: 'h'
+                v: 'Theta [rad]'
             },
             {
                 t: 's',
-                v: 'h.'
+                v: 'Theta. [rad/s]'
             },
             {
                 t: 's',
-                v: 'h..'
+                v: 'Theta.. [rad/s^2]'
             },
-        ]
-    ];
-    const footerRows = [
-        [
+
             {
                 t: 's',
-                v: 'Generato tramite SheetJS'
-            }
+                v: 'h [m]'
+            },
+            {
+                t: 's',
+                v: 'h. [m/s]'
+            },
+            {
+                t: 's',
+                v: 'h.. [m/s^2]'
+            },
+
+            {
+                t: 's',
+                v: 'l [m]'
+            },
+            {
+                t: 's',
+                v: 'Momentum [J/s]'
+            },
+
+            {
+                t: 's',
+                v: 'T1 [J]'
+            },
+            {
+                t: 's',
+                v: 'T2 [J]'
+            },
+            {
+                t: 's',
+                v: 'Ug [J]'
+            },
+            {
+                t: 's',
+                v: 'Uk [J]'
+            },
+            {
+                t: 's',
+                v: 'T+U [J]'
+            },
         ]
     ];
     const dataRows = await CalculateAll(my_sim, TimeMax);
-    const allRows = headerRows.concat(dataRows, footerRows);
+    const allRows = headerRows.concat(dataRows);
     const worksheet = XLSX.utils.aoa_to_sheet(allRows);
+    function matr(letter)
+    {
+        return letter + '3:' + letter + String(allRows.length);
+    }
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('J'), matr('A') + '-' + matr('G'));
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('K'), "0.5 * B1 * POWER(" + matr('A') + ", 2) * " + matr('E'));
+    
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('L'), "0.5 * B1 * (POWER(" + matr('B') + ", 2) + POWER(" + matr('A') + "*" + matr('E') + ", 2))");
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('M'), "0.5 * D1 * POWER(" + matr('H') + ", 2)");
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('N'), "J1 * " + matr('G'));
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('O'), "0.5 * H1 * POWER(" + matr('J') + " - F1, 2)");
+    
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('P'), [matr('L'), matr('M'), matr('N'), matr('O')].join(" + "));
     const workbook = XLSX.utils.book_new();
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "Export");
