@@ -253,6 +253,16 @@ class PolarVector
         return this;
     }
 
+    /**
+     * @param {PolarVector} vec
+     * @returns {PolarVector} 
+     */
+    plus(vec)
+    {
+        const other = this.copy();
+        return other.add(vec);
+    }
+
     reboundPositive()
     {
         if (this.r.isNegative())

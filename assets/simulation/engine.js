@@ -120,40 +120,47 @@ class EngineBase
 
     /**
      * @param {MassFallingObject} corpse 
+     * @param {Vector3} acc 
      * @param {Vector3} speed 
      * @param {number|Decimal} duration 
      */
-    #applySpeedFalling(corpse, speed, duration)
+    #applySpeedFalling(corpse, acc, speed, duration)
     {
-        return corpse.position.add(speed.times(duration));
+        const vDeltaT = speed.times(duration);
+        const halfADeltaTSquare = acc.times(0.5).times(duration.pow(2)).plus(vDeltaT);
+        return corpse.position.add( halfADeltaTSquare.times(0.25).plus( vDeltaT.times(0.75) ) );
     }
 
     /**
      * @param {MassRotatingObject} corpse 
+     * @param {PolarVector} acc
      * @param {PolarVector} speed 
      * @param {number|Decimal} duration 
      */
-    #applySpeedRotating(corpse, speed, duration)
+    #applySpeedRotating(corpse, acc, speed, duration)
     {
-        return corpse.position.add(speed.times(duration));
+        const vDeltaT = speed.times(duration);
+        const halfADeltaTSquare = acc.times(0.5).times(duration.pow(2)).plus(vDeltaT);
+        return corpse.position.add( halfADeltaTSquare.times(0.25).plus( vDeltaT.times(0.75) ) );
     }
 
     /**
      * @param {MassFallingObject|MassRotatingObject} corpse 
-     * @param {Vector3|PolarVector} momentum 
+     * @param {Vector3|PolarVector} acc
+     * @param {Vector3|PolarVector} speed
      * @param {Decimal|number} duration 
      */
-    applySpeed(corpse, speed, duration)
+    applySpeed(corpse, acc, speed, duration)
     {
         
         if (corpse instanceof MassFallingObject)
         {
-            return this.#applySpeedFalling(corpse, speed, duration);
+            return this.#applySpeedFalling(corpse, acc, speed, duration);
         }
 
         if (corpse instanceof MassRotatingObject)
         {
-            return this.#applySpeedRotating(corpse, speed, duration);
+            return this.#applySpeedRotating(corpse, acc, speed, duration);
         }
 
         throw new Error('corpse was not of a valid type!');
@@ -218,15 +225,31 @@ class Engine extends EngineBase
         this.applyAcceleration(fallingMass, fallingMass.acceleration, this.dt);
         this.applyAcceleration(tableMass, tableMass.acceleration, this.dt);
 
+        this.correctValues(tableMass, fallingMass);
+
         //Apply speeds: update position
-        this.applySpeed(tableMass, tableMass.speed, this.dt);
-        this.applySpeed(fallingMass, fallingMass.speed, this.dt);
+        this.applySpeed(tableMass, tableMass.acceleration, tableMass.speed, this.dt);
+        this.applySpeed(fallingMass, fallingMass.acceleration, fallingMass.speed, this.dt);
+
+        //For better output
         tableMass.position.reboundAngle();
+
+        //Check for failure
         if (fallingMass.height.greaterThan(0))
         {
             throw new Error('Simulazione incoerente, collisione avvenuta');
         }
 
+        //Check for center crossing
+        if (tableMass.r.lessThanOrEqualTo(0))
+        {
+            //The object just crossed the center of the table
+            tableMass.position.reboundPositive();
+            tableMass.rPrime = tableMass.rPrime.neg();
+            ///////TODO: fix this
+            fallingMass.hPrime = fallingMass.heightPrime.neg();
+        }
+        
     }
 }
 
@@ -246,29 +269,35 @@ class FixedLengthEngine extends Engine
         this.cableLength = cableLength;
     }
 
-
+    /**
+     * @param {MassRotatingObject} tableMass 
+     * @param {MassFallingObject} fallingMass 
+     */
+    correctValues(tableMass, fallingMass)
+    {
+        //Prevent values from diverging: we set them both to the medium value
+        tableMass.rPrime = fallingMass.heightPrime = ( tableMass.rPrime.plus(fallingMass.heightPrime) ).div(2);
+        
+        //Since cableLength = r + height, r + height - cableLength = error
+        const diff = (tableMass.r.plus( fallingMass.height.abs() ).minus( this.cableLength ) ).div(2);
+        tableMass.r = tableMass.r.minus( diff );
+        fallingMass.height = fallingMass.height.plus( diff );
+    }
     /**
      * @param {MassRotatingObject} tableMass 
      * @param {MassFallingObject} fallingMass 
      */
     getNewAccelerations(tableMass, fallingMass)
     {
-        //Prevent values from diverging: we set them both to the medium value
-        tableMass.rPrime = fallingMass.heightPrime = ( tableMass.rPrime.plus(fallingMass.heightPrime) ).div(2);
-        
+
         // ..         .
         //  R = ( m R 0^2 - M g ) / (m + M)
         tableMass.rDoublePrime = fallingMass.heightDoublePrime = ( 
             ( tableMass.mass.times(tableMass.r).times( tableMass.thetaPrime.pow(2) ) ).plus(
                 fallingMass.mass.times(g.neg())
             ) ).div( tableMass.mass.plus(fallingMass.mass) );
-        
-        if (tableMass.r.lessThanOrEqualTo(0))
+        if (tableMass.r.isZero())
         {
-            //The object just crossed the center of the table
-            tableMass.position.reboundPositive();
-            fallingMass.heightPrime = tableMass.rPrime = fallingMass.heightPrime.neg();
-            tableMass.thetaDoublePrime = new Decimal(0);
             return true;
         }
         try {
@@ -280,11 +309,6 @@ class FixedLengthEngine extends Engine
             console.warn(err);
             return false;
         }
-
-        //Since cableLength = r + height, r + height - cableLength = error
-        const diff = (tableMass.r.plus( fallingMass.height.abs() ).minus( this.cableLength ) ).div(2);
-        tableMass.r = tableMass.r.minus( diff );
-        fallingMass.height = fallingMass.height.plus( diff );
         return true;
     }
 }
@@ -310,7 +334,10 @@ class VariableLengthEngine extends Engine
         }
         this.k = k;
     }
+    correctValues(tableMass, fallingMass)
+    {
 
+    }
     /**
      * @param {MassRotatingObject} tableMass 
      * @param {MassFallingObject} fallingMass 
@@ -325,24 +352,17 @@ class VariableLengthEngine extends Engine
         // ..
         //  h = - g - k x / M 
         fallingMass.heightDoublePrime = g.neg().plus( kx.div(fallingMass.mass) );
-
-        if (tableMass.r.lessThanOrEqualTo(0))
+        if (tableMass.r.isZero())
         {
-            //The object just crossed the center of the table
-            tableMass.position.reboundPositive();
-            tableMass.rPrime = tableMass.rPrime.neg();
-            ///////TODO: fix this
-            fallingMass.hPrime = fallingMass.heightPrime.neg();
-        } else {
-            try {
-                    
-                // ..       . .
-                //  0 = - 2 R 0 / R
-                tableMass.thetaDoublePrime = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
-            } catch (err) {
-                console.warn(err);
-                return false;
-            }
+            return true;
+        }
+        try {
+            // ..       . .
+            //  0 = - 2 R 0 / R
+            tableMass.thetaDoublePrime = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
+        } catch (err) {
+            console.warn(err);
+            return false;
         }
         return true;
     }
