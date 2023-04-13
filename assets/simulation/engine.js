@@ -222,13 +222,13 @@ class Engine extends EngineBase
     applySpeedsAndForces(tableMass, fallingMass)
     {
         
-        //Apply accelerations: update speeds
-        this.applyAcceleration(fallingMass, fallingMass.acceleration, this.dt);
-        this.applyAcceleration(tableMass, tableMass.acceleration, this.dt);
-
         //Apply speeds: update position
         this.applySpeed(tableMass, tableMass.acceleration, tableMass.speed, this.dt);
         this.applySpeed(fallingMass, fallingMass.acceleration, fallingMass.speed, this.dt);
+
+        //Apply accelerations: update speeds
+        this.applyAcceleration(fallingMass, fallingMass.acceleration, this.dt);
+        this.applyAcceleration(tableMass, tableMass.acceleration, this.dt);
         
         //For better output
         tableMass.position.reboundAngle();

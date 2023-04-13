@@ -17,8 +17,9 @@ async function CalculateAll(sim, max)
     do {
         try {
             arr.push(await IterateAsync(sim, sim.dtCount));
-        } catch {
+        } catch (err) {
             //End the export
+            warn(err);
             return arr;
         }
     } while (sim.elapsedTime.lessThan(max));
@@ -146,6 +147,7 @@ async function Export ()
 {
 
     let my_sim = new Simulation(simulation.Engine, tableMass.clone(), fallingMass.clone(), null, null, TableMeasures, dtCount);
+    RefreshSimulationParams(my_sim);
     const headerRows = [
         [
             {
@@ -241,7 +243,6 @@ async function Export ()
 }
 exportBtn.onclick = () => {
     pause();
-    reset();
     const expectedRows = TimeMax.div(simulation.dt.times(dtCount)).floor().plus(2);
     if (!confirm(
         `Stai per avviare il calcolo di un\'intera simulazione.\n` +
@@ -249,6 +250,7 @@ exportBtn.onclick = () => {
         `La pagina potrebbe freezarsi; se il browser ti dovesse chiedere di attendere, cliccare su Attendi fino a fine operazione.\n` + 
         `Cliccare Ok per iniziare...`))
         return; 
+    reset();
     hideExport.disabled = true;
     exportBtn.innerHTML = '...';
     exportBtn.disabled = true;
