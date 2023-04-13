@@ -17,22 +17,14 @@ window.MathJax = {
     }
 };
 /**
- * 
- * @param {HtmlElement} e
+ * Renders an element created after page loaded
+ * @param {HtmlElement} e The element to render
+ * @returns {Promise<void>|null}
  */
-var RenderMathJax = function (e) {
+function RenderMathJax (e) {
+    if (!e) return null;
     let promise = Promise.resolve();
     promise = promise.then(() => MathJax.typesetPromise([e]))
         .catch((err) => warn('MathJax failed: ' + err.message));
     return promise;
-}
-/**
- * 
- * @param {HtmlElement} e
- * @param {string} newContent 
- */
-var ReRenderMathJax = function (e, newContent) {
-    MathJax.typesetClear([e]);
-    e.innerHTML = newContent;
-    return RenderMathJax(e);
 }

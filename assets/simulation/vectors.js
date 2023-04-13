@@ -1,12 +1,19 @@
 'use strict';
+
 if (!('Decimal' in window)) {
+    //An error happened!
     throw Error('Decimal.js not loaded properly');
 }
+
+//Set high precision
 Decimal.set( { precision: 50 } );
 if (Decimal.precision !== 50)
 {
+    //Check if it worked
     throw Error('Decimal.precision was not set correctly');
 }
+
+
 class Vector3
 {
     /**
@@ -365,9 +372,35 @@ class PolarVector
     }
 }
 
+/**
+ * Gravity acceleration, absolute value
+ * @type {Decimal}
+ */
 const g = new Decimal(9.8067);
+
+//Gravity as a Vector3, points to the bottom (g is negaive)
 const gravity = new Vector3(0, 0, g.neg());
+
+/**
+ * Good approximation of Pi as Decimal
+ * @type {Decimal}
+ */
 const pi = Decimal.acos(-1);
+
+/**
+ * Twice Pi as Decimal
+ * @type {Decimal}
+ */
 const doublePi = pi.times(2);
+
+/**
+ * Half Pi as Decimal
+ * @type {Decimal}
+ */
 const halfPi = pi.div(2);
+
+/**
+ * Number Ten as Decimal, since it is used many times
+ * @type {Decimal}
+ */
 const Ten = new Decimal(10);

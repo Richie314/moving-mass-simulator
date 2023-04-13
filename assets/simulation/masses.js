@@ -3,8 +3,8 @@
 class MassObject
 {
     /**
-     * 
-     * @param {Decimal|number} mass 
+     * Basic object with mass
+     * @param {Decimal|number|string} mass 
      */
     constructor(mass)
     {
@@ -13,13 +13,19 @@ class MassObject
             mass = new Decimal(mass);
         }
         this.mass = mass;
+
+        //Check for invalid values
+        if (this.mass.isNegative())
+        {
+            throw Error('Masses can\'t be negative!');
+        }
     }
 }
 
 class MassFallingObject extends MassObject
 {
     /**
-     * 
+     * Buolder
      * @param {Decimal} mass 
      * @param {Vector3} position 
      * @param {Vector3} speed 
@@ -113,6 +119,10 @@ class MassFallingObject extends MassObject
         return this.mass.times(g).times(this.height);
     }
 
+    /**
+     * Creates a copy of the instance
+     * @returns {MassFallingObject}
+     */
     clone()
     {
         return new MassFallingObject(
@@ -125,7 +135,7 @@ class MassFallingObject extends MassObject
 class MassRotatingObject extends MassObject
 {
     /**
-     * 
+     * Builder
      * @param {Decimal} mass 
      * @param {PolarVector} position 
      * @param {PolarVector} speed 
@@ -140,6 +150,7 @@ class MassRotatingObject extends MassObject
     }
 
     /**
+     * The kinetic energy
      * @returns {Decimal}
      */
     get kinetic()
@@ -212,6 +223,10 @@ class MassRotatingObject extends MassObject
         return this.mass.times(this.thetaPrime).times(this.r.pow(2));
     }
 
+    /**
+     * Creates a copy of the instance
+     * @returns {MassRotatingObject}
+     */
     clone()
     {
         return new MassRotatingObject(

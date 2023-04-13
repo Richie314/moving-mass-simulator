@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 
 if ( !WebGL.isWebGLAvailable() ) {
-
+    //Browser doesn't have WebGL support
 	throw new Error(WebGL.getWebGLErrorMessage());
 }
 

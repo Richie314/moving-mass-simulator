@@ -3,16 +3,18 @@
 class Simulation
 {
     /**
-     * @param {Engine} engine 
+     * Builder
+     * @param {Engine} engine The engine, can be changed later
      * @param {MassRotatingObject} tableMass
      * @param {MassFallingObject} fallingMass
-     * @param {HTMLCanvasElement|null} topCanvas
-     * @param {HTMLCanvasElement|null} sideCanvas
-     * @param {Vector3} tableMeasures
-     * @param {number|Decimal|BigInt} dtCount
+     * @param {HTMLCanvasElement|null} topCanvas The canvas where to draw the top view, can be null
+     * @param {HTMLCanvasElement|null} sideCanvas The canvas where to draw the side view, can be null
+     * @param {Vector3} tableMeasures How much the area to draw can be large
+     * @param {number|Decimal|BigInt} dtCount How many physics iterations will be done during one graphical rendering and the other
      */
     constructor(engine, tableMass, fallingMass, topCanvas, sideCanvas, tableMeasures, dtCount)
     {
+        //Sanitize input
         if (!(tableMass instanceof MassRotatingObject))
         {
             throw new Error('Invalid parameter "tableMass"');
@@ -25,12 +27,16 @@ class Simulation
         {
             throw new Error('Invalid parameter "dtCount"');
         }
+        //Store objects
         this.Engine = engine;
         this.tableMass = tableMass;
         this.fallingMass = fallingMass;
         this.dtCount = dtCount;
+
+        //Calculate first accelerations
         this.Engine.getNewAccelerations(tableMass, fallingMass);
 
+        //Draw the tail or not in the 3d view
         this.drawTail = true;
 
         this.iterationCount = new Decimal(0);
@@ -121,6 +127,7 @@ class Simulation
         ctx.stroke();
         ctx.closePath();
     }
+
     /**
      * @param {CanvasRenderingContext2D} ctx 
      * @param {number} x 
@@ -139,6 +146,7 @@ class Simulation
         ctx.closePath();
     }
 
+    //Draw the top view
     #drawTopView()
     {
         //Draws something like this
@@ -221,6 +229,8 @@ class Simulation
     {
         return this.topCanvasDrawOffSet.y - simulationY * this.topCanvasScaleY;
     }
+
+    //Draw the side view
     #drawSideView()
     {
         //Draws something like this
@@ -269,26 +279,43 @@ class Simulation
         return this.sideCanvasDrawOffSet.y - simulationZ * this.sideCanvasScaleY;
     }
 
+    //Wrapper for both the drawTopView and drawSideView functions
     drawSimulation()
     {
         this.#drawTopView();
         this.#drawSideView();
     }
 
+    /**
+     * Executes num iterations
+     * @param {Decimal|number} num 
+     * @returns true/false for success/error
+     */
     executeIterations(num)
     {
-        try {
+        try { //Catch any unexpected error
+            
             if (!this.Engine.executeIterations(num, this.tableMass, this.fallingMass))
-                return false;
+                return false; //An error was already caught but still happened
+
         } catch (err) {
-            warn(err);
+
+            warn(err); //Log the unexpected error
             return false;
         }
+
+        //All went good, we update the timestamps
         this.iterationCount = this.iterationCount.plus(num);
         this.elapsedTime = this.elapsedTime.plus(this.dt.times(num));
         return true;
     }
 
+    /**
+     * Executes num iterations, if no error occures draws the simulation 
+     * on both the top and the side canvas
+     * @param {Decimal|number} num 
+     * @returns true/false for success/error
+     */
     iterateAndDraw(num)
     {
         if (this.executeIterations(num))
@@ -298,6 +325,12 @@ class Simulation
         }
         return false;
     }
+
+    /**
+     * Set the function to be called when the simulation refreshes
+     * @param {Function} callback 
+     * @returns true if the passed argument is valid, false otherwise
+     */
     onRefresh(callback)
     {
         if (typeof callback !== 'function')
@@ -305,6 +338,8 @@ class Simulation
         this.RefreshCallback = callback;
         return true;
     }
+
+    //Call the previously set callback on refresh
     refresh()
     {
         try {
@@ -317,12 +352,15 @@ class Simulation
     }
 
     /**
+     * The dt of the Engine
      * @returns {Decimal}
      */
     get dt() {
         return this.Engine.dt;
     }
+
     /**
+     * The dt of the Engine
      * @param {Decimal} value
      */
     set dt(value) {
@@ -330,7 +368,8 @@ class Simulation
     }
 
     /**
-     * Changes the current engine, copying the actual values of masses and positions
+     * Changes the current engine, copying the actual values of masses and positions.
+     * Executes a refresh
      * @param {Engine} newEngine The new engine
      * @returns {Simulation} this object
      */
@@ -341,16 +380,21 @@ class Simulation
     }
 
     /**
+     * Set the function to be called when the simulation restarts
      * @param {Function} callback 
+     * @returns true if the passed argument is valid, false otherwise
      */
     onRestart(callback)
     {
-        if (typeof callback === 'function')
+        if (typeof callback !== 'function')
         {
-            this.RestartCallback = callback;
+            return false;
         }
+        this.RestartCallback = callback;
+        return true;
     }
 
+    //Restarts the simualtion
     restart()
     {
         this.iterationCount = new Decimal(0);
@@ -367,8 +411,14 @@ class Simulation
         log('Simulazione riavviata!');
     }
 
+    /**
+     * Alter spring on the fly
+     * @param {Decimal|number|string} newK The new hooke's constant, N/m
+     * @param {Decimal|number|string} newStartLength The new zero for spring energy, in meters
+     */
     updateSpring(newK, newStartLength)
     {
+        //Sanitize input
         if (!Decimal.isDecimal(newK))
         {
             newK = new Decimal(newK);
@@ -377,6 +427,8 @@ class Simulation
         {
             newStartLength = new Decimal(newStartLength);
         }
+
+        //Edit the spring only if there is one
         if ('k' in this.Engine)
         {
             this.Engine.k = newK;
@@ -386,6 +438,10 @@ class Simulation
             this.Engine.cableStartLength = newStartLength;
         }
     }
+
+    /**
+     * @returns {Decimal} The spring constant, if present, 0 otherwise
+     */
     get k()
     {
         if ('k' in this.Engine)
@@ -394,10 +450,13 @@ class Simulation
         }
         return new Decimal(0);
     }
+
+    //Sets the spring constant, only if there is already one
     set k(val)
     {
         if ('k' in this.Engine)
         {
+            //Sanitize
             if (!Decimal.isDecimal(val))
             {
                 val = new Decimal(val);
@@ -405,11 +464,19 @@ class Simulation
             this.Engine.k = val;
         }
     }
+
+    /**
+     * @returns {Decimal} The current total cable length, in meters
+     */
     get cable()
     {
         return this.tableMass.r.plus( this.fallingMass.height.abs() );
     }
 
+    /**
+     * Returns true if we are hitting the counter for the trail plotting in the 3d view
+     * @returns {boolean}
+     */
     TableFrequency()
     {
         if (++this.tableStaticFrequencyValue >= this.tableStaticFrequencyMax)

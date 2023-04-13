@@ -58,9 +58,12 @@
     <script defer src="assets/simulation/export-setup.js"></script>
 </head>
 <body>
+    <!--For compatibility-->
     <noscript>
         <h1>Abilita Javascript per far funzionare la simulazione e dopo <a href="#">ricarica</a> la pagina</h1>
     </noscript>
+
+    <!--Main menu-->
     <nav class="banner">
         <h4>
             Simulazione
@@ -146,21 +149,6 @@
                     <option value="3" title="Tonnellate" >[t]</option>
                 </select>
             </div>
-            <!--
-            <label for="friction">
-                Attrito:
-            </label>
-            <input type="checkbox" id="friction">
-            <div class="show-if-checked span-2 grid two">
-                <h4 class="span-2">
-                    Impostazioni attrito
-                </h4>
-                <label for="friction-value" title="Coefficiente di attrito dinamico">
-                    &mu;<sub>d</sub>: <output id="friction-value-display">0.5</output>
-                </label>
-                <input type="range" id="friction-value" value="0.5" min="0" max="1" step="0.01">
-            </div>
-            -->
 
             <label for="cable">
                 Filo estendibile:
@@ -174,7 +162,10 @@
                 <label for="hooke">
                     Costante elastica [N/m]:
                 </label>
-                <input type="number" id="hooke" value="300" min="100" max="10000" step="5">
+                <div class="grid" style="grid-template-columns: 65% 35%;width: 100%;">
+                    <input type="range" id="hooke" value="300" min="100" max="500" step="5">
+                    <output id="hooke-value-display"></output>
+                </div>
 
                 <label for="spring-relax">
                     Lunghezza a riposo [m]:
@@ -185,10 +176,6 @@
                 </div>
             </div>
 
-            <label for="interactions">
-                Interazioni:
-            </label>
-            <input type="checkbox" checked id="interactions">
 
             <label for="tail">
                 Disegna scia
@@ -210,6 +197,12 @@
                     <input type="range" id="table-mass-tail-freq" value="5" min="1" max="300" step="1">
                 </div>
             </div>
+
+            <label for="interactions">
+                Interazioni:
+            </label>
+            <input type="checkbox" checked id="interactions">
+
         </fieldset>
         <fieldset class="form grid two">
             <h3 class="span-2">
@@ -309,7 +302,6 @@
 
         </div>  
     </div>
-
     <div class="pop-up" id="math">
         <h2>
             Equazioni del moto
@@ -324,7 +316,7 @@
                         Caso semplice
                     </h3>
                     <span>
-                        (Nessun attrito e filo inestensibile)
+                        (Filo inestensibile)
                     </span>
                 </summary>
                 <p>
@@ -335,16 +327,16 @@
                     $$ T = {1 \over 2} (m + M) \dot{R}^2 + {1 \over 2} m (R \dot{\theta})^2 $$
                 </span>
                 <p>
-                    Mentre l'energia potenziale (solo gravitazionale), considerando la lunghezza totale del filo <i>l</i>:
+                    Mentre l'energia potenziale (solo gravitazionale), considerando la lunghezza totale del filo <i>l<sub>0</sub></i>:
                 </p>
                 <span class="math">
-                    $$ U = M g (l - R) $$
+                    $$ U = M g h = M g (R - l_{0}) $$
                 </span>
                 <p>
                     Le equazioni di Lagrange rispetto a <i>R</i> e <i>&theta;</i> sono quindi:
                 </p>
                 <span class="math">
-                    $$ \mathcal{L} = T - U = {1 \over 2} (m + M) \dot{R}^2 + {1 \over 2} m (R \dot{\theta})^2 + M g (R - l) $$
+                    $$ \mathcal{L} = T - U = {1 \over 2} (m + M) \dot{R}^2 + {1 \over 2} m (R \dot{\theta})^2 + M g (R - l_{0}) $$
                 </span>
                 <span class="math">
                     $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{R}} - \frac{\partial \mathcal{L}}{\partial R} = 0 $$
@@ -369,45 +361,54 @@
                         \ddot{\theta} = - 2 \frac{\dot{R} \dot{\theta}}{R} , R \ne 0
                     \end{cases}\ $$
                 </span>
+                <hr />
                 <p>
-                    Conoscendo istante per istante le accelerazioni &egrave; possibile, sfruttando
-                    un intervallo <i>dt</i> molto piccolo approssimare la variazione di velocit&agrave; e calcolare le velocit&agrave;
-                    all'istante successivo.
+                    Solo in questo caso &egrave; possibile applicare un semplice fattore correttivo ai valori: se il filo, per un errore di integrazione, 
+                    dovesse essersi "allungato" &egrave; possibile riscalare il raggio e l'altezza perch&eacute; la loro somma ritorni quella iniziale.
                 </p>
                 <span class="math">
-                    $$ \begin{cases}
-                        d\dot{R} = \ddot{R} \cdot dt\\
-                        d\dot{\theta} = \ddot{\theta} \cdot dt
-                    \end{cases}\ $$
-                    $$ \begin{cases}
-                        \dot{R}_{t+1} \approx \dot{R}_t + d\dot{R}\\
-                        \dot{\theta}_{t+1} \approx \dot{\theta}_t + d\dot{\theta}
-                    \end{cases}\ $$
+                    $$ x = R - h - l_{0} $$
+                    $$ R \leftarrow R - \frac{x}{2} $$
+                    $$ h \leftarrow h + \frac{x}{2} $$
                 </span>
                 <p>
-                    Le posizioni all'istante successivo sono ottenute col medesimo modo: tramite un <i>dt</i> molto piccolo
-                    viene approssimata la variazione di posizione e da esse le nuove posizioni.
+                    Lo stesso si pu&ograve; fare per le velocit&agrave;
                 </p>
                 <span class="math">
-                    $$ \begin{cases}
-                        dR = \dot{R} \cdot dt\\
-                        d\theta = \dot{\theta} \cdot dt
-                    \end{cases}\ $$
-                    $$ \begin{cases}
-                        R_{t+1} \approx R_t + dR\\
-                        \theta_{t+1} \approx \theta_t + d\theta
-                    \end{cases}\ $$
+                    $$ v = \frac{\dot{R} + \dot{h}}{2} $$
+                    $$ \dot{R} \leftarrow v $$
+                    $$ \dot{h} \leftarrow v $$
                 </span>
+            </details>
+            <details>
+                <summary>
+                    <h3>
+                        Caso elaborato
+                    </h3>
+                    <span>
+                        (Il filo &egrave; considerato una molla)
+                    </span>
+                </summary>
+                
+            </details>
+            <details>
+                <summary>
+                    <h3>
+                        Metodo di integrazione numerica
+                    </h3>
+                </summary>
+                
             </details>
         </div>
     </div>
     
-    <div class="banner">
-    </div>
+    <!--Main canvas will go here-->
     <div class="screen-container full-screen" id="d3-container">
         
     </div>
     <hr />
+
+    <!--Basic counters will go here-->
     <div class="full-w" style="padding-inline: 1.3em;">
         <div>
             <span>Iterazioni compiute:</span>
@@ -419,11 +420,15 @@
             <span>[s]</span>
         </div>
     </div>
+
+    <!--Top and side view will go here-->
     <div class="screen-container grid half-screen" id="d2-container">
         <canvas id="top-view" width="1800" height="900"></canvas>
         <canvas id="side-view" width="900" height="900"></canvas>
     </div>
     <hr />
+
+    <!--The table of the current values-->
     <div class="full-w number-table">
         <div title="Raggio">
             <span class="math">
@@ -559,6 +564,8 @@
         </div>
     </div>
     <hr />
+
+    <!--Just the footer, not interesting-->
     <footer class="grid two">
         
         <h3>
@@ -584,7 +591,7 @@
                     <a href="https://github.com/mrdoob/stats.js" target="_blank">Stats.js</a>
                 </li>
                 <li>
-                    <a href="https://docs.sheetjs.com/" target="_blank">SheetJS</a>
+                    <a href="https://sheetjs.com/" target="_blank">SheetJS</a>
                 </li>
                 <li>
                     <a href="https://fonts.google.com/" target="_blank">Material Icons</a>
@@ -598,7 +605,7 @@
                     <a href="https://www.richie314.it/" target="_blank">Ciucci Riccardo</a>
                 </li>
                 <li>
-                    <a href="" target="_blank">Leoncini Lorenzo</a>
+                    <a href="https://github.com/Leonch03" target="_blank">Leoncini Lorenzo</a>
                 </li>
             </ul>
         </div>

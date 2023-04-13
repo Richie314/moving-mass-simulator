@@ -1,5 +1,6 @@
 'use strict';
 
+//Wrapper for static physics functions
 class EngineBase
 {
 
@@ -90,7 +91,6 @@ class EngineBase
     }
 
     /**
-     * 
      * @param {MassFallingObject|MassRotatingObject} corpse 
      * @param {Vector3|PolarVector} acc 
      * @param {Decimal|number} duration 
@@ -145,6 +145,7 @@ class EngineBase
     }
 
     /**
+     * Function of numeric integration for the speeds
      * @param {MassFallingObject|MassRotatingObject} corpse 
      * @param {Vector3|PolarVector} acc
      * @param {Vector3|PolarVector} speed
@@ -168,6 +169,7 @@ class EngineBase
 
 }
 
+//Base class of the engine
 class Engine extends EngineBase
 {
 
@@ -177,6 +179,8 @@ class Engine extends EngineBase
     constructor(dt)
     {
         super();
+
+        //Sanitize the dt
         if (!Decimal.isDecimal(dt))
         {
             dt = new Decimal(dt);
@@ -190,32 +194,43 @@ class Engine extends EngineBase
     }
 
     /**
+     * Executes num iterations, stops in case of error
      * @param {MassRotatingObject} tableMass
      * @param {MassFallingObject} fallingMass
-     * @param {number} num Integer
-     * @returns {boolean}
+     * @param {number} num Integer (can be negtive)
+     * @returns {boolean} true/false for success/error
      */
     executeIterations(num, tableMass, fallingMass)
     {
         const numAbs = Math.abs(num);
         let ret = true;
+
+        //Inverts the dt interval if we are requesting a backwards iteration
         if (num !== numAbs)
         {
             this.#inverteTimeFlow();
         }
-        for (let i = 0; i < numAbs; i++)
+
+        //Actual iteration
+        for (let i = 0; i < numAbs && ret; i++)
         {
             this.applySpeedsAndForces(tableMass, fallingMass);
             ret = this.getNewAccelerations(tableMass, fallingMass);
         }
+
+        
+        //Set the direction to forward if it was previously altered
         if (num !== numAbs)
         {
             this.#inverteTimeFlow();
         }
+
+        //true/false for success/error
         return ret;
     }
     
     /**
+     * Very important function, moves the system
      * @param {MassRotatingObject} tableMass 
      * @param {MassFallingObject} fallingMass 
      */
@@ -243,25 +258,33 @@ class Engine extends EngineBase
         if (tableMass.r.lessThanOrEqualTo(0))
         {
             //The object just crossed the center of the table
+            //A reflection happens
             tableMass.position.reboundPositive();
             tableMass.rPrime = tableMass.rPrime.neg();
             ///////TODO: fix this
             fallingMass.heightPrime = fallingMass.heightPrime.neg();
         }
 
-        this.correctValues(tableMass, fallingMass);
+        if ('correctValues' in this)
+        {
+            this.correctValues(tableMass, fallingMass);
+        }
     }
 }
 
+//Simple engine
 class FixedLengthEngine extends Engine
 {
     /**
-     * @param {Decimal|number} cableLength
-     * @param {Decimal|number} dt 
+     * Builder
+     * @param {Decimal|number} cableLength The cable length, in meters
+     * @param {Decimal|number} dt The dt intervas, in seconds
      */
     constructor (cableLength, dt)
     {
         super(dt);
+
+        //Sanitize the input
         if (!Decimal.isDecimal(cableLength))
         {
             cableLength = new Decimal(cableLength);
@@ -270,6 +293,7 @@ class FixedLengthEngine extends Engine
     }
 
     /**
+     * Function that rebounds the state values of the objects
      * @param {MassRotatingObject} tableMass 
      * @param {MassFallingObject} fallingMass 
      */
@@ -283,7 +307,9 @@ class FixedLengthEngine extends Engine
         tableMass.r = tableMass.r.minus( diff );
         fallingMass.height = fallingMass.height.plus( diff );
     }
+
     /**
+     * Function that sets the new accelerations given the current state
      * @param {MassRotatingObject} tableMass 
      * @param {MassFallingObject} fallingMass 
      */
@@ -313,38 +339,44 @@ class FixedLengthEngine extends Engine
     }
 }
 
+//More sophisticated engine
 class VariableLengthEngine extends Engine
 {
     /**
-     * @param {Decimal|number} cableStartLength
-     * @param {Decimal|number} k 
-     * @param {Decimal|number} dt 
+     * Builder
+     * @param {Decimal|number} cableStartLength Start length, zero of the spring energy, in meters
+     * @param {Decimal|number} k The spring constant of hooke's law, N/m
+     * @param {Decimal|number} dt The time interval, in seconds
      */
     constructor (cableStartLength, k, dt)
     {
         super(dt);
+
+        //Sanitize the inputs
         if (!Decimal.isDecimal(cableStartLength))
         {
             cableStartLength = new Decimal(cableStartLength);
         }
         this.cableStartLength = cableStartLength;
+
         if (!Decimal.isDecimal(k))
         {
             k = new Decimal(k);
         }
         this.k = k;
     }
-    correctValues(tableMass, fallingMass)
-    {
-
-    }
+    
     /**
+     * Function that sets the new accelerations given the current state,
+     * if returns false the simulation should stop
      * @param {MassRotatingObject} tableMass 
      * @param {MassFallingObject} fallingMass 
      */
     getNewAccelerations(tableMass, fallingMass)
     {
+        //Calculate kx just once
         const kx = ( tableMass.r.minus(fallingMass.height).minus(this.cableStartLength) ).times(this.k);
+
         // ..     .
         //  R = R 0^2 - k x / m
         tableMass.rDoublePrime = ( tableMass.r.times( tableMass.thetaPrime.pow(2) ) ).minus( kx.div(tableMass.mass) );
@@ -368,6 +400,7 @@ class VariableLengthEngine extends Engine
     }
 
     /**
+     * Just a shortcut for the spring energy
      * @param {MassRotatingObject} tableMass 
      * @param {MassFallingObject} fallingMass 
      * @returns {Decimal}
