@@ -179,12 +179,14 @@ function SetInitialThetaPrime()
 }
 
 const springHtml = document.getElementById('hooke');
+const springShow = document.getElementById('hooke-value-display');
 const springRelaxHtml = document.getElementById('spring-relax');
 const springRelaxShow = document.getElementById('spring-relax-value-display');
 
 function UpdateSpringValue()
 {
     springConstant = new Decimal(springHtml.value);
+    springShow.innerHTML = springHtml.value;
     springRelaxLength = new Decimal(springRelaxHtml.value);
     springRelaxShow.innerHTML = springRelaxHtml.value;
 }
