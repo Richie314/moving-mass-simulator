@@ -50,20 +50,100 @@ async function IterateAsync(sim, count)
         sim.fallingMass.heightPrime, //I
         sim.fallingMass.heightDoublePrime, //J
 
+        //Fillers to set cell format to EXCEL calculated data
+        new Decimal(0), new Decimal(0),
+        new Decimal(0), new Decimal(0),
+        new Decimal(0), new Decimal(0),
+        new Decimal(0), new Decimal(0),
+
     ].map(elem => {
         return {
             t: 'n',
             v: elem.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-            z: '0.00E+00'
+            z: '0.000E+00'
         }
     });
 }
+const tableHeaders = [
+    {
+        t: 's',
+        v: 'Timestamp [s]'
+    },
+    {
+        t: 's',
+        v: 'R [m]'
+    },
+    {
+        t: 's',
+        v: 'R\' [m/s]'
+    },
+    {
+        t: 's',
+        v: 'R\'\' [m/s^2]'
+    },
 
+    {
+        t: 's',
+        v: 'Theta [rad]'
+    },
+    {
+        t: 's',
+        v: 'Theta\' [rad/s]'
+    },
+    {
+        t: 's',
+        v: 'Theta\'\' [rad/s^2]'
+    },
+
+    {
+        t: 's',
+        v: 'h [m]'
+    },
+    {
+        t: 's',
+        v: 'h\' [m/s]'
+    },
+    {
+        t: 's',
+        v: 'h\'\' [m/s^2]'
+    },
+
+    {
+        t: 's',
+        v: 'l [m]'
+    },
+    {
+        t: 's',
+        v: 'Momentum [J/s]'
+    },
+
+    {
+        t: 's',
+        v: 'T1 [J]'
+    },
+    {
+        t: 's',
+        v: 'T2 [J]'
+    },
+    {
+        t: 's',
+        v: 'Ug [J]'
+    },
+    {
+        t: 's',
+        v: 'Uk [J]'
+    },
+    {
+        t: 's',
+        v: 'T+U [J]'
+    },
+    {
+        t: 's',
+        v: 'T-U [J]'
+    },
+]
 async function Export ()
 {
-    hideExport.disabled = true;
-    exportBtn.innerHTML = '...';
-    exportBtn.disabled = true;
 
     let my_sim = new Simulation(simulation.Engine, tableMass.clone(), fallingMass.clone(), null, null, TableMeasures, dtCount);
     const headerRows = [
@@ -113,84 +193,7 @@ async function Export ()
                 v: g.toSignificantDigits(5, Decimal.ROUND_HALF_EVEN)
             }
         ],
-        [
-            {
-                t: 's',
-                v: 'Timestamp [s]'
-            },
-            {
-                t: 's',
-                v: 'R [m]'
-            },
-            {
-                t: 's',
-                v: 'R. [m/s]'
-            },
-            {
-                t: 's',
-                v: 'R.. [m/s^2]'
-            },
-
-            {
-                t: 's',
-                v: 'Theta [rad]'
-            },
-            {
-                t: 's',
-                v: 'Theta. [rad/s]'
-            },
-            {
-                t: 's',
-                v: 'Theta.. [rad/s^2]'
-            },
-
-            {
-                t: 's',
-                v: 'h [m]'
-            },
-            {
-                t: 's',
-                v: 'h. [m/s]'
-            },
-            {
-                t: 's',
-                v: 'h.. [m/s^2]'
-            },
-
-            {
-                t: 's',
-                v: 'l [m]'
-            },
-            {
-                t: 's',
-                v: 'Momentum [J/s]'
-            },
-
-            {
-                t: 's',
-                v: 'T1 [J]'
-            },
-            {
-                t: 's',
-                v: 'T2 [J]'
-            },
-            {
-                t: 's',
-                v: 'Ug [J]'
-            },
-            {
-                t: 's',
-                v: 'Uk [J]'
-            },
-            {
-                t: 's',
-                v: 'T+U [J]'
-            },
-            {
-                t: 's',
-                v: 'T-U [J]'
-            },
-        ]
+        tableHeaders
     ];
     const dataRows = await CalculateAll(my_sim, TimeMax);
     const allRows = headerRows.concat(dataRows);
@@ -199,6 +202,16 @@ async function Export ()
     {
         return `${letter}3:${letter + String(allRows.length)}`;
     }
+    function repeat(obj, count)
+    {
+        let arr = [];
+        for (let i = 0; i < count; i++)
+        {
+            arr.push(obj);
+        }
+        return arr;
+    }
+    worksheet[matr('K')] = {}
     XLSX.utils.sheet_set_array_formula(worksheet, matr('K'), matr('B') + '-' + matr('H'));
     XLSX.utils.sheet_set_array_formula(worksheet, matr('L'), `B1 * POWER(${matr('B')}, 2) * ${matr('F')}`);
     
@@ -209,28 +222,46 @@ async function Export ()
     
     XLSX.utils.sheet_set_array_formula(worksheet, matr('Q'), [matr('M'), matr('N'), matr('O'), matr('P')].join(" + "));
     XLSX.utils.sheet_set_array_formula(worksheet, matr('R'), `${matr('M')}+${matr('N')}-${matr('O')}-${matr('P')}`);
+    
+    worksheet["!cols"] = repeat({
+        wch: 10
+    }, 18);//Enlarge width for a better view of the table
+
     const workbook = XLSX.utils.book_new();
 
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Export");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Simulazione");
+    
+    if (!workbook.Props) 
+        workbook.Props = {};
+    
+        workbook.Props.Title = "Export dati simulazione";
+
     XLSX.writeFileXLSX(workbook, 'export.xlsx');
 
-    hideExport.disabled = false;
-    exportBtn.innerHTML = 'Esporta';
-    exportBtn.disabled = false;
 }
 exportBtn.onclick = () => {
     pause();
-    simulation.refresh();
-    const expectedRows = TimeMax.div(simulation.dt.times(dtCount));
+    reset();
+    const expectedRows = TimeMax.div(simulation.dt.times(dtCount)).floor().plus(2);
     if (!confirm(
-        'Stai per avviare il calcolo di un\'intera simulazione.\n' +
+        `Stai per avviare il calcolo di un\'intera simulazione.\n` +
         `Sarà creato un file XLSX con ${expectedRows.toSignificantDigits(7)} righe.\n` +
         `La pagina potrebbe freezarsi; se il browser ti dovesse chiedere di attendere, cliccare su Attendi fino a fine operazione.\n` + 
-        'Cliccare Ok per iniziare...'))
+        `Cliccare Ok per iniziare...`))
         return; 
-    Export().then(() => {
-        log('Export effettuato');
-    }).catch(err => {
-        error(err);
-    });
+    hideExport.disabled = true;
+    exportBtn.innerHTML = '...';
+    exportBtn.disabled = true;
+    setTimeout(() => { //To see the ... in the button
+        Export().then(() => {
+            log('Export effettuato');
+        }).catch(error => {
+            err(error);
+        }).finally(() => {
+            hideExport.disabled = false;
+            exportBtn.innerHTML = 'Esporta';
+            exportBtn.disabled = false;
+        })
+    }, 100);
+    
 };
