@@ -231,6 +231,8 @@ hr {
 #tutorial-3d, #tutorial-2d {
   padding-inline: 1.3em;
   transition: height 1s ease-in-out;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 #tutorial-3d button > i, #tutorial-2d button > i {
   color: green;
