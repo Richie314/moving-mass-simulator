@@ -174,7 +174,7 @@ async function Export ()
             },
             {
                 t: 'n',
-                v: my_sim.cable.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
+                v: springRelaxLength.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
                 z: '0.00E+00'
             },
             {
