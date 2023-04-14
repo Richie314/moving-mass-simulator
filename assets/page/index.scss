@@ -210,3 +210,10 @@ hr {
     width: 90%;
     margin-inline: 5%;
 }
+#tutorial-3d, #tutorial-2d {
+    button > i {
+        color: green;
+    }
+    padding-inline: 1.3em;
+    transition: height 1s ease-in-out;
+}

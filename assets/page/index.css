@@ -226,4 +226,12 @@ nav > button[type=button] > i {
 hr {
   width: 90%;
   margin-inline: 5%;
+}
+
+#tutorial-3d, #tutorial-2d {
+  padding-inline: 1.3em;
+  transition: height 1s ease-in-out;
+}
+#tutorial-3d button > i, #tutorial-2d button > i {
+  color: green;
 }/*# sourceMappingURL=index.css.map */

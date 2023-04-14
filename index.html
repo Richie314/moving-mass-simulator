@@ -92,7 +92,7 @@
     </nav>
     
     <!--Basic tutorial on how to move in the 3d canvas-->
-    <div class="full-w grid four" style="padding-inline: 1.3em;" id="tutorial-3d">
+    <div class="full-w grid four" id="tutorial-3d">
         <ul class="span-3 no-list">
             <li>
                 Utilizza il tasto sinistro del mouse per ruotare la vista 3d
@@ -105,8 +105,8 @@
             </li>
         </ul>
         <div class="center">
-            <button type="button" class="center" onclick="document.getElementById('tutorial-3d').style.display = 'none';">
-                Ho capito <i class="material-icons" style="color: green;">done_outline</i>
+            <button type="button" class="center" onclick="document.getElementById('tutorial-3d').style.height = '0px !important';">
+                Ho capito <i class="material-icons">done_outline</i>
             </button>
         </div>
     </div>
@@ -338,6 +338,9 @@
                         (Filo inestensibile)
                     </span>
                 </summary>
+                <span class="math">
+                    $$ q = \begin {pmatrix} R \\ {\theta} \end{pmatrix}\ $$
+                </span>
                 <p>
                     Le uniche variabili del sistema sono in questo caso il raggio <i>R</i> e l'angolo <i>&theta;</i>.<br />
                     L'energia cinetica dei due corpi (m sopra il tavolo ed M sotto) diventa:
@@ -399,6 +402,8 @@
                     $$ \dot{h} \leftarrow v $$
                 </span>
             </details>
+
+
             <details>
                 <summary>
                     <h3>
@@ -408,7 +413,64 @@
                         (Il filo &egrave; considerato una molla)
                     </span>
                 </summary>
-                
+                <span class="math">
+                    $$ q = \begin {pmatrix} R \\ {\theta} \\ h \end{pmatrix}\ $$
+                </span>
+                <span class="math">
+                    $$ T = \frac{1}{2} m \dot{R}^2 + \frac{1}{2}M\dot{h}^2 + \frac{1}{2}m(\dot{\theta}R)^2 =
+                      \frac{1}{2}m (\dot{R}^2 + R^2\dot{\theta}^2) + \frac{1}{2}M\dot{h}^2 $$
+                </span>
+                <span class="math">
+                    $$ 
+                    U_G = mgh;
+                    U_K = \frac{1}{2}k(l_0-\left | h \right | - R)^2 = \frac{1}{2}k(l_0 + h - R)^2 
+                    $$
+                </span>
+                <span class="math">
+                    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{R}} - \frac{\partial \mathcal{L}}{\partial R} 
+                    \Rightarrow \frac{d}{dt}(m\dot{R}) - m\dot{\theta}^2 R + \frac{k}{2} (2R - 2l - 2l_0) $$
+                </span>
+                <span class="math">
+                    $$ m\ddot{R} = m \dot{\theta}^2 R - k(R - l - l_0) \Rightarrow \ddot{R} = \dot{\theta}^2 R - \frac{k}{m}(R - l - l_0)  = 0$$
+                </span>
+                <span class="math">
+                    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{\theta}} - \frac{\partial \mathcal{L}}{\partial \theta} = 0 
+                    \Rightarrow  \frac{d}{dt}(mR^2\dot{\theta}) = 0 
+                    \Rightarrow m\frac {d}{dt}(R^2\dot{\theta}) = 0 
+                    \Rightarrow \frac{d}{dt}(R^2\dot{\theta}) = 0 $$
+                </span>
+                <span class="math">
+                    $$
+                    \ddot{\theta}R^2 + 2R\dot{r}\dot{\theta} = 0
+                    \Rightarrow \ddot{\theta} = 
+                    \begin{cases}
+                        -2 \frac{\dot{R} \dot{\theta}}{R} \cap R \not = 0  \\
+                        Idefinito \cap R = 0 \
+                    \end{cases}
+                    $$
+                </span>
+                <span class="math">
+                    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{h}} - \frac{\partial \mathcal{L}}{\partial h} = 0
+                    \Rightarrow \frac{d}{dt}(M\dot{h}) + Mg + \frac{k}{2}(2h +2l_0 - 2R) $$
+                </span>
+                <span class="math">
+                    $$
+                    \Rightarrow M\ddot{h} = - M g - k (h + l_0 - R) \Rightarrow \ddot{h} = - g -\frac{k}{M} (h + l_0 - R)
+                    $$
+                </span>
+                <span class="math">
+                    $$
+                    x = R - h - l_0
+                    $$
+                </span>
+                <span class="math">
+                    $$
+                    \begin{cases}
+                        \ddot{R}= \dot{\theta}^2R - \frac{kx}{m} \\
+                        \ddot{h} = - g - \frac{k}{M}(-x) = - g + \frac{kx}{M}
+                    \end{cases}
+                    $$
+                </span>
             </details>
             <details>
                 <summary>
@@ -442,7 +504,7 @@
     <hr />
 
     <!--Basic tutorial on how to move in the 2d canvas-->
-    <div class="full-w grid four" style="padding-inline: 1.3em;" id="tutorial-2d">
+    <div class="full-w grid four" id="tutorial-2d">
         <ul class="span-3 no-list">
             <li>
                 Trascina l'oggetto nella visualizzazione dall'alto per variare la sua posizione iniziale
@@ -453,8 +515,8 @@
             </li>
         </ul>
         <div class="center">
-            <button type="button" class="center" onclick="document.getElementById('tutorial-2d').style.display = 'none';">
-                Ho capito <i class="material-icons" style="color: green;">done_outline</i>
+            <button type="button" class="center" onclick="document.getElementById('tutorial-2d').style.height = '0px !important';">
+                Ho capito <i class="material-icons">done_outline</i>
             </button>
         </div>
     </div>

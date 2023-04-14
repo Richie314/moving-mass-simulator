@@ -148,7 +148,7 @@ function UpdateEngine()
     {
         simulation.changeEngine(ConservativeEngine);
     } else {
-        CinematicEngine.cableLength = simulation.tableMass.cable;
+        CinematicEngine.cableLength = simulation.cable;
         simulation.changeEngine(CinematicEngine);
     }
 }

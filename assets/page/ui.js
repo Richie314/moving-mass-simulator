@@ -75,6 +75,15 @@ document.getElementById('close-settings').onclick = () => {
 }
 
 /**********************************************/
+/*             Tutorial buttons               */
+/**********************************************/
+
+setTimeout(() => {
+    document.getElementById('tutorial-3d').style.height = '0 !important';
+    document.getElementById('tutorial-2d').style.height = '0 !important';
+    log('Nascosti i tutorial');
+}, 10000);
+/**********************************************/
 /*              Form inputs                   */
 /**********************************************/
 
