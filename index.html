@@ -106,7 +106,7 @@
             <label for="dt-number">
                 <span class="math">$$ dt $$</span>
             </label>
-            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;">
                 <input type="range" id="dt-number" value="50" min="5" max="500" step="5">
                 <output id="dt-value-display"></output>
                 <select id="dt-unit" title="Ordine di grandezza">
@@ -119,7 +119,7 @@
             <label for="dt-count">
                 Iterazioni per ciclo:
             </label>
-            <div class="grid" style="grid-template-columns: 10% 90%;width: 100%;">
+            <div class="grid" style="grid-template-columns: 10% 90%;">
                 <output id="dt-count-value-display"></output>
                 <input type="range" id="dt-count" value="20" min="5" max="1000" step="5">
             </div>
@@ -127,7 +127,7 @@
             <label for="table-mass">
                 Massa sul tavolo: 
             </label>
-            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;">
                 <input type="range" id="table-mass" value="3" min="1" max="20" step="1">
                 <output id="table-mass-value-display"></output>
                 <select id="table-mass-unit" title="Ordine di grandezza">
@@ -140,7 +140,7 @@
             <label for="falling-mass">
                 Massa sotto il tavolo:
             </label>
-            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;">
                 <input type="range" id="falling-mass" value="3" min="1" max="20" step="1">
                 <output id="falling-mass-value-display"></output>
                 <select id="falling-mass-unit" title="Ordine di grandezza">
@@ -162,7 +162,7 @@
                 <label for="hooke">
                     Costante elastica [N/m]:
                 </label>
-                <div class="grid" style="grid-template-columns: 65% 35%;width: 100%;">
+                <div class="grid" style="grid-template-columns: 65% 35%;">
                     <input type="range" id="hooke" value="300" min="10" max="500" step="5">
                     <output id="hooke-value-display"></output>
                 </div>
@@ -170,7 +170,7 @@
                 <label for="spring-relax">
                     Lunghezza a riposo [m]:
                 </label>
-                <div class="grid" style="grid-template-columns: 65% 35%;width: 100%;">
+                <div class="grid" style="grid-template-columns: 65% 35%;">
                     <input type="range" id="spring-relax" value="1.1" min="0.5" max="3" step=".1">
                     <output id="spring-relax-value-display"></output>
                 </div>
@@ -189,7 +189,7 @@
                 <label for="table-mass-tail-freq">
                     Frequenza di campionamento:
                 </label>
-                <div class="grid" style="grid-template-columns: 10% 10% 80%;width: 100%;">
+                <div class="grid" style="grid-template-columns: 10% 10% 80%;">
                     <span>
                         1 /
                     </span>
@@ -215,10 +215,10 @@
             </p>
 
             <!--Radial initial speed-->
-            <label for="rp-start">
+            <label for="rp-start" title="Velocità radiale iniziale">
                 <span class="math">$$ \dot{R} $$</span>
             </label>
-            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;">
                 <input type="range" id="rp-start" value="10" min="-100" max="100" step="0.5">
                 <output id="rp-start-display"></output>
                 <select id="rp-start-unit" title="Ordine di grandezza">
@@ -229,19 +229,19 @@
             </div>
 
             <!--Angular initial speed-->
-            <label for="thetap-start">
+            <label for="thetap-start" title="Velocità angolare iniziale">
                 <span class="math">$$ \dot{\theta} $$</span>
             </label>
-            <div class="grid" style="grid-template-columns: 65% 35%;width: 100%;">
+            <div class="grid" style="grid-template-columns: 65% 35%;">
                 <input type="number" id="thetap-start" value="4" min="-100" max="100" step="0.5">
                 <span>[rad/s]</span>
             </div>
 
             <!--Vertical initial speed-->
-            <label for="hp-start">
+            <label for="hp-start" title="Velocità verticale iniziale">
                 <span class="math">$$ \dot{h} $$</span>
             </label>
-            <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
+            <div class="grid" style="grid-template-columns: 55% 10% 35%;">
                 <input type="range" id="hp-start" value="10" min="-100" max="100" step="0.5">
                 <output id="hp-start-display"></output>
                 <select id="hp-start-unit" title="Ordine di grandezza">
