@@ -170,3 +170,11 @@ details {
 .justify {
     text-align: justify;
 }
+.no-list {
+    display: unset;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    & > li {
+        list-style-type: none;
+    }
+}

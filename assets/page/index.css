@@ -137,6 +137,8 @@ nav > button[type=button] > i {
   margin: 1em 5% auto 5%;
   height: -moz-fit-content;
   height: fit-content;
+  max-height: 80vh;
+  overflow-y: auto;
   color: black;
   background-color: white;
   grid-template-columns: calc(100% - 1.5em) 1.5em;
@@ -213,4 +215,15 @@ nav > button[type=button] > i {
 #top-view.grabbing {
   cursor: grabbing;
   border: 1px dashed red;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+hr {
+  width: 90%;
+  margin-inline: 5%;
 }/*# sourceMappingURL=index.css.map */

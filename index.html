@@ -91,8 +91,27 @@
         </button>
     </nav>
     
-    <!--Windows that pop-up -->
+    <!--Basic tutorial on how to move in the 3d canvas-->
+    <div class="full-w grid four" style="padding-inline: 1.3em;" id="tutorial-3d">
+        <ul class="span-3 no-list">
+            <li>
+                Utilizza il tasto sinistro del mouse per ruotare la vista 3d
+            </li>
+            <li>
+                Utilizza il tasto centrale del mouse per variare lo zoom
+            </li>
+            <li>
+                Utilizza il tasto destro del mouse per traslare la vista 3d
+            </li>
+        </ul>
+        <div class="center">
+            <button type="button" class="center" onclick="document.getElementById('tutorial-3d').style.display = 'none';">
+                Ho capito <i class="material-icons" style="color: green;">done_outline</i>
+            </button>
+        </div>
+    </div>
 
+    <!--Windows that pop-up -->
     <div class="pop-up" id="settings">
         <h2>
             Parametri della simulazione
@@ -266,7 +285,7 @@
             Durante la creazione del file non &egrave; possibile chiudere questa finestra e tantomeno visualizzare
             la simulazione. Per limitare le dimensioni del file generato le energie saranno escluse.<br />
             I parametri iniziali impiegati saranno i medesimi della simulazione, e sono controllabili dal men&ugrave;
-            <strong>Impostazioni</strong>.<br />
+            <strong>Impostazioni</strong><i class="material-icons">settings</i>.<br />
             &Egrave; possibile impostare un limite massimo temporale. In caso di errore la procedura terminer&agrave;
             restituendo le righe apportate per ora
         </p>
@@ -418,6 +437,25 @@
             <span>Tempo trascorso:</span>
             <output id="elapsed-time">0</output>
             <span>[s]</span>
+        </div>
+    </div>
+    <hr />
+
+    <!--Basic tutorial on how to move in the 2d canvas-->
+    <div class="full-w grid four" style="padding-inline: 1.3em;" id="tutorial-2d">
+        <ul class="span-3 no-list">
+            <li>
+                Trascina l'oggetto nella visualizzazione dall'alto per variare la sua posizione iniziale
+            </li>
+            <li>
+                Fare ci&ograve; metter&agrave; in pausa la simulazione, 
+                &egrave; comunque consigliato riavviarla dopo aver effettuato spostamenti
+            </li>
+        </ul>
+        <div class="center">
+            <button type="button" class="center" onclick="document.getElementById('tutorial-2d').style.display = 'none';">
+                Ho capito <i class="material-icons" style="color: green;">done_outline</i>
+            </button>
         </div>
     </div>
 

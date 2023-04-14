@@ -120,6 +120,8 @@ nav {
     width: 90%;
     margin: 1em 5% auto 5%;
     height: fit-content;
+    max-height: 80vh;
+    overflow-y: auto;
     color: black;
     background-color: white;
     grid-template-columns: calc(100% - 1.5em) 1.5em;
@@ -198,4 +200,13 @@ nav {
         border: 1px dashed red;
     }
     aspect-ratio: 2 !important;
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+hr {
+    width: 90%;
+    margin-inline: 5%;
 }
