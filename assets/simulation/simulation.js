@@ -347,6 +347,7 @@ class Simulation
         } catch(err) {
             warn(err);
         } finally {
+            this.Engine.getNewAccelerations(tableMass, fallingMass);
             return this;
         }
     }

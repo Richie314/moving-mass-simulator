@@ -4,6 +4,9 @@
 }
 button[type=button] {
     cursor: pointer;
+    &:disabled {
+        cursor: not-allowed;
+    }
 }
 span {
     &.math {

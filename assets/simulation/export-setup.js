@@ -258,6 +258,7 @@ async function Export ()
 
 }
 exportBtn.onclick = () => {
+    if (exportBtn.disabled) return;
     pause();
     const expectedRows = TimeMax.div(simulation.dt.times(dtCount)).floor().plus(2);
     if (!confirm(
