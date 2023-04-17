@@ -302,7 +302,7 @@
             I parametri iniziali impiegati saranno i medesimi della simulazione, e sono controllabili dal men&ugrave;
             <strong>Impostazioni</strong>(<i class="material-icons" style="font-size: 1em;">settings</i>).<br />
             &Egrave; possibile impostare un limite massimo temporale. In caso di errore la procedura terminer&agrave;
-            restituendo le righe apportate per ora
+            restituendo le righe calcolate fino a quel momento.
         </p>
         <fieldset class="form grid two">
 
@@ -317,6 +317,17 @@
                     <option value="-3" title="Milli secondi">[ms]</option>
                     <option value="0" title="Secondi" selected="selected">[s]</option>
                 </select>
+            </div>
+
+            <label for="dt-export-count">
+                Frequenza righe:
+            </label>
+            <div class="grid" style="grid-template-columns: 10% 10% 80%;">
+                <span>
+                    1 / 
+                </span>
+                <output id="dt-export-count-value-display"></output>
+                <input type="range" id="dt-export-count" value="250" min="100" max="1000" step="5" />
             </div>
 
             <button type="button" id="export-btn" class="span-2" title="Esporta">

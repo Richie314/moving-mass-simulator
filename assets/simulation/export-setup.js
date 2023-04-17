@@ -1,17 +1,38 @@
 'use strict';
 var TimeMax = new Decimal(1);
 UpdateTimeMax();
+
+var dtExportCount = 250;
+const dtExportCountInput = document.getElementById('dt-export-count');
+const dtExportCountShow = document.getElementById('dt-export-count-value-display');
+function UpdateDtExportCount()
+{
+    dtExportCount = Number(dtExportCountInput.value);
+    dtExportCountShow.innerHTML = dtExportCount;
+}
+dtExportCountInput.addEventListener('input', UpdateDtExportCount);
+UpdateDtExportCount();
+
 /**
  * 
  * @param {Simulation} sim 
  * @param {Decimal|number|string} max
- * @returns {object[][]}
+ * @param {Function} onUpdate
+ * @param {Function} callback
  */
-async function CalculateAll(sim, max)
+function CalculateAll(sim, max, onUpdate, callback)
 {
     if (!Decimal.isDecimal(max))
     {
         max = new Decimal(max);
+    }
+    if (typeof callback !== 'function')
+    {
+        callback = data => log(data);
+    }
+    if (typeof onUpdate !== 'function')
+    {
+        onUpdate = data => log(data);
     }
     /**
      * @param {Simulation} s 
@@ -54,30 +75,32 @@ async function CalculateAll(sim, max)
     let arr = [
         getDataFunction(sim).map(mapDataFunction)
     ];
-    do {
-        try {
-            arr.push(await IterateAsync(sim, sim.dtCount, getDataFunction, mapDataFunction));
-        } catch (err) {
-            //End the export
-            warn(err);
-            return arr;
-        }
-    } while (sim.elapsedTime.lessThan(max));
-    return arr;
+    IterateAsync(arr, sim, max, dtExportCount, getDataFunction, mapDataFunction, onUpdate, callback);
 }
 /**
+ * @param {any[]} array
  * @param {Simulation} sim 
+ * @param {Decimal|number} timeMax
  * @param {Decimal} count 
  * @param {Function} getDataFunction
- * @param {Function} mapFunction
+ * @param {Function} mapDataFunction
+ * @param {Function} updateCallback
+ * @param {Function} endCallback
  */
-async function IterateAsync(sim, count, getDataFunction, mapFunction)
+function IterateAsync(array, sim, timeMax, count, getDataFunction, mapDataFunction, updateCallback, endCallback)
 {
+    if (!sim.elapsedTime.lessThan(timeMax))
+    {
+        endCallback(array, sim);
+        return;
+    }
     if (!sim.executeIterations(count))
     {
-        throw new Error('End export');
+        throw new Error('End export: simulation failed');
     }
-    return getDataFunction(sim).map(mapFunction);
+    array.push( getDataFunction(sim).map(mapDataFunction) );
+    updateCallback( sim.elapsedTime.div(timeMax).toNumber() );
+    setTimeout(IterateAsync, 1, array, sim, timeMax, count, getDataFunction, mapDataFunction, updateCallback, endCallback);
 }
 const tableHeaders = [
     {
@@ -156,12 +179,13 @@ const tableHeaders = [
         t: 's',
         v: 'T-U [J]'
     },
-]
-async function Export ()
+];
+/**
+ * @param {any[]} dataRows 
+ * @param {Simulation} sim 
+ */
+function ExportEnd(dataRows, sim)
 {
-
-    let my_sim = new Simulation(simulation.Engine, tableMass.clone(), fallingMass.clone(), null, null, TableMeasures, dtCount);
-    RefreshSimulationParams(my_sim);
     const headerRows = [
         [
             {
@@ -170,7 +194,7 @@ async function Export ()
             },
             {
                 t: 'n',
-                v: my_sim.tableMass.mass.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
+                v: sim.tableMass.mass.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
                 z: '0.00E+00'
             },
             {
@@ -179,7 +203,7 @@ async function Export ()
             },
             {
                 t: 'n',
-                v: my_sim.fallingMass.mass.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
+                v: sim.fallingMass.mass.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
                 z: '0.00E+00'
             },
             {
@@ -197,7 +221,7 @@ async function Export ()
             },
             {
                 t: 'n',
-                v: my_sim.k.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
+                v: sim.k.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
                 z: '0.00E+00'
             },
             {
@@ -214,7 +238,7 @@ async function Export ()
             },
             {
                 t: 'n',
-                v: my_sim.dt.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN)
+                v: sim.dt.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN)
             },
             {
                 t: 's',
@@ -222,12 +246,11 @@ async function Export ()
             },
             {
                 t: 'n',
-                v: my_sim.cavalieriWeight.toSignificantDigits(3, Decimal.ROUND_HALF_EVEN)
+                v: sim.cavalieriWeight.toSignificantDigits(3, Decimal.ROUND_HALF_EVEN)
             }
         ],
         tableHeaders
     ];
-    const dataRows = await CalculateAll(my_sim, TimeMax);
     const allRows = headerRows.concat(dataRows);
     const worksheet = XLSX.utils.aoa_to_sheet(allRows);
     function matr(letter)
@@ -269,33 +292,52 @@ async function Export ()
         workbook.Props.Title = "Export dati simulazione";
 
     XLSX.writeFileXLSX(workbook, 'export.xlsx');
-
+}
+function Export(onUpdate, onSuccess, onError, onFinally)
+{
+    const exportSim = new Simulation(simulation.Engine, tableMass.clone(), fallingMass.clone(), null, null, TableMeasures, dtCount);
+    RefreshSimulationParams(exportSim);
+    UpdateTimeMax();
+    UpdateDtExportCount();
+    CalculateAll(exportSim, TimeMax, onUpdate, (data, sim) => {
+        try {
+            ExportEnd(data, sim);
+            onSuccess();
+        } catch(e) {
+            onError(e);
+        } finally {
+            onFinally();
+        }
+    });
 }
 exportBtn.onclick = () => {
     if (exportBtn.disabled) return;
     pause();
-    const expectedRows = TimeMax.div(simulation.dt.times(dtCount)).floor().plus(1);
+    const expectedRows = TimeMax.div(simulation.dt.times(dtExportCount)).floor().plus(1);
+    const totalExpectedRows = TimeMax.div(simulation.dt).floor().plus(1);
     if (!confirm(
         `Stai per avviare il calcolo di un\'intera simulazione.\n` +
         `Sarà creato un file XLSX con ${expectedRows.toSignificantDigits(7)} righe.\n` +
+        `Nonostante ciò le righe calcolate saranno ${totalExpectedRows.toSignificantDigits(7)}.\n` +
         `La pagina potrebbe freezarsi; se il browser ti dovesse chiedere di attendere, cliccare su Attendi fino a fine operazione.\n` + 
         `Cliccare Ok per iniziare...`))
         return; 
     reset();
     hideExport.disabled = true;
-    exportBtn.innerHTML = '...';
     exportBtn.disabled = true;
-    setTimeout(() => { //To see the ... in the button
-        Export().then(() => {
-            log('Export effettuato');
-        }).catch(error => {
-            err(error);
-        }).finally(() => {
+    const oldUnload = window.onbeforeunload;
+    window.onbeforeunload = () => 'Sei sicuro di voler chiudere la pagina?\nL\'export in corso andrà perso.';
+    Export(
+        percentage => {
+            exportBtn.innerHTML = 'Progresso: ' + (percentage * 100).toFixed(2) + '%';
+        },
+        () => log('Export effettuato'), 
+        e => err(e), 
+        () => {
             hideExport.disabled = false;
             exportBtn.innerHTML = 'Esporta';
             exportBtn.disabled = false;
+            window.onbeforeunload = oldUnload;
             reset();
-        })
-    }, 100);
-    
+        });    
 };
