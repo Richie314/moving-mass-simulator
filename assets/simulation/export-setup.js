@@ -13,10 +13,50 @@ async function CalculateAll(sim, max)
     {
         max = new Decimal(max);
     }
-    let arr = [];
+    /**
+     * @param {Simulation} s 
+     */
+    function getDataFunction(s)
+    {
+        return [
+            s.elapsedTime,//A
+
+            s.tableMass.r, //B
+            s.tableMass.rPrime, //C
+            s.tableMass.rDoublePrime, //D
+
+            s.tableMass.theta, //E
+            s.tableMass.thetaPrime, //F
+            s.tableMass.thetaDoublePrime, //G
+            
+            s.fallingMass.height, //H
+            s.fallingMass.heightPrime, //I
+            s.fallingMass.heightDoublePrime, //J
+
+            //Fillers to set cell format to EXCEL calculated data
+            new Decimal(0), new Decimal(0),
+            new Decimal(0), new Decimal(0),
+            new Decimal(0), new Decimal(0),
+            new Decimal(0), new Decimal(0)
+        ];
+    }
+    /**
+     * @param {Decimal} elem 
+     */
+    function mapDataFunction(elem)
+    {
+        return {
+            t: 'n',
+            v: elem.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
+            z: '0.000E+00'
+        }
+    }
+    let arr = [
+        getDataFunction(sim).map(mapDataFunction)
+    ];
     do {
         try {
-            arr.push(await IterateAsync(sim, sim.dtCount));
+            arr.push(await IterateAsync(sim, sim.dtCount, getDataFunction, mapDataFunction));
         } catch (err) {
             //End the export
             warn(err);
@@ -26,44 +66,18 @@ async function CalculateAll(sim, max)
     return arr;
 }
 /**
- * 
  * @param {Simulation} sim 
  * @param {Decimal} count 
+ * @param {Function} getDataFunction
+ * @param {Function} mapFunction
  */
-async function IterateAsync(sim, count)
+async function IterateAsync(sim, count, getDataFunction, mapFunction)
 {
     if (!sim.executeIterations(count))
     {
         throw new Error('End export');
     }
-    return [
-        sim.elapsedTime,//A
-
-        sim.tableMass.r, //B
-        sim.tableMass.rPrime, //C
-        sim.tableMass.rDoublePrime, //D
-
-        sim.tableMass.theta, //E
-        sim.tableMass.thetaPrime, //F
-        sim.tableMass.thetaDoublePrime, //G
-        
-        sim.fallingMass.height, //H
-        sim.fallingMass.heightPrime, //I
-        sim.fallingMass.heightDoublePrime, //J
-
-        //Fillers to set cell format to EXCEL calculated data
-        new Decimal(0), new Decimal(0),
-        new Decimal(0), new Decimal(0),
-        new Decimal(0), new Decimal(0),
-        new Decimal(0), new Decimal(0),
-
-    ].map(elem => {
-        return {
-            t: 'n',
-            v: elem.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-            z: '0.000E+00'
-        }
-    });
+    return getDataFunction(sim).map(mapFunction);
 }
 const tableHeaders = [
     {
@@ -260,7 +274,7 @@ async function Export ()
 exportBtn.onclick = () => {
     if (exportBtn.disabled) return;
     pause();
-    const expectedRows = TimeMax.div(simulation.dt.times(dtCount)).floor().plus(2);
+    const expectedRows = TimeMax.div(simulation.dt.times(dtCount)).floor().plus(1);
     if (!confirm(
         `Stai per avviare il calcolo di un\'intera simulazione.\n` +
         `Sarà creato un file XLSX con ${expectedRows.toSignificantDigits(7)} righe.\n` +
@@ -280,6 +294,7 @@ exportBtn.onclick = () => {
             hideExport.disabled = false;
             exportBtn.innerHTML = 'Esporta';
             exportBtn.disabled = false;
+            reset();
         })
     }, 100);
     
