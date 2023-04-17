@@ -126,7 +126,7 @@
                 <span class="math">$$ dt $$</span>
             </label>
             <div class="grid" style="grid-template-columns: 55% 10% 35%;">
-                <input type="range" id="dt-number" value="50" min="5" max="500" step="5">
+                <input type="range" id="dt-number" value="50" min="5" max="500" step="5" />
                 <output id="dt-value-display"></output>
                 <select id="dt-unit" title="Ordine di grandezza">
                     <option value="-9" title="Nano secondi">[ns]</option>
@@ -140,14 +140,24 @@
             </label>
             <div class="grid" style="grid-template-columns: 10% 90%;">
                 <output id="dt-count-value-display"></output>
-                <input type="range" id="dt-count" value="20" min="5" max="1000" step="5">
+                <input type="range" id="dt-count" value="20" min="5" max="1000" step="5" />
             </div>
+
+            <label for="cavalieri-weight" title="Peso da dare alla parte accelerata di moto nella media ponderata">
+                Peso accelerazione:
+            </label>
+            <div class="grid" style="grid-template-columns: 10% 90%;">
+                <output id="cavalieri-weight-value-display"></output>
+                <input type="range" id="cavalieri-weight" value=".3" min="0" max="1" step=".01" />
+            </div>
+
+            <hr class="span-2" />
 
             <label for="table-mass">
                 Massa sul tavolo: 
             </label>
             <div class="grid" style="grid-template-columns: 55% 10% 35%;">
-                <input type="range" id="table-mass" value="3" min="1" max="20" step="1">
+                <input type="range" id="table-mass" value="3" min="1" max="20" step="1" />
                 <output id="table-mass-value-display"></output>
                 <select id="table-mass-unit" title="Ordine di grandezza">
                     <option value="-3" title="Grammi">[g]</option>
@@ -169,10 +179,12 @@
                 </select>
             </div>
 
+            <hr class="span-2" />
+
             <label for="cable">
                 Filo estendibile:
             </label>
-            <input type="checkbox" id="cable" checked>
+            <input type="checkbox" id="cable" checked="checked" />
             <div class="show-if-checked span-2 grid two">
                 <h4 class="span-2">
                     Impostazioni molla
@@ -182,7 +194,7 @@
                     Costante elastica [N/m]:
                 </label>
                 <div class="grid" style="grid-template-columns: 65% 35%;">
-                    <input type="range" id="hooke" value="300" min="10" max="500" step="5">
+                    <input type="range" id="hooke" value="300" min="10" max="450" step="5" />
                     <output id="hooke-value-display"></output>
                 </div>
 
@@ -190,16 +202,17 @@
                     Lunghezza a riposo [m]:
                 </label>
                 <div class="grid" style="grid-template-columns: 65% 35%;">
-                    <input type="range" id="spring-relax" value="1.1" min="0.5" max="3" step=".1">
+                    <input type="range" id="spring-relax" value="1.1" min="0.5" max="3" step=".1" />
                     <output id="spring-relax-value-display"></output>
                 </div>
             </div>
 
+            <hr class="span-2" />
 
             <label for="tail">
                 Disegna scia
             </label>
-            <input type="checkbox" checked id="tail">
+            <input type="checkbox" checked id="tail" />
             <div class="show-if-checked span-2 grid two">
                 <h4 class="span-2">
                     Impostazioni scia
@@ -213,14 +226,16 @@
                         1 /
                     </span>
                     <output id="table-mass-tail-freq-show"></output>
-                    <input type="range" id="table-mass-tail-freq" value="5" min="1" max="300" step="1">
+                    <input type="range" id="table-mass-tail-freq" value="5" min="1" max="300" step="1" />
                 </div>
             </div>
+
+            <hr class="span-2" />
 
             <label for="interactions">
                 Interazioni:
             </label>
-            <input type="checkbox" checked id="interactions">
+            <input type="checkbox" checked id="interactions" />
 
         </fieldset>
         <fieldset class="form grid two">
@@ -285,7 +300,7 @@
             Durante la creazione del file non &egrave; possibile chiudere questa finestra e tantomeno visualizzare
             la simulazione. Per limitare le dimensioni del file generato le energie saranno escluse.<br />
             I parametri iniziali impiegati saranno i medesimi della simulazione, e sono controllabili dal men&ugrave;
-            <strong>Impostazioni</strong><i class="material-icons" style="height: 1em;">settings</i>.<br />
+            <strong>Impostazioni</strong>(<i class="material-icons" style="font-size: 1em;">settings</i>).<br />
             &Egrave; possibile impostare un limite massimo temporale. In caso di errore la procedura terminer&agrave;
             restituendo le righe apportate per ora
         </p>
@@ -295,7 +310,7 @@
                 Durata massima
             </label>
             <div class="grid" style="grid-template-columns: 55% 10% 35%;width: 100%;">
-                <input type="range" id="max-export" value="10" min="1" max="1000" step="1">
+                <input type="range" id="max-export" value="10" min="1" max="1000" step="1" />
                 <output id="max-export-value-display">10</output>
                 <select id="max-export-unit" title="Ordine di grandezza">
                     <option value="-6" title="Micro secondi">[&mu;s]</option>

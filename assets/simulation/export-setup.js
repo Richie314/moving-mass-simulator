@@ -193,6 +193,22 @@ async function Export ()
             {
                 t: 'n',
                 v: g.toSignificantDigits(5, Decimal.ROUND_HALF_EVEN)
+            },
+            {
+                t: 's',
+                v: 'dt [s]'
+            },
+            {
+                t: 'n',
+                v: my_sim.dt.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN)
+            },
+            {
+                t: 's',
+                v: 'Peso accelerazione'
+            },
+            {
+                t: 'n',
+                v: my_sim.cavalieriWeight.toSignificantDigits(3, Decimal.ROUND_HALF_EVEN)
             }
         ],
         tableHeaders

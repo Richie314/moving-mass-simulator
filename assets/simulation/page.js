@@ -47,6 +47,7 @@ var springConstant = new Decimal(300);
 
 var dt = new Decimal(0.00005);
 var dtCount = 15;
+var cavalieriWeight = 0.3;
 
 var drawTail = true;
 var tailFreq = 1;
@@ -64,6 +65,7 @@ function LoadInitialVariables()
 
     UpdateDtCount();
     UpdateDt();
+    UpdateIntegrationWieghts();
 
     UpdateTailSettings();
     UpdateTailFrequency();
@@ -81,8 +83,8 @@ const fallingMass = new MassFallingObject(
     new Vector3(0, 0, InitialHPrime),
     gravity);
 
-const CinematicEngine = new FixedLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), dt);
-const ConservativeEngine = new VariableLengthEngine(springRelaxLength, springConstant, dt);
+const CinematicEngine = new FixedLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), dt, cavalieriWeight);
+const ConservativeEngine = new VariableLengthEngine(springRelaxLength, springConstant, dt, cavalieriWeight);
 const TableMeasures = new Vector3(5, 2.5, 2.5);
 var simulation = new Simulation(
     ConservativeEngine, 

@@ -111,6 +111,15 @@ function UpdateDtCount()
 }
 dtCountInput.addEventListener('input', UpdateDtCount);
 
+const cavalieriInput = document.getElementById('cavalieri-weight');
+const cavalieriShow = document.getElementById('cavalieri-weight-value-display');
+function UpdateIntegrationWieghts()
+{
+    cavalieriWeight = Number(cavalieriInput.value);
+    cavalieriShow.innerHTML = cavalieriWeight;
+}
+cavalieriInput.addEventListener('input',UpdateIntegrationWieghts);
+
 const tableMassInput = document.getElementById('table-mass');
 const tableMassExponent = document.getElementById('table-mass-unit');
 const tableMassCountShow = document.getElementById('table-mass-value-display');

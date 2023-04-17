@@ -123,12 +123,13 @@ class EngineBase
      * @param {Vector3} acc 
      * @param {Vector3} speed 
      * @param {number|Decimal} duration 
+     * @param {number |Decimal} cavalieriWeight
      */
-    #applySpeedFalling(corpse, acc, speed, duration)
+    #applySpeedFalling(corpse, acc, speed, duration, cavalieriWeight)
     {
         const vDeltaT = speed.times(duration);
-        const halfADeltaTSquare = acc.times(0.5).times(duration.pow(2)).plus(vDeltaT);
-        return corpse.position.add( halfADeltaTSquare.times(0.25).plus( vDeltaT.times(0.75) ) );
+        const halfAccDeltaTSquare = acc.times(0.5).times(duration.pow(2)).times( cavalieriWeight );
+        return corpse.position.add( halfAccDeltaTSquare.plus( vDeltaT ) );
     }
 
     /**
@@ -136,12 +137,13 @@ class EngineBase
      * @param {PolarVector} acc
      * @param {PolarVector} speed 
      * @param {number|Decimal} duration 
+     * @param {number |Decimal} cavalieriWeight
      */
-    #applySpeedRotating(corpse, acc, speed, duration)
+    #applySpeedRotating(corpse, acc, speed, duration, cavalieriWeight)
     {
         const vDeltaT = speed.times(duration);
-        const halfADeltaTSquare = acc.times(0.5).times(duration.pow(2)).plus(vDeltaT);
-        return corpse.position.add( halfADeltaTSquare.times(0.25).plus( vDeltaT.times(0.75) ) );
+        const halfAccDeltaTSquare = acc.times(0.5).times(duration.pow(2)).times( cavalieriWeight );
+        return corpse.position.add( halfAccDeltaTSquare.plus( vDeltaT ) );
     }
 
     /**
@@ -150,18 +152,19 @@ class EngineBase
      * @param {Vector3|PolarVector} acc
      * @param {Vector3|PolarVector} speed
      * @param {Decimal|number} duration 
+     * @param {number |Decimal} cavalieriWeight
      */
-    applySpeed(corpse, acc, speed, duration)
+    applySpeed(corpse, acc, speed, duration, cavalieriWeight = 0.3)
     {
         
         if (corpse instanceof MassFallingObject)
         {
-            return this.#applySpeedFalling(corpse, acc, speed, duration);
+            return this.#applySpeedFalling(corpse, acc, speed, duration, cavalieriWeight);
         }
 
         if (corpse instanceof MassRotatingObject)
         {
-            return this.#applySpeedRotating(corpse, acc, speed, duration);
+            return this.#applySpeedRotating(corpse, acc, speed, duration, cavalieriWeight);
         }
 
         throw new Error('corpse was not of a valid type!');
@@ -175,8 +178,9 @@ class Engine extends EngineBase
 
     /**
      * @param {Decimal|number} dt 
+     * @param {Decimal|number} cavalieriWeight 
      */
-    constructor(dt)
+    constructor(dt, cavalieriWeight)
     {
         super();
 
@@ -186,6 +190,13 @@ class Engine extends EngineBase
             dt = new Decimal(dt);
         }
         this.dt = dt;
+
+        //Sanitize the cavalieriWeight
+        if (!Decimal.isDecimal(cavalieriWeight))
+        {
+            cavalieriWeight = new Decimal(cavalieriWeight);
+        }
+        this.cavalieriWeight = cavalieriWeight;
     }
 
     #inverteTimeFlow()
@@ -238,8 +249,8 @@ class Engine extends EngineBase
     {
         
         //Apply speeds: update position
-        this.applySpeed(tableMass, tableMass.acceleration, tableMass.speed, this.dt);
-        this.applySpeed(fallingMass, fallingMass.acceleration, fallingMass.speed, this.dt);
+        this.applySpeed(tableMass, tableMass.acceleration, tableMass.speed, this.dt, this.cavalieriWeight);
+        this.applySpeed(fallingMass, fallingMass.acceleration, fallingMass.speed, this.dt, this.cavalieriWeight);
 
         //Apply accelerations: update speeds
         this.applyAcceleration(fallingMass, fallingMass.acceleration, this.dt);
@@ -279,10 +290,11 @@ class FixedLengthEngine extends Engine
      * Builder
      * @param {Decimal|number} cableLength The cable length, in meters
      * @param {Decimal|number} dt The dt intervas, in seconds
+     * @param {Decimal|number} cavalieriWeight The weight of the acceleration movement during the numeric integration
      */
-    constructor (cableLength, dt)
+    constructor (cableLength, dt, cavalieriWeight)
     {
-        super(dt);
+        super(dt, cavalieriWeight);
 
         //Sanitize the input
         if (!Decimal.isDecimal(cableLength))
@@ -347,10 +359,11 @@ class VariableLengthEngine extends Engine
      * @param {Decimal|number} cableStartLength Start length, zero of the spring energy, in meters
      * @param {Decimal|number} k The spring constant of hooke's law, N/m
      * @param {Decimal|number} dt The time interval, in seconds
+     * @param {Decimal|number} cavalieriWeight The weight of the acceleration movement during the numeric integration
      */
-    constructor (cableStartLength, k, dt)
+    constructor (cableStartLength, k, dt, cavalieriWeight)
     {
-        super(dt);
+        super(dt, cavalieriWeight);
 
         //Sanitize the inputs
         if (!Decimal.isDecimal(cableStartLength))

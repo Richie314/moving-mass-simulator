@@ -368,6 +368,22 @@ class Simulation
     }
 
     /**
+     * The cavalieriWeight of the Engine
+     * @returns {Decimal}
+     */
+    get cavalieriWeight() {
+        return this.Engine.cavalieriWeight;
+    }
+
+    /**
+     * The cavalieriWeight of the Engine
+     * @param {Decimal} value
+     */
+    set cavalieriWeight(value) {
+        return this.Engine.cavalieriWeight = new Decimal(value);
+    }
+
+    /**
      * Changes the current engine, copying the actual values of masses and positions.
      * Executes a refresh
      * @param {Engine} newEngine The new engine
