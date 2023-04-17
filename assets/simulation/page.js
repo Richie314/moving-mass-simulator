@@ -100,14 +100,18 @@ function RefreshSimulationParams(sim)
 {
     sim.dt = dt;
     sim.dtCount = dtCount;
+    sim.cavalieriWeight = cavalieriWeight;
+
     sim.tableMass.mass = tableMassMass;
     sim.fallingMass.mass = fallingMassMass;
+
     if (sim.drawTail && !drawTail)
     {
         window.EraseTail();
     }
     sim.drawTail = drawTail;
     sim.tableStaticFrequencyMax = tailFreq;
+    
     sim.updateSpring(springConstant, springRelaxLength);
 
     if (smoothRefresher++ == 4)
