@@ -13,6 +13,6 @@ Microsoft Excel, che può permettere di eseguire analisi più approfondite come 
 
 Esempi grafici Excel ottenuti dagli export dei dati:
 
-![molla normale](./assets/exports/hard-spring.png?raw=true)
+![Molla normale](./assets/exports/hard-spring.png?raw=true)
 ![Molla debole](./assets/exports/soft-spring.png?raw=true)
 ![Integrazione in nanosecondi](./assets/exports/nanosecs.png?raw=true)
