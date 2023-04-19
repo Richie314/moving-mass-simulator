@@ -60,14 +60,14 @@
 <body>
     <!--For compatibility-->
     <noscript>
-        <h1>Abilita Javascript per far funzionare la simulazione e dopo <a href="#">ricarica</a> la pagina</h1>
+        <h2>Abilita Javascript per far funzionare la simulazione e dopo <a href="#">ricarica</a> la pagina</h2>
     </noscript>
 
     <!--Main menu-->
     <nav class="banner">
-        <h4>
+        <h1>
             Simulazione
-        </h4>
+        </h1>
         <div id="stats">
 
         </div>
@@ -83,10 +83,10 @@
         <button type="button" id="show-export" title="Esporta">
             <i class="material-icons">file_present</i>
         </button>
-        <button type="button" id="show-terminal-btn" title="Esegui codice">
+        <button type="button" id="show-terminal-btn" title="Visualizza log">
             <i class="material-icons">terminal</i>
         </button>
-        <button type="button" id="show-math-btn" title="Matematica">
+        <button type="button" id="show-math-btn" title="Vedi spiegazioni matematiche">
             <i class="material-icons">functions</i>
         </button>
     </nav>
@@ -539,7 +539,51 @@
                         Metodo di integrazione numerica
                     </h3>
                 </summary>
-                
+                <p>
+                    Dalla lagrangiana &egrave; possibile costruire una funzione <i>f</i>
+                    che, date le variabili di stato del sistema e le rispettive derivaterispetto al tempo, restituisce le accelerazioni.
+                </p>
+                <span class="math">
+                    $$ \ddot{q} = f(q_t, \dot{q}_t) $$
+                </span>
+                <p>
+                    Questo per&ograve; non permette di calcolare i successivi valori di <i>q</i> e <i>q'</i>, 
+                    che devono quindi essere integrate numericamente (approssimate).
+                </p>
+
+                <h3>
+                    Metodo delle tangenti
+                </h3>
+                <img src="./assets/page/integral-with-tangents.svg" class="full-w"
+                    title="Integrazione con tangenti" alt="Integrzione funzione q da tangenti" />
+                <p>
+                    Dalla variabile <i>q<sub>t</sub></i> si ricava <i>q<sub>t+1</sub></i> sfruttando un <i>dt</i> molto piccolo
+                </p>
+                <span class="math">
+                    $$ q_{t+1} = q_t + \dot{q}  \mathrm{d}t $$
+                    $$ \dot{q}_{t+1} = \dot{q}_t + \ddot{q}  \mathrm{d}t $$
+                    $$ \ddot{q}_{t+1} = f(q_{t+1}, \dot{q}_{t+1}) $$
+                </span>
+
+                <h3>
+                    Metodo Cavalieri Simpson (delle parabole)
+                </h3>
+                <img src="./assets/page/integral-with-parabolas.svg" class="full-w"
+                    title="Integrazione con tangenti" alt="Integrzione funzione q da tangenti" />
+                <p>
+                    In questo caso il moto &egrave; approssimato ad un moto uniformemente accelerato, con accelerazione nota, in modo da ridurre l'errore.
+                    La variazione delle velocit&agrave; &egrave; ancora calcolata in modo lineare. Questa approssimazione &egrave; in grado di ottenere risultati migliori
+                    al metodo delle tangenti solo nel caso n cui il <i>dt</i> scelto sia dello stesso ordine di grandezza.
+                </p>
+                <span class="math">
+                    $$ q_{t+1} = q_t + \frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + \dot{q} \mathrm{d}t $$
+                    $$ \dot{q}_{t+1} = \dot{q}_t + \ddot{q} \mathrm{d}t $$
+                    $$ \ddot{q}_{t+1} = f(q_{t+1}, \dot{q}_{t+1}) $$
+                </span>
+
+                <h3>
+                    Metodo misto
+                </h3>
             </details>
         </div>
     </div>
