@@ -11,7 +11,7 @@ La libreria <a href="https://github.com/mathjax/MathJax">MathJax</a> è usata pe
 La funzionalità di esportazione, realizzata tramite <a href="https://github.com/SheetJS/sheetjs">SheetJS</a>, permette di generare un foglio di calcolo
 Microsoft Excel, che può permettere di eseguire analisi più approfondite come grafici.
 
-Esempi grafici Excel ottenuti dagli export dei dati:
+Esempi di grafici Excel ottenuti dagli export dei dati:
 
 ![Molla normale](./assets/exports/hard-spring.png?raw=true)
 ![Molla debole](./assets/exports/soft-spring.png?raw=true)
