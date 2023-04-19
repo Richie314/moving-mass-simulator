@@ -13,6 +13,6 @@ Microsoft Excel, che può permettere di eseguire analisi più approfondite come 
 
 Esempi grafici Excel ottenuti dagli export dei dati:
 
-![alt text](https://github.com/Richie314/moving-mass-simulator/blob/master/exports/hard-spring.png?raw=true)
-![alt text](https://github.com/Richie314/moving-mass-simulator/blob/master/exports/soft-spring.png?raw=true)
-![alt text](https://github.com/Richie314/moving-mass-simulator/blob/master/exports/nanosecs.png?raw=true)
+![molla normale](./exports/hard-spring.png?raw=true)
+![Molla debole](./exports/soft-spring.png?raw=true)
+![Integrazione in nanosecondi](./exports/nanosecs.png?raw=true)
