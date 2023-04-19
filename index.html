@@ -584,6 +584,38 @@
                 <h3>
                     Metodo misto
                 </h3>
+                <p>
+                    Per ottimizzare i calcoli in base ai parametri scelti &egrave; possibile quanto approssimare il moto
+                    ad uniformemente accelerato e quanto a lineare uniforme facendo una media ponderata tra essi.<br />
+                    Scelti due pesi (numeri tra 0 e 1, la cui somma &egrave; 1) <i>w<sub>L</sub></i> e <i>w<sub>A</sub></i>, &egrave; possibile approssimare il moto in questo modo
+                </p>
+                <span class="math">
+                    $$ \Delta q_L = \dot{q} \mathrm{d}t $$
+                    $$ \Delta q_A = \frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + \dot{q} \mathrm{d}t $$
+                    $$ q_{t+1} = q_t + w_L \Delta q_L + w_A \Delta q_A  $$
+                    $$ \dot{q}_{t+1} = \dot{q}_t + \ddot{q} \mathrm{d}t $$
+                    $$ \ddot{q}_{t+1} = f(q_{t+1}, \dot{q}_{t+1}) $$
+                </span>
+                <p>
+                    L'equazione scritta sopra pu&ograve; essere semplificata sostituendo i valori
+                </p>
+                <span class="math">
+                    $$ q_{t+1} = q_t + w_L \dot{q} \mathrm{d}t + w_A (\frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + \dot{q} \mathrm{d}t)  $$
+                    $$ q_{t+1} = q_t + w_L \dot{q} \mathrm{d}t + w_A \frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + w_A \dot{q} \mathrm{d}t $$
+                    $$ q_{t+1} = q_t + (w_L + w_A) \dot{q} \mathrm{d}t + w_A \frac{1}{2} \ddot{q} {\mathrm{d}t}^2  $$
+                </span>
+                <p>
+                    Ma, poich&eacute;
+                </p>
+                <span class="math">
+                    $$ w_L + w_A = 1  $$
+                    $$ q_{t+1} = q_t + \dot{q} \mathrm{d}t + w_A \frac{1}{2} \ddot{q} {\mathrm{d}t}^2  $$
+                </span>
+                <p>
+                    Il parametro <i>w<sub>A</sub></i> controlla quindi quanto il moto &egrave; approssimato ad uniformemente accelerato:
+                    pi&ugrave; basso <i>w<sub>A</sub></i>, pi&ugrave; il moto sar&agrave; lineare, 
+                    pi&ugrave; alto <i>w<sub>A</sub></i>,  pi&ugrave; il moto sar&agrave; uniformemente accelerato 
+                </p>
             </details>
         </div>
     </div>
