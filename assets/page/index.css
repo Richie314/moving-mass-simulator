@@ -239,4 +239,9 @@ hr {
 }
 #tutorial-3d button > i, #tutorial-2d button > i {
   color: green;
+}
+
+.equations > p {
+  width: calc(100% - 2em);
+  margin-inline: 2em;
 }/*# sourceMappingURL=index.css.map */

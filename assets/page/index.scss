@@ -221,3 +221,9 @@ hr {
     transition: height 1s ease-in-out;
     height: fit-content;
 }
+.equations {
+    & > p {
+        width: calc(100% - 2em);
+        margin-inline: 2em;
+    }
+}
