@@ -96,6 +96,7 @@ function IterateAsync(array, sim, timeMax, count, getDataFunction, mapDataFuncti
     }
     if (!sim.executeIterations(count))
     {
+        endCallback(array, sim);
         throw new Error('End export: simulation failed');
     }
     array.push( getDataFunction(sim).map(mapDataFunction) );
