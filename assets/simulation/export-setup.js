@@ -101,7 +101,7 @@ function IterateAsync(array, sim, timeMax, count, getDataFunction, mapDataFuncti
     }
     array.push( getDataFunction(sim).map(mapDataFunction) );
     updateCallback( sim.elapsedTime.div(timeMax).toNumber() );
-    setTimeout(IterateAsync, 1, array, sim, timeMax, count, getDataFunction, mapDataFunction, updateCallback, endCallback);
+    setTimeout(IterateAsync, 0.1, array, sim, timeMax, count, getDataFunction, mapDataFunction, updateCallback, endCallback);
 }
 const tableHeaders = [
     {
@@ -298,8 +298,6 @@ function Export(onUpdate, onSuccess, onError, onFinally)
 {
     const exportSim = new Simulation(simulation.Engine, tableMass.clone(), fallingMass.clone(), null, null, TableMeasures, dtCount);
     RefreshSimulationParams(exportSim);
-    UpdateTimeMax();
-    UpdateDtExportCount();
     CalculateAll(exportSim, TimeMax, onUpdate, (data, sim) => {
         try {
             ExportEnd(data, sim);
@@ -314,6 +312,9 @@ function Export(onUpdate, onSuccess, onError, onFinally)
 exportBtn.onclick = () => {
     if (exportBtn.disabled) return;
     pause();
+    RefreshSimulationParams(simulation);
+    UpdateTimeMax();
+    UpdateDtExportCount();
     const expectedRows = TimeMax.div(simulation.dt.times(dtExportCount)).floor().plus(1);
     const totalExpectedRows = TimeMax.div(simulation.dt).floor().plus(1);
     if (!confirm(
@@ -333,10 +334,15 @@ exportBtn.onclick = () => {
             exportBtn.innerHTML = 'Progresso: ' + (percentage * 100).toFixed(2) + '%';
         },
         () => log('Export effettuato'), 
-        e => err(e), 
+        e => {
+            exportBtn.innerHTML = '&Egrave; avvenuto un errore...';
+            err(e);
+        }, 
         () => {
             hideExport.disabled = false;
-            exportBtn.innerHTML = 'Esporta';
+            setTimeout(() => {
+                exportBtn.innerHTML = 'Esporta';
+            }, 1000);
             exportBtn.disabled = false;
             window.onbeforeunload = oldUnload;
             reset();
