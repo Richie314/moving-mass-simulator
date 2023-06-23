@@ -316,7 +316,7 @@ class PolarVector
     }
 
     /**
-     * Scales just the radius
+     * Scales both the radius and the angle
      * @param {Decimal|number} scalar
      * @returns {PolarVector} 
      */
@@ -366,6 +366,10 @@ class PolarVector
         return this;
     }
 
+    /**
+     * Returns a copy of the istance
+     * @returns  {PolarVector}
+     */
     copy()
     {
         return new PolarVector(new Decimal(this.r), new Decimal(this.theta));
@@ -400,7 +404,7 @@ const doublePi = pi.times(2);
 const halfPi = pi.div(2);
 
 /**
- * Number Ten as Decimal, since it is used many times
+ * Number 10 as Decimal, since it is used many times
  * @type {Decimal}
  */
 const Ten = new Decimal(10);
