@@ -319,11 +319,11 @@ class PoligonalEngine extends EngineBase
     executeSingleIteration(tableMass, fallingMass)
     {
         try {
-            this.applySpeedsAndForces(tableMass, fallingMass);
             const acc = this.calculateAccelerations(tableMass, fallingMass);
-            tableMass.rDoublePrime = acc.x.clone();
-            tableMass.thetaDoublePrime = acc.y.clone();
-            fallingMass.heightDoublePrime = acc.z.clone();
+            tableMass.rDoublePrime = acc.x;
+            tableMass.thetaDoublePrime = acc.y;
+            fallingMass.heightDoublePrime = acc.z;
+            this.applySpeedsAndForces(tableMass, fallingMass);
         } catch (err) {
             console.warn(err);
             return false;
@@ -377,9 +377,9 @@ class RungeKuttaNistromEngine extends EngineBase
         const k1 = this.calculateAccelerations(tableMass, fallingMass);
 
         //Set the current acceleration of the objects in order to display it
-        tableMass.rDoublePrime = k1.x.clone();
-        tableMass.thetaDoublePrime = k1.y.clone();
-        fallingMass.heightDoublePrime = k1.z.clone();
+        tableMass.rDoublePrime = k1.x;
+        tableMass.thetaDoublePrime = k1.y;
+        fallingMass.heightDoublePrime = k1.z;
 
         //Step 1
         const yPrime1 = yPrime0.plus( k1.times( h.div(2) ) );
@@ -422,4 +422,3 @@ class RungeKuttaNistromEngine extends EngineBase
         return true;
     }
 }
-
