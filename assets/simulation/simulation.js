@@ -33,9 +33,6 @@ class Simulation
         this.fallingMass = fallingMass;
         this.dtCount = dtCount;
 
-        //Calculate first accelerations
-        this.Engine.getNewAccelerations(tableMass, fallingMass);
-
         //Draw the tail or not in the 3d view
         this.drawTail = true;
 
@@ -347,7 +344,7 @@ class Simulation
         } catch(err) {
             warn(err);
         } finally {
-            this.Engine.getNewAccelerations(tableMass, fallingMass);
+            //this.Engine.getNewAccelerations(tableMass, fallingMass);
             return this;
         }
     }

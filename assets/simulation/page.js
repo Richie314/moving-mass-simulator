@@ -83,11 +83,17 @@ const fallingMass = new MassFallingObject(
     new Vector3(0, 0, InitialHPrime),
     gravity);
 
-const CinematicEngine = new FixedLengthEngine(tableMass.r.plus( fallingMass.height.abs() ), dt, cavalieriWeight);
-const ConservativeEngine = new VariableLengthEngine(springRelaxLength, springConstant, dt, cavalieriWeight);
+/**
+ * Engine declaration here
+ */
+const SimpleEngine2 = new PoligonalEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt, cavalieriWeight);
+const SimpleEngine3 = new PoligonalEngine3(springRelaxLength, springConstant, dt, cavalieriWeight);
+const RKN_Engine2 = new RungeKuttaNistromEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt);
+const RKN_Engine3 = new RungeKuttaNistromEngine3(springRelaxLength, springConstant, dt);
+
 const TableMeasures = new Vector3(5, 2.5, 2.5);
 var simulation = new Simulation(
-    ConservativeEngine, 
+    SimpleEngine3, 
     tableMass, fallingMass,
     topViewCanvas, sideViewCanvas, 
     TableMeasures, dtCount);
@@ -150,15 +156,39 @@ simulation.onRefresh(RefreshSimulationParams);
 
 function UpdateEngine()
 {
-    if (isNotFixedLength.checked)
+    function SetSimpleEngine()
     {
-        simulation.changeEngine(ConservativeEngine);
-    } else {
-        CinematicEngine.cableLength = simulation.cable;
-        simulation.changeEngine(CinematicEngine);
+        if (isNotFixedLength.checked)
+        {
+            simulation.changeEngine(SimpleEngine3);
+        } else {
+            CinematicEngine.cableLength = simulation.cable;
+            simulation.changeEngine(SimpleEngine2);
+        }
     }
+    function SetRungeKuttaEngine()
+    {
+        if (isNotFixedLength.checked)
+        {
+            simulation.changeEngine(RKN_Engine3);
+        } else {
+            CinematicEngine.cableLength = simulation.cable;
+            simulation.changeEngine(RKN_Engine2);
+        }
+    }
+    switch (engineFamily.value)
+    {
+        case "simple":
+            SetSimpleEngine();
+            break;
+        case "runge-kutta":
+            SetRungeKuttaEngine();
+            break;
+    }
+    
 }
 isNotFixedLength.addEventListener('change', UpdateEngine);
+engineFamily.addEventListener('change', UpdateEngine);
 
 UpdateEngine();
 
@@ -198,7 +228,7 @@ topViewCanvas.addEventListener('mousedown', evt => {
     const canvasPos = simulation.tableMass.position.toVec3();
     canvasPos.x = canvasPos.x.times(simulation.topCanvasScaleX);
     canvasPos.y = canvasPos.y.times(simulation.topCanvasScaleY);
-    console.log(vec3.toNumbers(), canvasPos.toNumbers());
+    //console.log(vec3.toNumbers(), canvasPos.toNumbers());
     if ( ( vec3.minus(canvasPos) ).module() < simulation.topCanvasDiscRadius )
     {
         isGrabbing = true;

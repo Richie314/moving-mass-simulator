@@ -32,7 +32,9 @@
     <script defer src="https://unpkg.com/decimal.js@latest/decimal.js" referrerpolicy="no-referrer"></script>
     <script defer src="assets/simulation/vectors.js"></script>
     <script defer src="assets/simulation/masses.js"></script>
-    <script defer src="assets/simulation/engine.js"></script>
+    <script defer src="assets/simulation/engine/base.js"></script>
+    <script defer src="assets/simulation/engine/poligonal.js"></script>
+    <script defer src="assets/simulation/engine/runge-kutta-nistrom.js"></script>
 
     <script defer src="https://unpkg.com/stats-js@latest/build/stats.min.js" referrerpolicy="no-referrer"></script>
     <script type="importmap">
@@ -143,12 +145,22 @@
                 <input type="range" id="dt-count" value="20" min="5" max="1000" step="5" />
             </div>
 
-            <label for="cavalieri-weight" title="Peso da dare alla parte accelerata di moto nella media ponderata">
-                Peso accelerazione (w<sub>A</sub>):
+            <label for="engine">
+                Motore di integrazione
             </label>
-            <div class="grid" style="grid-template-columns: 10% 90%;">
-                <output id="cavalieri-weight-value-display"></output>
-                <input type="range" id="cavalieri-weight" value=".3" min="0" max="1" step=".01" />
+            <select id="engine" title="Quale motore usare per integrare">
+                <option value="simple" title="Approssimazione poligonale" selected="selected">Approssimazione per punti</option>
+                <option value="runge-kutta" title="Approssimazione Runge Kutta">Metodo Runge-Kutta-Nyström</option>
+            </select>
+
+            <div class="span-2 grid two" id="cavalieri-input-container">
+                <label for="cavalieri-weight" title="Peso da dare alla parte accelerata di moto nella media ponderata">
+                    Peso accelerazione (w<sub>A</sub>):
+                </label>
+                <div class="grid" style="grid-template-columns: 10% 90%;">
+                    <output id="cavalieri-weight-value-display"></output>
+                    <input type="range" id="cavalieri-weight" value=".3" min="0" max="1" step=".01" />
+                </div>
             </div>
 
             <hr class="span-2" />

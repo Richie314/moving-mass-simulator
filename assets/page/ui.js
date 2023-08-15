@@ -153,6 +153,16 @@ fallingMassExponent.addEventListener('input', () => {
 });
 
 const isNotFixedLength = document.getElementById('cable');
+const engineFamily = document.getElementById('engine');
+const cavalieriInputContainer = document.getElementById('cavalieri-input-container');
+engineFamily.addEventListener('change', () => {
+    if (engineFamily.value === 'simple')
+    {
+        cavalieriInputContainer.style.display = 'block';
+    } else {
+        cavalieriInputContainer.style.display = 'none';
+    }
+});
 
 const allowGrabbing = document.getElementById('interactions');
 
