@@ -1,0 +1,77 @@
+<p>
+    Dalla lagrangiana &egrave; possibile costruire una funzione <i>f</i>
+    che, date le variabili di stato del sistema e le rispettive derivaterispetto al tempo, restituisce le accelerazioni.
+</p>
+<span class="math">
+    $$ \ddot{q} = f(q_t, \dot{q}_t) $$
+</span>
+<p>
+    Questo per&ograve; non permette di calcolare i successivi valori di <i>q</i> e <i>q'</i>, 
+    che devono quindi essere integrate numericamente (approssimate).
+</p>
+
+<h3>
+    Metodo delle tangenti
+</h3>
+<img src="./assets/page/integral-with-tangents.svg" class="full-w"
+    title="Integrazione con tangenti" alt="Integrzione funzione q da tangenti" />
+<p>
+    Dalla variabile <i>q<sub>t</sub></i> si ricava <i>q<sub>t+1</sub></i> sfruttando un <i>dt</i> molto piccolo
+</p>
+<span class="math">
+    $$ q_{t+1} = q_t + \dot{q}  \mathrm{d}t $$
+    $$ \dot{q}_{t+1} = \dot{q}_t + \ddot{q}  \mathrm{d}t $$
+    $$ \ddot{q}_{t+1} = f(q_{t+1}, \dot{q}_{t+1}) $$
+</span>
+
+<h3>
+    Metodo Cavalieri Simpson (delle parabole)
+</h3>
+<img src="./assets/page/integral-with-parabolas.svg" class="full-w"
+    title="Integrazione con tangenti" alt="Integrzione funzione q da tangenti" />
+<p>
+    In questo caso il moto &egrave; approssimato ad un moto uniformemente accelerato, con accelerazione nota, in modo da ridurre l'errore.
+    La variazione delle velocit&agrave; &egrave; ancora calcolata in modo lineare. Questa approssimazione &egrave; in grado di ottenere risultati migliori
+    al metodo delle tangenti solo nel caso n cui il <i>dt</i> scelto sia dello stesso ordine di grandezza.
+</p>
+<span class="math">
+    $$ q_{t+1} = q_t + \frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + \dot{q} \mathrm{d}t $$
+    $$ \dot{q}_{t+1} = \dot{q}_t + \ddot{q} \mathrm{d}t $$
+    $$ \ddot{q}_{t+1} = f(q_{t+1}, \dot{q}_{t+1}) $$
+</span>
+
+<h3>
+    Metodo misto
+</h3>
+<p>
+    Per ottimizzare i calcoli in base ai parametri scelti &egrave; possibile quanto approssimare il moto
+    ad uniformemente accelerato e quanto a lineare uniforme facendo una media ponderata tra essi.<br />
+    Scelti due pesi (numeri tra 0 e 1, la cui somma &egrave; 1) <i>w<sub>L</sub></i> e <i>w<sub>A</sub></i>, &egrave; possibile approssimare il moto in questo modo
+</p>
+<span class="math">
+    $$ \Delta q_L = \dot{q} \mathrm{d}t $$
+    $$ \Delta q_A = \frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + \dot{q} \mathrm{d}t $$
+    $$ q_{t+1} = q_t + w_L \Delta q_L + w_A \Delta q_A  $$
+    $$ \dot{q}_{t+1} = \dot{q}_t + \ddot{q} \mathrm{d}t $$
+    $$ \ddot{q}_{t+1} = f(q_{t+1}, \dot{q}_{t+1}) $$
+</span>
+<p>
+    L'equazione scritta sopra pu&ograve; essere semplificata sostituendo i valori
+</p>
+<span class="math">
+    $$ q_{t+1} = q_t + w_L \dot{q} \mathrm{d}t + w_A (\frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + \dot{q} \mathrm{d}t)  $$
+    $$ q_{t+1} = q_t + w_L \dot{q} \mathrm{d}t + w_A \frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + w_A \dot{q} \mathrm{d}t $$
+    $$ q_{t+1} = q_t + (w_L + w_A) \dot{q} \mathrm{d}t + w_A \frac{1}{2} \ddot{q} {\mathrm{d}t}^2  $$
+</span>
+<p>
+    Ma, poich&eacute;
+</p>
+<span class="math">
+    $$ w_L + w_A = 1  $$
+    $$ q_{t+1} = q_t + \dot{q} \mathrm{d}t + w_A \frac{1}{2} \ddot{q} {\mathrm{d}t}^2  $$
+</span>
+<p>
+    Il parametro <i>w<sub>A</sub></i> controlla quindi quanto il moto &egrave; approssimato ad uniformemente accelerato:
+    pi&ugrave; basso <i>w<sub>A</sub></i>, pi&ugrave; il moto sar&agrave; lineare, 
+    pi&ugrave; alto <i>w<sub>A</sub></i>,  pi&ugrave; il moto sar&agrave; uniformemente accelerato 
+</p>

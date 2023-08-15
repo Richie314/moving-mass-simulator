@@ -1,0 +1,63 @@
+<span class="math">
+    $$ q = \begin {pmatrix} R \\ {\theta} \end{pmatrix}\ $$
+</span>
+<p>
+    Le uniche variabili del sistema sono in questo caso il raggio <i>R</i> e l'angolo <i>&theta;</i>.<br />
+    L'energia cinetica dei due corpi (m sopra il tavolo ed M sotto) diventa:
+</p>
+<span class="math">
+    $$ T = {1 \over 2} (m + M) \dot{R}^2 + {1 \over 2} m (R \dot{\theta})^2 $$
+</span>
+<p>
+    Mentre l'energia potenziale (solo gravitazionale), considerando la lunghezza totale del filo <i>l<sub>0</sub></i>:
+</p>
+<span class="math">
+    $$ U = M g h = M g (R - l_{0}) $$
+</span>
+<p>
+    Le equazioni di Lagrange rispetto a <i>R</i> e <i>&theta;</i> sono quindi:
+</p>
+<span class="math">
+    $$ \mathcal{L} = T - U = {1 \over 2} (m + M) \dot{R}^2 + {1 \over 2} m (R \dot{\theta})^2 + M g (R - l_{0}) $$
+</span>
+<span class="math">
+    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{R}} - \frac{\partial \mathcal{L}}{\partial R} = 0 $$
+    
+    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{\theta}} - \frac{\partial \mathcal{L}}{\partial \theta} = 0 $$
+</span>
+<p>
+    Che portano al sistema
+</p>
+<span class="math">
+    $$ \begin{cases}
+        (m + M) \ddot{R} - m R \dot{\theta}^2 - M g = 0\\
+        \ddot{\theta} R^2 + 2 R \dot{R} \dot{\theta} = 0
+    \end{cases}\ $$
+</span>
+<p>
+    Che, una volta risolto, permette di esprimere le accelerazioni in funzione delle posizioni e delle velocit&agrave;
+</p>
+<span class="math">
+    $$ \begin{cases}
+        \ddot{R} = \frac{m R \dot{\theta}^2 + M g}{m + M}\\
+        \ddot{\theta} = - 2 \frac{\dot{R} \dot{\theta}}{R} , R \ne 0
+    \end{cases}\ $$
+</span>
+<hr />
+<p>
+    Solo in questo caso &egrave; possibile applicare un semplice fattore correttivo ai valori: se il filo, per un errore di integrazione, 
+    dovesse essersi "allungato" &egrave; possibile riscalare il raggio e l'altezza perch&eacute; la loro somma ritorni quella iniziale.
+</p>
+<span class="math">
+    $$ x = R - h - l_{0} $$
+    $$ R \leftarrow R - \frac{x}{2} $$
+    $$ h \leftarrow h + \frac{x}{2} $$
+</span>
+<p>
+    Lo stesso si pu&ograve; fare per le velocit&agrave;
+</p>
+<span class="math">
+    $$ v = \frac{\dot{R} + \dot{h}}{2} $$
+    $$ \dot{R} \leftarrow v $$
+    $$ \dot{h} \leftarrow v $$
+</span>

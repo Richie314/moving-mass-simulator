@@ -223,32 +223,6 @@ class EngineBase extends EngineHelpers
     }
 
     /**
-     * Function that calculates the new accelerations given the current state,
-     * Raises exceptions for errors
-     * @param {MassRotatingObject} tableMass 
-     * @param {MassFallingObject} fallingMass 
-     * @returns {Vector3} a vector containing the three new accelerations
-     */
-    calculateAccelerations(tableMass, fallingMass)
-    {
-        //Calculate kx just once
-        const kx = ( tableMass.r.minus(fallingMass.height).minus(this.cableStartLength) ).times(this.k);
-
-        const acc = new Vector3();
-        // ..     .
-        //  R = R 0^2 - k x / m
-        acc.x = ( tableMass.r.times( tableMass.thetaPrime.pow(2) ) ).minus( kx.div(tableMass.mass) );
-        // ..       . .
-        //  0 = - 2 R 0 / R
-        acc.y = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
-        // ..
-        //  h = - g - k x / M 
-        acc.z = g.neg().plus( kx.div(fallingMass.mass) );
-
-        return acc;
-    }
-
-    /**
      * 
      * @param {MassRotatingObject} tableMass 
      * @param {MassFallingObject} fallingMass 
@@ -277,14 +251,14 @@ class EngineBase extends EngineHelpers
     applyState(tableMass, fallingMass, y, yPrime)
     {
         //Apply new state values
-        tableMass.r = y.x;
-        tableMass.theta = y.y;
-        fallingMass.height = y.z;
+        tableMass.r = y.x.clone();
+        tableMass.theta = y.y.clone();
+        fallingMass.height = y.z.clone();
 
         //Apply new speed values
-        tableMass.rPrime = yPrime.x;
-        tableMass.thetaPrime = yPrime.y;
-        fallingMass.heightPrime = yPrime.z;
+        tableMass.rPrime = yPrime.x.clone();
+        tableMass.thetaPrime = yPrime.y.clone();
+        fallingMass.heightPrime = yPrime.z.clone();
     }
 
     /**
@@ -344,12 +318,12 @@ class PoligonalEngine extends EngineBase
      */
     executeSingleIteration(tableMass, fallingMass)
     {
-        this.applySpeedsAndForces(tableMass, fallingMass);
         try {
+            this.applySpeedsAndForces(tableMass, fallingMass);
             const acc = this.calculateAccelerations(tableMass, fallingMass);
-            tableMass.rDoublePrime = acc.x;
-            tableMass.thetaDoublePrime = acc.y;
-            fallingMass.heightDoublePrime = acc.z;
+            tableMass.rDoublePrime = acc.x.clone();
+            tableMass.thetaDoublePrime = acc.y.clone();
+            fallingMass.heightDoublePrime = acc.z.clone();
         } catch (err) {
             console.warn(err);
             return false;
@@ -401,6 +375,11 @@ class RungeKuttaNistromEngine extends EngineBase
         const yPrime0 = new Vector3(tableMass.rPrime, tableMass.thetaPrime, fallingMass.heightPrime);
         const y0 = new Vector3(tableMass.r, tableMass.theta, fallingMass.height);
         const k1 = this.calculateAccelerations(tableMass, fallingMass);
+
+        //Set the current acceleration of the objects in order to display it
+        tableMass.rDoublePrime = k1.x.clone();
+        tableMass.thetaDoublePrime = k1.y.clone();
+        fallingMass.heightDoublePrime = k1.z.clone();
 
         //Step 1
         const yPrime1 = yPrime0.plus( k1.times( h.div(2) ) );

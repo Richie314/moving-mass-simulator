@@ -20,21 +20,22 @@
     
     <!--Styles-->
 
-    <link rel="stylesheet" href="assets/page/index.css" media="all" />
-    <link rel="stylesheet" href="assets/page/menu.css" media="all" />
+    <link rel="stylesheet" href="./assets/page/index.css" media="all" />
+    <link rel="stylesheet" href="./assets/page/menu.css" media="all" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" media="all" referrerpolicy="no-referrer" />
 
     <!--Scripts-->
 
-    <script defer src="assets/page/log.js"></script>
-    <script defer src="assets/page/ui.js"></script>
+    <script defer src="./assets/page/log.js"></script>
+    <script defer src="./assets/page/ui.js"></script>
+    <script defer src="./assets/page/parts.js"></script>
 
     <script defer src="https://unpkg.com/decimal.js@latest/decimal.js" referrerpolicy="no-referrer"></script>
-    <script defer src="assets/simulation/vectors.js"></script>
-    <script defer src="assets/simulation/masses.js"></script>
-    <script defer src="assets/simulation/engine/base.js"></script>
-    <script defer src="assets/simulation/engine/poligonal.js"></script>
-    <script defer src="assets/simulation/engine/runge-kutta-nistrom.js"></script>
+    <script defer src="./assets/simulation/vectors.js"></script>
+    <script defer src="./assets/simulation/masses.js"></script>
+    <script defer src="./assets/simulation/engine/base.js"></script>
+    <script defer src="./assets/simulation/engine/poligonal.js"></script>
+    <script defer src="./assets/simulation/engine/runge-kutta-nistrom.js"></script>
 
     <script defer src="https://unpkg.com/stats-js@latest/build/stats.min.js" referrerpolicy="no-referrer"></script>
     <script type="importmap">
@@ -45,24 +46,26 @@
           }
         }
     </script>
-    <script defer src="assets/simulation/three-setup.js" type="module"></script>
-    <script defer src="assets/simulation/controls.js"></script>
-    <script defer src="assets/simulation/simulation.js"></script>
-    <script defer src="assets/simulation/page.js"></script>
+    <script defer src="./assets/simulation/three-setup.js" type="module"></script>
+    <script defer src="./assets/simulation/controls.js"></script>
+    <script defer src="./assets/simulation/simulation.js"></script>
+    <script defer src="./assets/simulation/page.js"></script>
 
     <!--[if lt IE 7]>
         <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6" referrerpolicy="no-referrer"></script>
     <![endif]-->
-    <script src="assets/page/math-setup.js"></script>
+    <script src="./assets/page/math-setup.js"></script>
     <script defer src="https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js" referrerpolicy="no-referrer"></script>
 
     <script defer src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-    <script defer src="assets/simulation/export-setup.js"></script>
+    <script defer src="./assets/simulation/export-setup.js"></script>
 </head>
 <body>
     <!--For compatibility-->
     <noscript>
-        <h2>Abilita Javascript per far funzionare la simulazione e dopo <a href="#">ricarica</a> la pagina</h2>
+        <h2>
+            Abilita Javascript per far funzionare la simulazione e dopo <a href="#">ricarica</a> la pagina
+        </h2>
     </noscript>
 
     <!--Main menu-->
@@ -387,69 +390,8 @@
                         (Filo inestensibile)
                     </span>
                 </summary>
-                <span class="math">
-                    $$ q = \begin {pmatrix} R \\ {\theta} \end{pmatrix}\ $$
-                </span>
-                <p>
-                    Le uniche variabili del sistema sono in questo caso il raggio <i>R</i> e l'angolo <i>&theta;</i>.<br />
-                    L'energia cinetica dei due corpi (m sopra il tavolo ed M sotto) diventa:
-                </p>
-                <span class="math">
-                    $$ T = {1 \over 2} (m + M) \dot{R}^2 + {1 \over 2} m (R \dot{\theta})^2 $$
-                </span>
-                <p>
-                    Mentre l'energia potenziale (solo gravitazionale), considerando la lunghezza totale del filo <i>l<sub>0</sub></i>:
-                </p>
-                <span class="math">
-                    $$ U = M g h = M g (R - l_{0}) $$
-                </span>
-                <p>
-                    Le equazioni di Lagrange rispetto a <i>R</i> e <i>&theta;</i> sono quindi:
-                </p>
-                <span class="math">
-                    $$ \mathcal{L} = T - U = {1 \over 2} (m + M) \dot{R}^2 + {1 \over 2} m (R \dot{\theta})^2 + M g (R - l_{0}) $$
-                </span>
-                <span class="math">
-                    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{R}} - \frac{\partial \mathcal{L}}{\partial R} = 0 $$
-                    
-                    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{\theta}} - \frac{\partial \mathcal{L}}{\partial \theta} = 0 $$
-                </span>
-                <p>
-                    Che portano al sistema
-                </p>
-                <span class="math">
-                    $$ \begin{cases}
-                        (m + M) \ddot{R} - m R \dot{\theta}^2 - M g = 0\\
-                        \ddot{\theta} R^2 + 2 R \dot{R} \dot{\theta} = 0
-                    \end{cases}\ $$
-                </span>
-                <p>
-                    Che, una volta risolto, permette di esprimere le accelerazioni in funzione delle posizioni e delle velocit&agrave;
-                </p>
-                <span class="math">
-                    $$ \begin{cases}
-                        \ddot{R} = \frac{m R \dot{\theta}^2 + M g}{m + M}\\
-                        \ddot{\theta} = - 2 \frac{\dot{R} \dot{\theta}}{R} , R \ne 0
-                    \end{cases}\ $$
-                </span>
-                <hr />
-                <p>
-                    Solo in questo caso &egrave; possibile applicare un semplice fattore correttivo ai valori: se il filo, per un errore di integrazione, 
-                    dovesse essersi "allungato" &egrave; possibile riscalare il raggio e l'altezza perch&eacute; la loro somma ritorni quella iniziale.
-                </p>
-                <span class="math">
-                    $$ x = R - h - l_{0} $$
-                    $$ R \leftarrow R - \frac{x}{2} $$
-                    $$ h \leftarrow h + \frac{x}{2} $$
-                </span>
-                <p>
-                    Lo stesso si pu&ograve; fare per le velocit&agrave;
-                </p>
-                <span class="math">
-                    $$ v = \frac{\dot{R} + \dot{h}}{2} $$
-                    $$ \dot{R} \leftarrow v $$
-                    $$ \dot{h} \leftarrow v $$
-                </span>
+
+                <div data-loadurl="./assets/parts/simple-case.html"></div>
             </details>
 
             <!--Advanced case explained here-->
@@ -462,182 +404,29 @@
                         (Il filo &egrave; considerato una molla)
                     </span>
                 </summary>
-                <p>
-                    In questo caso, il filo viene considerato elastico, e viene approssimato quindi ad una molla. Le variabili
-                    del sistema passano da due a tre, in quanto non c'&egrave; pi&ugrave; un legame diretto
-                    tra il raggio e l'altezza
-                </p>
-                <span class="math">
-                    $$ q = \begin {pmatrix} R \\ {\theta} \\ h \end{pmatrix}\ $$
-                </span>
-                <p>
-                    L'energia cinetica del sistema diventa quindi:
-                </p>
-                <span class="math">
-                    $$ T = \frac{1}{2} m \dot{R}^2 + \frac{1}{2}M\dot{h}^2 + \frac{1}{2}m(\dot{\theta}R)^2 =
-                      \frac{1}{2}m (\dot{R}^2 + R^2\dot{\theta}^2) + \frac{1}{2}M\dot{h}^2 $$
-                </span>
-                <p>
-                    Mentre le energie potenziali:
-                </p>
-                <span class="math">
-                    $$ 
-                    U_G = mgh;
-                    U_K = \frac{1}{2}k(l_0-\left | h \right | - R)^2 = \frac{1}{2}k(l_0 + h - R)^2 
-                    $$
-                </span>
-                <p>
-                    Sfruttando le equazioni di Lagrange, &egrave; possibile esprimere anche in questo caso 
-                    le accelerazioni dalle posizioni e le velocit&agrave;.<br />
-                    Nel caso del raggio:
-                </p>
-                <span class="math">
-                    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{R}} - \frac{\partial \mathcal{L}}{\partial R} 
-                    \Rightarrow \frac{d}{dt}(m\dot{R}) - m\dot{\theta}^2 R + \frac{k}{2} (2R - 2l - 2l_0) $$
-                </span>
-                <span class="math">
-                    $$ m\ddot{R} = m \dot{\theta}^2 R - k(R - l - l_0) \Rightarrow \ddot{R} = \dot{\theta}^2 R - \frac{k}{m}(R - l - l_0)  = 0$$
-                </span>
-                <p>
-                    Mentre in quello dell'angolo:
-                </p>
-                <span class="math">
-                    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{\theta}} - \frac{\partial \mathcal{L}}{\partial \theta} = 0 
-                    \Rightarrow  \frac{d}{dt}(mR^2\dot{\theta}) = 0 
-                    \Rightarrow m\frac {d}{dt}(R^2\dot{\theta}) = 0 
-                    \Rightarrow \frac{d}{dt}(R^2\dot{\theta}) = 0 $$
-                </span>
-                <p>
-                    Che viene risolto nei due casi
-                </p>
-                <span class="math">
-                    $$
-                    \ddot{\theta}R^2 + 2R\dot{r}\dot{\theta} = 0
-                    \Rightarrow \ddot{\theta} = 
-                    \begin{cases}
-                        -2 \frac{\dot{R} \dot{\theta}}{R} \cap R \not = 0  \\
-                        Indefinito \cap R = 0 \
-                    \end{cases}
-                    $$
-                </span>
-                <p>
-                    Il secondo caso del sistema si pu&ograve; verificare solo in caso di totale annullamento
-                    del momento angolare, non possibile se la velocit&agrave; angolare iniziale &egrave; non nulla:
-                    la massa sul tavolo risente di una forza centrale, che non pu&ograve; quindi variarne il momento angolare.<br />
-                    Nel caso di assenza di momento angolare non ha tuttavia senso calcolare l'accelerazione angolare in quanto &egrave;
-                    direttamente proporzionale all'opposto della velocit&agrave; angolare, che rimarr&agrave; sempre nulla. <br />
-                    L'equazione di Lagrange rispetto all'altezza &egrave; invece:
-                </p>
-                <span class="math">
-                    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{h}} - \frac{\partial \mathcal{L}}{\partial h} = 0
-                    \Rightarrow \frac{d}{dt}(M\dot{h}) + Mg + \frac{k}{2}(2h +2l_0 - 2R) $$
-                </span>
-                <span class="math">
-                    $$
-                    \Rightarrow M\ddot{h} = - M g - k (h + l_0 - R) \Rightarrow \ddot{h} = - g -\frac{k}{M} (h + l_0 - R)
-                    $$
-                </span>
-                <p>
-                    Per semplificare la computazione (velocizzare i calcoli) &egrave; possibile calcolare l'allungamento della molla una
-                    volta sola: esso &egrave; utilizzato sia dalla accelerazione radiale che da quella verticale.
-                </p>
-                <span class="math">
-                    $$
-                    x = R - h - l_0
-                    $$
-                </span>
-                <span class="math">
-                    $$
-                    \begin{cases}
-                        \ddot{R}= \dot{\theta}^2R - \frac{kx}{m} \\
-                        \ddot{h} = - g - \frac{k}{M}(-x) = - g + \frac{kx}{M}
-                    \end{cases}
-                    $$
-                </span>
+
+                <div data-loadurl="./assets/parts/difficult-case.html"></div>
             </details>
+
+
             <details>
                 <summary>
                     <h3>
-                        Metodo di integrazione numerica
+                        Metodo di integrazione numerica veloce
                     </h3>
                 </summary>
-                <p>
-                    Dalla lagrangiana &egrave; possibile costruire una funzione <i>f</i>
-                    che, date le variabili di stato del sistema e le rispettive derivaterispetto al tempo, restituisce le accelerazioni.
-                </p>
-                <span class="math">
-                    $$ \ddot{q} = f(q_t, \dot{q}_t) $$
-                </span>
-                <p>
-                    Questo per&ograve; non permette di calcolare i successivi valori di <i>q</i> e <i>q'</i>, 
-                    che devono quindi essere integrate numericamente (approssimate).
-                </p>
 
-                <h3>
-                    Metodo delle tangenti
-                </h3>
-                <img src="./assets/page/integral-with-tangents.svg" class="full-w"
-                    title="Integrazione con tangenti" alt="Integrzione funzione q da tangenti" />
-                <p>
-                    Dalla variabile <i>q<sub>t</sub></i> si ricava <i>q<sub>t+1</sub></i> sfruttando un <i>dt</i> molto piccolo
-                </p>
-                <span class="math">
-                    $$ q_{t+1} = q_t + \dot{q}  \mathrm{d}t $$
-                    $$ \dot{q}_{t+1} = \dot{q}_t + \ddot{q}  \mathrm{d}t $$
-                    $$ \ddot{q}_{t+1} = f(q_{t+1}, \dot{q}_{t+1}) $$
-                </span>
+                <div data-loadurl="./assets/parts/fast-integration.html"></div>
+            </details>
 
-                <h3>
-                    Metodo Cavalieri Simpson (delle parabole)
-                </h3>
-                <img src="./assets/page/integral-with-parabolas.svg" class="full-w"
-                    title="Integrazione con tangenti" alt="Integrzione funzione q da tangenti" />
-                <p>
-                    In questo caso il moto &egrave; approssimato ad un moto uniformemente accelerato, con accelerazione nota, in modo da ridurre l'errore.
-                    La variazione delle velocit&agrave; &egrave; ancora calcolata in modo lineare. Questa approssimazione &egrave; in grado di ottenere risultati migliori
-                    al metodo delle tangenti solo nel caso n cui il <i>dt</i> scelto sia dello stesso ordine di grandezza.
-                </p>
-                <span class="math">
-                    $$ q_{t+1} = q_t + \frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + \dot{q} \mathrm{d}t $$
-                    $$ \dot{q}_{t+1} = \dot{q}_t + \ddot{q} \mathrm{d}t $$
-                    $$ \ddot{q}_{t+1} = f(q_{t+1}, \dot{q}_{t+1}) $$
-                </span>
+            <details>
+                <summary>
+                    <h3>
+                        Metodo di integrazione numerica pi&ugrave; precisa
+                    </h3>
+                </summary>
 
-                <h3>
-                    Metodo misto
-                </h3>
-                <p>
-                    Per ottimizzare i calcoli in base ai parametri scelti &egrave; possibile quanto approssimare il moto
-                    ad uniformemente accelerato e quanto a lineare uniforme facendo una media ponderata tra essi.<br />
-                    Scelti due pesi (numeri tra 0 e 1, la cui somma &egrave; 1) <i>w<sub>L</sub></i> e <i>w<sub>A</sub></i>, &egrave; possibile approssimare il moto in questo modo
-                </p>
-                <span class="math">
-                    $$ \Delta q_L = \dot{q} \mathrm{d}t $$
-                    $$ \Delta q_A = \frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + \dot{q} \mathrm{d}t $$
-                    $$ q_{t+1} = q_t + w_L \Delta q_L + w_A \Delta q_A  $$
-                    $$ \dot{q}_{t+1} = \dot{q}_t + \ddot{q} \mathrm{d}t $$
-                    $$ \ddot{q}_{t+1} = f(q_{t+1}, \dot{q}_{t+1}) $$
-                </span>
-                <p>
-                    L'equazione scritta sopra pu&ograve; essere semplificata sostituendo i valori
-                </p>
-                <span class="math">
-                    $$ q_{t+1} = q_t + w_L \dot{q} \mathrm{d}t + w_A (\frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + \dot{q} \mathrm{d}t)  $$
-                    $$ q_{t+1} = q_t + w_L \dot{q} \mathrm{d}t + w_A \frac{1}{2} \ddot{q} {\mathrm{d}t}^2 + w_A \dot{q} \mathrm{d}t $$
-                    $$ q_{t+1} = q_t + (w_L + w_A) \dot{q} \mathrm{d}t + w_A \frac{1}{2} \ddot{q} {\mathrm{d}t}^2  $$
-                </span>
-                <p>
-                    Ma, poich&eacute;
-                </p>
-                <span class="math">
-                    $$ w_L + w_A = 1  $$
-                    $$ q_{t+1} = q_t + \dot{q} \mathrm{d}t + w_A \frac{1}{2} \ddot{q} {\mathrm{d}t}^2  $$
-                </span>
-                <p>
-                    Il parametro <i>w<sub>A</sub></i> controlla quindi quanto il moto &egrave; approssimato ad uniformemente accelerato:
-                    pi&ugrave; basso <i>w<sub>A</sub></i>, pi&ugrave; il moto sar&agrave; lineare, 
-                    pi&ugrave; alto <i>w<sub>A</sub></i>,  pi&ugrave; il moto sar&agrave; uniformemente accelerato 
-                </p>
+                <div data-loadurl="./assets/parts/rkn-integration.html"></div>
             </details>
         </div>
     </div>

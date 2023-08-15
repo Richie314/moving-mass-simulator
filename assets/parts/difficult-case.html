@@ -1,0 +1,92 @@
+<p>
+    In questo caso, il filo viene considerato elastico, e viene approssimato quindi ad una molla. Le variabili
+    del sistema passano da due a tre, in quanto non c'&egrave; pi&ugrave; un legame diretto
+    tra il raggio e l'altezza
+</p>
+<span class="math">
+    $$ q = \begin {pmatrix} R \\ {\theta} \\ h \end{pmatrix}\ $$
+</span>
+<p>
+    L'energia cinetica del sistema diventa quindi:
+</p>
+<span class="math">
+    $$ T = \frac{1}{2} m \dot{R}^2 + \frac{1}{2}M\dot{h}^2 + \frac{1}{2}m(\dot{\theta}R)^2 =
+      \frac{1}{2}m (\dot{R}^2 + R^2\dot{\theta}^2) + \frac{1}{2}M\dot{h}^2 $$
+</span>
+<p>
+    Mentre le energie potenziali:
+</p>
+<span class="math">
+    $$ 
+    U_G = mgh;
+    U_K = \frac{1}{2}k(l_0-\left | h \right | - R)^2 = \frac{1}{2}k(l_0 + h - R)^2 
+    $$
+</span>
+<p>
+    Sfruttando le equazioni di Lagrange, &egrave; possibile esprimere anche in questo caso 
+    le accelerazioni dalle posizioni e le velocit&agrave;.<br />
+    Nel caso del raggio:
+</p>
+<span class="math">
+    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{R}} - \frac{\partial \mathcal{L}}{\partial R} 
+    \Rightarrow \frac{d}{dt}(m\dot{R}) - m\dot{\theta}^2 R + \frac{k}{2} (2R - 2l - 2l_0) $$
+</span>
+<span class="math">
+    $$ m\ddot{R} = m \dot{\theta}^2 R - k(R - l - l_0) \Rightarrow \ddot{R} = \dot{\theta}^2 R - \frac{k}{m}(R - l - l_0)  = 0$$
+</span>
+<p>
+    Mentre in quello dell'angolo:
+</p>
+<span class="math">
+    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{\theta}} - \frac{\partial \mathcal{L}}{\partial \theta} = 0 
+    \Rightarrow  \frac{d}{dt}(mR^2\dot{\theta}) = 0 
+    \Rightarrow m\frac {d}{dt}(R^2\dot{\theta}) = 0 
+    \Rightarrow \frac{d}{dt}(R^2\dot{\theta}) = 0 $$
+</span>
+<p>
+    Che viene risolto nei due casi
+</p>
+<span class="math">
+    $$
+    \ddot{\theta}R^2 + 2R\dot{r}\dot{\theta} = 0
+    \Rightarrow \ddot{\theta} = 
+    \begin{cases}
+        -2 \frac{\dot{R} \dot{\theta}}{R} \cap R \not = 0  \\
+        Indefinito \cap R = 0 \
+    \end{cases}
+    $$
+</span>
+<p>
+    Il secondo caso del sistema si pu&ograve; verificare solo in caso di totale annullamento
+    del momento angolare, non possibile se la velocit&agrave; angolare iniziale &egrave; non nulla:
+    la massa sul tavolo risente di una forza centrale, che non pu&ograve; quindi variarne il momento angolare.<br />
+    Nel caso di assenza di momento angolare non ha tuttavia senso calcolare l'accelerazione angolare in quanto &egrave;
+    direttamente proporzionale all'opposto della velocit&agrave; angolare, che rimarr&agrave; sempre nulla. <br />
+    L'equazione di Lagrange rispetto all'altezza &egrave; invece:
+</p>
+<span class="math">
+    $$ \frac{\mathrm{d}}{\mathrm{d}t} \frac{\partial \mathcal{L}}{\partial \dot{h}} - \frac{\partial \mathcal{L}}{\partial h} = 0
+    \Rightarrow \frac{d}{dt}(M\dot{h}) + Mg + \frac{k}{2}(2h +2l_0 - 2R) $$
+</span>
+<span class="math">
+    $$
+    \Rightarrow M\ddot{h} = - M g - k (h + l_0 - R) \Rightarrow \ddot{h} = - g -\frac{k}{M} (h + l_0 - R)
+    $$
+</span>
+<p>
+    Per semplificare la computazione (velocizzare i calcoli) &egrave; possibile calcolare l'allungamento della molla una
+    volta sola: esso &egrave; utilizzato sia dalla accelerazione radiale che da quella verticale.
+</p>
+<span class="math">
+    $$
+    x = R - h - l_0
+    $$
+</span>
+<span class="math">
+    $$
+    \begin{cases}
+        \ddot{R}= \dot{\theta}^2R - \frac{kx}{m} \\
+        \ddot{h} = - g - \frac{k}{M}(-x) = - g + \frac{kx}{M}
+    \end{cases}
+    $$
+</span>

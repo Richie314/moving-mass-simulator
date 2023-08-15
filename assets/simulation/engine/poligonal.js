@@ -105,12 +105,16 @@ class PoligonalEngine3 extends PoligonalEngine
         // ..     .
         //  R = R 0^2 - k x / m
         acc.x = ( tableMass.r.times( tableMass.thetaPrime.pow(2) ) ).minus( kx.div(tableMass.mass) );
-        // ..       . .
-        //  0 = - 2 R 0 / R
-        acc.y = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
         // ..
         //  h = - g - k x / M 
         acc.z = g.neg().plus( kx.div(fallingMass.mass) );
+
+        if (tableMass.r.isZero())
+            return acc;
+
+        // ..       . .
+        //  0 = - 2 R 0 / R
+        acc.y = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
 
         return acc;
     }

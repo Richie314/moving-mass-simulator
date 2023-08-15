@@ -98,13 +98,30 @@ class RungeKuttaNistromEngine3 extends RungeKuttaNistromEngine
         // ..     .
         //  R = R 0^2 - k x / m
         acc.x = ( tableMass.r.times( tableMass.thetaPrime.pow(2) ) ).minus( kx.div(tableMass.mass) );
-        // ..       . .
-        //  0 = - 2 R 0 / R
-        acc.y = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
         // ..
         //  h = - g - k x / M 
         acc.z = g.neg().plus( kx.div(fallingMass.mass) );
 
+        if (tableMass.r.isZero())
+        {
+            return acc;
+        }
+        // ..       . .
+        //  0 = - 2 R 0 / R
+        acc.y = tableMass.rPrime.times(-2).times( tableMass.thetaPrime ).div( tableMass.r );
+
         return acc;
+    }
+
+    /**
+     * Just a shortcut for the spring energy
+     * @param {MassRotatingObject} tableMass 
+     * @param {MassFallingObject} fallingMass 
+     * @returns {Decimal}
+     */
+    SpringEnergy(tableMass, fallingMass)
+    {
+        const x = fallingMass.height.abs().plus(tableMass.r).minus(this.cableStartLength);
+        return this.k.div(2).times(x.pow(2));
     }
 }
