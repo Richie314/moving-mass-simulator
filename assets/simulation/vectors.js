@@ -1,6 +1,6 @@
 'use strict';
 
-if (!('Decimal' in window)) {
+if (self && !('Decimal' in self)) {
     //An error happened!
     throw Error('Decimal.js not loaded properly');
 }

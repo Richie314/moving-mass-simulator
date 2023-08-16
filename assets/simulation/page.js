@@ -86,8 +86,8 @@ const fallingMass = new MassFallingObject(
 /**
  * Engine declaration here
  */
-const SimpleEngine2 = new PoligonalEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt, cavalieriWeight);
-const SimpleEngine3 = new PoligonalEngine3(springRelaxLength, springConstant, dt, cavalieriWeight);
+const SimpleEngine2 = new TaylorEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt, cavalieriWeight);
+const SimpleEngine3 = new TaylorEngine3(springRelaxLength, springConstant, dt, cavalieriWeight);
 const RKN_Engine2 = new RungeKuttaNistromEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt);
 const RKN_Engine3 = new RungeKuttaNistromEngine3(springRelaxLength, springConstant, dt);
 
@@ -162,7 +162,7 @@ function UpdateEngine()
         {
             simulation.changeEngine(SimpleEngine3);
         } else {
-            CinematicEngine.cableLength = simulation.cable;
+            SimpleEngine2.cableLength = simulation.cable;
             simulation.changeEngine(SimpleEngine2);
         }
     }
@@ -172,7 +172,7 @@ function UpdateEngine()
         {
             simulation.changeEngine(RKN_Engine3);
         } else {
-            CinematicEngine.cableLength = simulation.cable;
+            RKN_Engine2.cableLength = simulation.cable;
             simulation.changeEngine(RKN_Engine2);
         }
     }

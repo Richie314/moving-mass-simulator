@@ -6,7 +6,7 @@ class RungeKuttaNistromEngine2 extends RungeKuttaNistromEngine
      */
     constructor(cableStartLength, dt)
     {
-        super(dt);
+        super(dt, 'Runge-Kutta-Nistrom - 2 variables');
 
         //Sanitize the inputs
         if (!Decimal.isDecimal(cableStartLength))
@@ -66,7 +66,7 @@ class RungeKuttaNistromEngine3 extends RungeKuttaNistromEngine
      */
     constructor(cableStartLength, k, dt)
     {
-        super(dt);
+        super(dt, 'Runge-Kutta-Nistrom - 3 variables');
 
         //Sanitize the inputs
         if (!Decimal.isDecimal(cableStartLength))

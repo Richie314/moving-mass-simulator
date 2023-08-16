@@ -1,6 +1,6 @@
 
 //Simple engine, two variables
-class PoligonalEngine2 extends PoligonalEngine
+class TaylorEngine2 extends TaylorEngine
 {
     /**
      * Builder
@@ -10,7 +10,7 @@ class PoligonalEngine2 extends PoligonalEngine
      */
     constructor (cableLength, dt, cavalieriWeight)
     {
-        super(dt, cavalieriWeight);
+        super(dt, cavalieriWeight, 'Taylor - 2 varibles');
 
         //Sanitize the input
         if (!Decimal.isDecimal(cableLength))
@@ -62,7 +62,7 @@ class PoligonalEngine2 extends PoligonalEngine
 }
 
 //More sophisticated engine, three variables
-class PoligonalEngine3 extends PoligonalEngine
+class TaylorEngine3 extends TaylorEngine
 {
     /**
      * Builder
@@ -73,7 +73,7 @@ class PoligonalEngine3 extends PoligonalEngine
      */
     constructor (cableStartLength, k, dt, cavalieriWeight)
     {
-        super(dt, cavalieriWeight);
+        super(dt, cavalieriWeight, 'Taylor - 3 variables');
 
         //Sanitize the inputs
         if (!Decimal.isDecimal(cableStartLength))

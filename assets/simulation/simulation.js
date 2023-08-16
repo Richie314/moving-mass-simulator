@@ -370,7 +370,9 @@ class Simulation
      * @returns {Decimal}
      */
     get cavalieriWeight() {
-        return this.Engine.cavalieriWeight;
+        if ('cavalieriWeight' in this.Engine)
+            return this.Engine.cavalieriWeight;
+        return new Decimal(0);
     }
 
     /**
@@ -476,6 +478,32 @@ class Simulation
                 val = new Decimal(val);
             }
             this.Engine.k = val;
+        }
+    }
+
+    /**
+     * @returns {Decimal} The spring relax length, if present, 0 otherwise
+     */
+    get springRelaxLenght()
+    {
+        if ('cableStartLength' in this.Engine)
+        {
+            return this.Engine.cableStartLength;
+        }
+        return new Decimal(0);
+    }
+
+    //Sets the spring constant, only if there is already one
+    set springRelaxLenght(val)
+    {
+        if ('springRelaxLenght' in this.Engine)
+        {
+            //Sanitize
+            if (!Decimal.isDecimal(val))
+            {
+                val = new Decimal(val);
+            }
+            this.Engine.springRelaxLenght = val;
         }
     }
 

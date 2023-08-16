@@ -13,301 +13,82 @@ function UpdateDtExportCount()
 dtExportCountInput.addEventListener('input', UpdateDtExportCount);
 UpdateDtExportCount();
 
-/**
- * 
- * @param {Simulation} sim 
- * @param {Decimal|number|string} max
- * @param {Function} onUpdate
- * @param {Function} callback
- */
-function CalculateAll(sim, max, onUpdate, callback)
+let exportWorker = null;
+
+function Export()
 {
-    if (!Decimal.isDecimal(max))
-    {
-        max = new Decimal(max);
-    }
-    if (typeof callback !== 'function')
-    {
-        callback = data => log(data);
-    }
-    if (typeof onUpdate !== 'function')
-    {
-        onUpdate = data => log(data);
-    }
-    /**
-     * @param {Simulation} s 
-     */
-    function getDataFunction(s)
-    {
-        return [
-            s.elapsedTime,//A
-
-            s.tableMass.r, //B
-            s.tableMass.rPrime, //C
-            s.tableMass.rDoublePrime, //D
-
-            s.tableMass.theta, //E
-            s.tableMass.thetaPrime, //F
-            s.tableMass.thetaDoublePrime, //G
-            
-            s.fallingMass.height, //H
-            s.fallingMass.heightPrime, //I
-            s.fallingMass.heightDoublePrime, //J
-
-            //Fillers to set cell format to EXCEL calculated data
-            new Decimal(0), new Decimal(0),
-            new Decimal(0), new Decimal(0),
-            new Decimal(0), new Decimal(0),
-            new Decimal(0), new Decimal(0)
-        ];
-    }
-    /**
-     * @param {Decimal} elem 
-     */
-    function mapDataFunction(elem)
-    {
-        return {
-            t: 'n',
-            v: elem.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-            z: '0.000E+00'
-        }
-    }
-    let arr = [
-        getDataFunction(sim).map(mapDataFunction)
-    ];
-    IterateAsync(arr, sim, max, dtExportCount, getDataFunction, mapDataFunction, onUpdate, callback);
-}
-/**
- * @param {any[]} array
- * @param {Simulation} sim 
- * @param {Decimal|number} timeMax
- * @param {Decimal} count 
- * @param {Function} getDataFunction
- * @param {Function} mapDataFunction
- * @param {Function} updateCallback
- * @param {Function} endCallback
- */
-function IterateAsync(array, sim, timeMax, count, getDataFunction, mapDataFunction, updateCallback, endCallback)
-{
-    if (!sim.elapsedTime.lessThan(timeMax))
-    {
-        endCallback(array, sim);
-        return;
-    }
-    if (!sim.executeIterations(count))
-    {
-        endCallback(array, sim);
-        throw new Error('End export: simulation failed');
-    }
-    array.push( getDataFunction(sim).map(mapDataFunction) );
-    updateCallback( sim.elapsedTime.div(timeMax).toNumber() );
-    setTimeout(IterateAsync, 0.1, array, sim, timeMax, count, getDataFunction, mapDataFunction, updateCallback, endCallback);
-}
-const tableHeaders = [
-    {
-        t: 's',
-        v: 'Timestamp [s]'
-    },
-    {
-        t: 's',
-        v: 'R [m]'
-    },
-    {
-        t: 's',
-        v: 'R\' [m/s]'
-    },
-    {
-        t: 's',
-        v: 'R\'\' [m/s^2]'
-    },
-
-    {
-        t: 's',
-        v: 'Theta [rad]'
-    },
-    {
-        t: 's',
-        v: 'Theta\' [rad/s]'
-    },
-    {
-        t: 's',
-        v: 'Theta\'\' [rad/s^2]'
-    },
-
-    {
-        t: 's',
-        v: 'h [m]'
-    },
-    {
-        t: 's',
-        v: 'h\' [m/s]'
-    },
-    {
-        t: 's',
-        v: 'h\'\' [m/s^2]'
-    },
-
-    {
-        t: 's',
-        v: 'l [m]'
-    },
-    {
-        t: 's',
-        v: 'Momentum [J/s]'
-    },
-
-    {
-        t: 's',
-        v: 'T1 [J]'
-    },
-    {
-        t: 's',
-        v: 'T2 [J]'
-    },
-    {
-        t: 's',
-        v: 'Ug [J]'
-    },
-    {
-        t: 's',
-        v: 'Uk [J]'
-    },
-    {
-        t: 's',
-        v: 'T+U [J]'
-    },
-    {
-        t: 's',
-        v: 'T-U [J]'
-    },
-];
-/**
- * @param {any[]} dataRows 
- * @param {Simulation} sim 
- */
-function ExportEnd(dataRows, sim)
-{
-    const headerRows = [
-        [
-            {
-                t: 's',
-                v: 'm1 [kg]'
-            },
-            {
-                t: 'n',
-                v: sim.tableMass.mass.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-                z: '0.00E+00'
-            },
-            {
-                t: 's',
-                v: 'm2 [kg]'
-            },
-            {
-                t: 'n',
-                v: sim.fallingMass.mass.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-                z: '0.00E+00'
-            },
-            {
-                t: 's',
-                v: 'l [m]'
-            },
-            {
-                t: 'n',
-                v: springRelaxLength.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-                z: '0.00E+00'
-            },
-            {
-                t: 's',
-                v: 'k [N/m]'
-            },
-            {
-                t: 'n',
-                v: sim.k.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN),
-                z: '0.00E+00'
-            },
-            {
-                t: 's',
-                v: 'g [m/s^2]'
-            },
-            {
-                t: 'n',
-                v: g.toSignificantDigits(5, Decimal.ROUND_HALF_EVEN)
-            },
-            {
-                t: 's',
-                v: 'dt [s]'
-            },
-            {
-                t: 'n',
-                v: sim.dt.toSignificantDigits(8, Decimal.ROUND_HALF_EVEN)
-            },
-            {
-                t: 's',
-                v: 'Peso accelerazione'
-            },
-            {
-                t: 'n',
-                v: sim.cavalieriWeight.toSignificantDigits(3, Decimal.ROUND_HALF_EVEN)
-            }
-        ],
-        tableHeaders
-    ];
-    const allRows = headerRows.concat(dataRows);
-    const worksheet = XLSX.utils.aoa_to_sheet(allRows);
-    function matr(letter)
-    {
-        return `${letter}3:${letter + String(allRows.length)}`;
-    }
-    function repeat(obj, count)
-    {
-        let arr = [];
-        for (let i = 0; i < count; i++)
-        {
-            arr.push(obj);
-        }
-        return arr;
-    }
-    worksheet[matr('K')] = {}
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('K'), matr('B') + '-' + matr('H'));
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('L'), `B1 * POWER(${matr('B')}, 2) * ${matr('F')}`);
-    
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('M'), `0.5 * B1 * (POWER(${matr('C')}, 2) + POWER(${matr('B')}*${matr('F')}, 2))`);
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('N'), `0.5 * D1 * POWER(${matr('I')}, 2)`);
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('O'), `J1 * D1 * ${matr('H')}`);
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('P'), `0.5 * H1 * POWER(${matr('K')} - F1, 2)`);
-    
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('Q'), [matr('M'), matr('N'), matr('O'), matr('P')].join(" + "));
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('R'), `${matr('M')}+${matr('N')}-${matr('O')}-${matr('P')}`);
-    
-    worksheet["!cols"] = repeat({
-        wch: 10
-    }, 18);//Enlarge width for a better view of the table
-
-    const workbook = XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Simulazione");
-    
-    if (!workbook.Props) 
-        workbook.Props = {};
-    
-        workbook.Props.Title = "Export dati simulazione";
-
-    XLSX.writeFileXLSX(workbook, 'export.xlsx');
-}
-function Export(onUpdate, onSuccess, onError, onFinally)
-{
-    const exportSim = new Simulation(simulation.Engine, tableMass.clone(), fallingMass.clone(), null, null, TableMeasures, dtCount);
+    const exportSim = new Simulation(
+        simulation.Engine, 
+        tableMass.clone(), 
+        fallingMass.clone(), 
+        null, null, 
+        TableMeasures, dtCount);
     RefreshSimulationParams(exportSim);
-    CalculateAll(exportSim, TimeMax, onUpdate, (data, sim) => {
-        try {
-            ExportEnd(data, sim);
-            onSuccess();
-        } catch(e) {
-            onError(e);
-        } finally {
-            onFinally();
+    if (!exportWorker)
+    {
+        exportWorker = new Worker('./assets/simulation/export-worker.js');
+        exportWorker.addEventListener('message', msg => {
+            const obj = JSON.parse(msg.data);
+            if (!('simulation' in obj))
+                return;
+            const id = Number(obj.simulation);
+            switch (obj.action)
+            {
+                case 'simulation-start': {
+                    ExportStarted(id);
+                } break;
+                case 'simulation-end': {
+                    ExportEnded(id);
+                } break;
+                case 'error-report': {
+                    const message = String(obj.message);
+                    ExportError(id, message);
+                } break;
+                case 'status-update': {
+                    const message = String(obj.message);
+                    ExportUpdate(id, message);
+                } break;
+                case 'send-file': {
+                    const file = obj.file;
+                    ReceiveFile(id, file);
+                } break;
+                default: {
+                    console.log(obj);
+                }
+            }
+        })
+        const sim = {
+            startSimulation: 'yes',
+            engine: exportSim.Engine.name,
+            table: {
+                mass: exportSim.tableMass.mass,
+
+                r: exportSim.tableMass.r,
+                r1: exportSim.tableMass.rPrime,
+                r2: exportSim.tableMass.rDoublePrime,
+
+                t: exportSim.tableMass.theta,
+                t1: exportSim.tableMass.thetaPrime,
+                t2: exportSim.tableMass.thetaDoublePrime
+            },
+            falling: {
+                mass: exportSim.fallingMass.mass,
+
+                h: exportSim.fallingMass.height,
+                h1: exportSim.fallingMass.heightPrime,
+                h2: exportSim.fallingMass.heightDoublePrime
+            },
+            dt: exportSim.dt,
+            dtCount: exportSim.dtCount,
+            k: exportSim.k,
+            cable: exportSim.cable,
+            cavalieriWeight: exportSim.cavalieriWeight,
+            timeMax: TimeMax,
+            exportFreq: dtExportCount
         }
-    });
+        //This will start the export
+        exportWorker.postMessage(JSON.stringify(sim));
+    }
 }
 exportBtn.onclick = () => {
     if (exportBtn.disabled) return;
@@ -328,23 +109,78 @@ exportBtn.onclick = () => {
     hideExport.disabled = true;
     exportBtn.disabled = true;
     const oldUnload = window.onbeforeunload;
-    window.onbeforeunload = () => 'Sei sicuro di voler chiudere la pagina?\nL\'export in corso andrà perso.';
-    Export(
-        percentage => {
-            exportBtn.innerHTML = 'Progresso: ' + (percentage * 100).toFixed(2) + '%';
-        },
-        () => log('Export effettuato'), 
-        e => {
-            exportBtn.innerHTML = '&Egrave; avvenuto un errore...';
-            err(e);
-        }, 
-        () => {
-            hideExport.disabled = false;
-            setTimeout(() => {
-                exportBtn.innerHTML = 'Esporta';
-            }, 1000);
-            exportBtn.disabled = false;
-            window.onbeforeunload = oldUnload;
-            reset();
-        });    
+    //window.onbeforeunload = () => 'Sei sicuro di voler chiudere la pagina?\nL\'export in corso andrà perso.';
+    Export();    
+    hideExport.disabled = false;
+    exportBtn.disabled = false;
 };
+
+function ExportStarted(id)
+{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>#${id}</td> <td id="progress-${id}"></td> <td id="action-${id}"><button type="button" onclick="StopExport(${id})">X</button></td>`;
+    tr.id = 'sim-' + id;
+    document.getElementById('export-body').appendChild(tr);
+}
+
+function ExportEnded(id)
+{
+    setTimeout(() => document.getElementById('progress-' + id).innerHTML = '<strong>Terminato</strong>', 500);
+}
+
+function ExportError(id, message)
+{
+    document.getElementById('progress-' + id).innerHTML = `<div class="error">${message}</div>`;
+}
+
+function ExportUpdate(id, message)
+{
+    document.getElementById('progress-' + String(id)).innerHTML = `<div class="message">${message}</div>`;
+}
+
+function b64toBlob (b64Data, contentType='application/octet-stream', chunkSize = 512) {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+  
+    for (let offset = 0; offset < byteCharacters.length; offset += chunkSize)
+    {
+      const slice = byteCharacters.slice(offset, offset + chunkSize);
+  
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++)
+      {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+  
+      byteArrays.push( new Uint8Array(byteNumbers) );
+    }
+  
+    return new Blob(byteArrays, { type: contentType });
+  }
+
+function ReceiveFile(id, allRows)
+{
+    const td = document.getElementById('action-' + id);
+    
+    try {
+        const blob = b64toBlob(
+            allRows, 
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+            1024);
+        const a = document.createElement('a');
+        a.download = 'export-' + id + '.xlsx';
+        a.innerHTML = 'Scarica';
+        a.href = window.URL.createObjectURL(blob);
+        td.removeChild(td.children[0]);
+        td.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            window.URL.revokeObjectURL(a.href);
+            a.href = 'javascript:alert("Non più disponibile")';
+            a.innerHTML = 'Non pi&ugrave; disponibile';
+        }, 100 * 1000);//Deletes the Blob after 100 seconds
+        
+    } catch (err) {
+        warn(err);
+    }
+}
