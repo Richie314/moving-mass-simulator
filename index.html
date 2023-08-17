@@ -27,6 +27,8 @@
     <!--Scripts-->
 
     <script defer src="./assets/page/log.js"></script>
+    <script defer src="./assets/page/msg.min.js"></script>
+    <script defer src="./assets/cookies.js"></script>
     <script defer src="./assets/page/ui.js"></script>
     <script defer src="./assets/page/parts.js"></script>
 
@@ -57,7 +59,6 @@
     <script src="./assets/page/math-setup.js"></script>
     <script defer src="https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js" referrerpolicy="no-referrer"></script>
 
-    <script defer src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script defer src="./assets/simulation/export-setup.js"></script>
 </head>
 <body>
@@ -95,36 +96,9 @@
             <i class="material-icons">functions</i>
         </button>
     </nav>
-    
-    <!--Basic tutorial on how to move in the 3d canvas-->
-    <div class="full-w grid four" id="tutorial-3d">
-        <ul class="span-3 no-list">
-            <li>
-                Utilizza il tasto sinistro del mouse per ruotare la vista 3d
-            </li>
-            <li>
-                Utilizza il tasto centrale del mouse per variare lo zoom
-            </li>
-            <li>
-                Utilizza il tasto destro del mouse per traslare la vista 3d
-            </li>
-        </ul>
-        <div class="center">
-            <button type="button" class="center" onclick="tutorialDivthree.style.height = '0';">
-                Ho capito <i class="material-icons">done_outline</i>
-            </button>
-        </div>
-    </div>
 
     <!--Windows that pop-up -->
-    <div class="pop-up" id="settings">
-        <h2>
-            Parametri della simulazione
-        </h2>
-        <button type="button" id="close-settings">
-            <i class="material-icons">close</i>
-        </button>
-
+    <div id="settings">
         <fieldset class="form grid two">
 
             <label for="dt-number">
@@ -301,14 +275,7 @@
             </div>
         </fieldset>
     </div>
-    <div class="pop-up" id="export-menu">
-        <h2>
-            Esporta la simulazione
-        </h2>
-        <button type="button" id="close-export">
-            <i class="material-icons">close</i>
-        </button>
-
+    <div id="export-menu">
         <p class="justify">
             Questa funzionalit&agrave; permette di esportare le posizioni dei corpi, le velocit&agrave; e 
             le accelerazioni in una tabella che verr&agrave; poi scaricata.<br />
@@ -348,52 +315,38 @@
             <button type="button" id="export-btn" class="span-2" title="Esporta">
                 Esporta
             </button>
-            <table class="exports">
-                <thead>
-                    <tr>
-                        <th>
-                            ID
-                        </th>
-                        <th>
-                            Stato
-                        </th>
-                        <th>
-                            Azioni
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="export-body">
-                    
-                </tbody>
-            </table>
         </fieldset>
+        <table class="exports">
+            <thead>
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Stato
+                    </th>
+                    <th>
+                        Azioni
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="export-body">
+                
+            </tbody>
+        </table>
     </div>
-    <div class="pop-up" id="shell">
-        <h2>
-            Console script
-        </h2>
-        <button type="button" onclick="document.getElementById('shell').classList.remove('show');ReEnableButtons();">
-            <i class="material-icons">close</i>
-        </button>
-        <div class="log-container span-2" id="logs">
-
-        </div>  
+    <div id="shell">
+        <div class="log-container span-2" id="logs"></div>  
     </div>
-    <div class="pop-up" id="math">
-        <h2>
-            Equazioni del moto
-        </h2>
-        <button type="button" onclick="document.getElementById('math').classList.remove('show');ReEnableButtons();">
-            <i class="material-icons">close</i>
-        </button>
+    <div id="math">
         <div class="equations">
-            <p>
+            <p class="justify">
                 La simulazione esamina un sistema coposto da due masse: una sopra un tavolo (piano senza attrito, zero dell'energia potenziale gravitazionale)
                 ed una sotto ad esso. Le due masse sono connesse tra di loro da un filo che attraversa il tavolo tramite un buco. Nessuna delle due masse &egrave;
                 in grado di attraversare tale fessura. Il filo viene considerato come sempre in tensione e vengono analizzati i due casi: in cui esso &egrave;
                 inestensibile e in cui &egrave; estensibile e quindi approssimato ad una molla con massa trascurabile.
             </p>
-            <p>
+            <p class="justify">
                 Dal men&ugrave; &egrave; possibile controllare i vari parametri iniziali, le procedure di integrazione numerica ed anche calcolare
                 l'intera simulazione senza visualizzarla per poi esportare i dati in un foglio di calcolo Microsoft Excel e condurre analisi pi&ugrave; approfondite.
             </p>
@@ -447,6 +400,19 @@
             </details>
         </div>
     </div>
+    <div id="tutorial" class="full-w grid four">
+        <ul class="span-3 no-list">
+            <li>
+                Utilizza il tasto sinistro del mouse per ruotare la vista 3d
+            </li>
+            <li>
+                Utilizza il tasto centrale del mouse per variare lo zoom
+            </li>
+            <li>
+                Utilizza il tasto destro del mouse per traslare la vista 3d
+            </li>
+        </ul>
+    </div>
     
     <!--Main canvas will go here-->
     <div class="screen-container full-screen" id="d3-container">
@@ -467,24 +433,6 @@
         </div>
     </div>
     <hr />
-
-    <!--Basic tutorial on how to move in the 2d canvas-->
-    <div class="full-w grid four" id="tutorial-2d">
-        <ul class="span-3 no-list">
-            <li>
-                Trascina l'oggetto nella visualizzazione dall'alto per variare la sua posizione iniziale
-            </li>
-            <li>
-                Fare ci&ograve; metter&agrave; in pausa la simulazione, 
-                &egrave; comunque consigliato riavviarla dopo aver effettuato spostamenti
-            </li>
-        </ul>
-        <div class="center">
-            <button type="button" class="center" onclick="tutorialDivtwo.style.height = '0';">
-                Ho capito <i class="material-icons">done_outline</i>
-            </button>
-        </div>
-    </div>
 
     <!--Top and side view will go here-->
     <div class="screen-container grid half-screen" id="d2-container">

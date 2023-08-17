@@ -24,6 +24,40 @@ const promptShellBtn = document.getElementById('show-terminal-btn');
  */
 const promptMathBtn = document.getElementById('show-math-btn');
 
+const WindowTemplate = Msg.factory( {
+    class: 'blue',
+    preset: 'popup',
+    position: 'center',
+    sideStack: 'vertical',
+
+    enable_titlebar: true,
+    center_titlebar: true,
+
+    persistent: false,
+    closeable: true,
+    close_on_escape: true,
+    close_others_on_show: true,
+    lock: true,
+    remove_after_close: false,
+    
+    window_min_height: '45vh',
+    window_height: 'auto',
+    window_max_height: '90vh',
+
+    window_min_width: '75vw',
+    window_width: 'auto',
+    window_max_width: '95vw',
+
+    after_show: DisableButtons,
+    after_close: ReEnableButtons
+} );
+
+const settings = document.getElementById('settings');
+const math = document.getElementById('math');
+const shell = document.getElementById('shell');
+const exportMenu = document.getElementById('export-menu');
+
+const tutorial = document.getElementById('tutorial');
 
 function DisableButtons() {
     pauseBtn.disabled = true;
@@ -42,49 +76,67 @@ function ReEnableButtons() {
     promptExportBtn.disabled = false;
 }
 promptMathBtn.onclick = () => {
-    document.getElementById('math').classList.add('show');
-    document.getElementById('math').scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-        inline: 'end'
-    });
-    DisableButtons();
+    math.style.display = 'block';
+    WindowTemplate.show(['Equazioni del moto', math]);
 }
 promptShellBtn.onclick = () => {
-    document.getElementById('shell').classList.add('show');
-    document.getElementById('shell').scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-        inline: 'end'
-    });
-    DisableButtons();
+    shell.style.display = 'block';
+    WindowTemplate.show(['Console script', shell]);
 }
 promptSettingsBtn.onclick = () => {
     pause();
-    document.getElementById('settings').classList.add('show');
-    document.getElementById('settings').scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-        inline: 'end'
-    });
-    DisableButtons();
+    settings.style.display = 'block';
+    WindowTemplate.show(['Parametri della simulazione', settings]);
 }
-document.getElementById('close-settings').onclick = () => {
-    document.getElementById('settings').classList.remove('show');
-    ReEnableButtons();
-}
+promptExportBtn.onclick = () => {
+    exportMenu.style.display = 'block';
+    WindowTemplate.show(['Esporta simulazione', exportMenu]);
+};
 
 /**********************************************/
-/*             Tutorial buttons               */
+/*                Tutorial                    */
 /**********************************************/
 
-const tutorialDivthree = document.getElementById('tutorial-3d');
-const tutorialDivtwo = document.getElementById('tutorial-2d');
-setTimeout(() => {
-    tutorialDivthree.style.height = '0';
-    tutorialDivtwo.style.height = '0';
-    log('Nascosti i tutorial');
-}, 60000);
+const TutorialWindow = Msg.factory({
+    class: 'blue',
+    preset: 'popup',
+    position: 'center',
+    sideStack: 'vertical',
+
+    enable_titlebar: true,
+    center_titlebar: true,
+
+    persistent: false,
+    closeable: true,
+    close_on_escape: true,
+    close_others_on_show: true,
+    lock: true,
+    remove_after_close: false,
+    
+    window_min_height: '45vh',
+    window_height: 'auto',
+    window_max_height: '90vh',
+
+    window_min_width: '75vw',
+    window_width: 'auto',
+    window_max_width: '95vw',
+
+    after_show: () => {
+        DisableButtons();
+        Cookies.set('tutorial', 1);
+    },
+    after_close: ReEnableButtons
+});
+if (Cookies.get('tutorial') != 1)
+{
+    ShowTutorial();
+}
+function ShowTutorial()
+{
+    tutorial.style.display = 'block';
+    TutorialWindow.show(['Leggi qui', tutorial]);
+}
+
 /**********************************************/
 /*              Form inputs                   */
 /**********************************************/
@@ -255,20 +307,4 @@ function UpdateTimeMax()
 timeMaxInput.addEventListener('input', UpdateTimeMax);
 timeMaxExponent.addEventListener('input', UpdateTimeMax);
 
-const hideExport = document.getElementById('close-export');
-const exportPopUp = document.getElementById('export-menu');
 const exportBtn = document.getElementById('export-btn');
-
-promptExportBtn.onclick = () => {
-    exportPopUp.classList.add('show');
-    DisableButtons();
-    exportPopUp.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-        inline: 'end'
-    });
-};
-hideExport.onclick = () => {
-    exportPopUp.classList.remove('show');
-    ReEnableButtons();
-};

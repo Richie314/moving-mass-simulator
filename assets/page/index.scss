@@ -116,50 +116,27 @@ nav {
         z-index: unset !important;
     }
 }
-.pop-up {
-    position: absolute;
-    z-index: 100;
+#settings, #math, #export-menu, #shell, #tutorial {
     display: none;
-    width: 90%;
-    margin: 1em 5% auto 5%;
-    height: fit-content;
-    max-height: 80vh;
-    overflow-y: auto;
-    color: black;
-    background-color: white;
-    grid-template-columns: calc(100% - 1.5em) 1.5em;
-    grid-template-rows: 1.5em auto;
-    gap: 0;
-    border: 1px solid;
-
-    &.show {
-        display: grid;
+    button, select, input {
+        cursor: pointer;
+        color:rgb(7, 17, 120);
+        background-color: azure;
     }
-
-    & > :is(.equations, .form) {
-        grid-column-start: 1;
-        grid-column-end: 3;
+    button {
+        border: none;
+        border-radius: 4.5px;
+        margin-block: .8em;
     }
-    & > :is(h1,h2,h3,h4,h5,h6)
-    {
-        margin: 0;
+    select {
+        border: .7px solid;
         text-align: center;
-        user-select: none;
     }
-    & > button[type=button] {
-        color: darkred;
-        background-color: red;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    & > p {
-        padding-inline: .9em;
-    }
-    & > :last-child {
-        margin-bottom: 1.3em;
+    input[type=number], input[type=text] {
+        cursor: text;
     }
 }
+
 .screen-container {
     width: min(100%, 1200px);
     margin-inline: auto;
@@ -222,8 +199,27 @@ hr {
     height: fit-content;
 }
 .equations {
+    & > details {
+        text-align: justify;
+    }
     & > p {
+        text-align: justify;
         width: calc(100% - 2em);
         margin-inline: 2em;
+    }
+}
+
+.exports {
+    width: 100%;
+    margin-inline: 0;
+    padding: 0;
+    margin-block: 1em;
+    height: auto;
+    overflow: hidden auto;
+    tr {
+        background-color: rgb(107, 118, 242);
+        &:nth-child(even) {
+            background-color: rgb(40, 53, 243);
+        }
     }
 }

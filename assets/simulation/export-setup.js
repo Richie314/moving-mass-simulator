@@ -56,39 +56,47 @@ function Export()
                     console.log(obj);
                 }
             }
-        })
-        const sim = {
-            startSimulation: 'yes',
-            engine: exportSim.Engine.name,
-            table: {
-                mass: exportSim.tableMass.mass,
-
-                r: exportSim.tableMass.r,
-                r1: exportSim.tableMass.rPrime,
-                r2: exportSim.tableMass.rDoublePrime,
-
-                t: exportSim.tableMass.theta,
-                t1: exportSim.tableMass.thetaPrime,
-                t2: exportSim.tableMass.thetaDoublePrime
-            },
-            falling: {
-                mass: exportSim.fallingMass.mass,
-
-                h: exportSim.fallingMass.height,
-                h1: exportSim.fallingMass.heightPrime,
-                h2: exportSim.fallingMass.heightDoublePrime
-            },
-            dt: exportSim.dt,
-            dtCount: exportSim.dtCount,
-            k: exportSim.k,
-            cable: exportSim.cable,
-            cavalieriWeight: exportSim.cavalieriWeight,
-            timeMax: TimeMax,
-            exportFreq: dtExportCount
-        }
-        //This will start the export
-        exportWorker.postMessage(JSON.stringify(sim));
+        });
+        exportWorker.addEventListener('error', msg => {
+            err(msg.message);
+            const old_text = exportBtn.innerHTML;
+            exportBtn.innerHTML = 'Errore in worker!!';
+            setTimeout(() => exportBtn.innerHTML = old_text, 4000);
+            exportWorker.terminate();
+            exportWorker = null;
+        });
     }
+    const sim = {
+        startSimulation: 'yes',
+        engine: exportSim.Engine.name,
+        table: {
+            mass: exportSim.tableMass.mass,
+
+            r: exportSim.tableMass.r,
+            r1: exportSim.tableMass.rPrime,
+            r2: exportSim.tableMass.rDoublePrime,
+
+            t: exportSim.tableMass.theta,
+            t1: exportSim.tableMass.thetaPrime,
+            t2: exportSim.tableMass.thetaDoublePrime
+        },
+        falling: {
+            mass: exportSim.fallingMass.mass,
+
+            h: exportSim.fallingMass.height,
+            h1: exportSim.fallingMass.heightPrime,
+            h2: exportSim.fallingMass.heightDoublePrime
+        },
+        dt: exportSim.dt,
+        dtCount: exportSim.dtCount,
+        k: exportSim.k,
+        cable: exportSim.cable,
+        cavalieriWeight: exportSim.cavalieriWeight,
+        timeMax: TimeMax,
+        exportFreq: dtExportCount
+    }
+    //This will start the export
+    exportWorker.postMessage(JSON.stringify(sim));
 }
 exportBtn.onclick = () => {
     if (exportBtn.disabled) return;
@@ -106,19 +114,17 @@ exportBtn.onclick = () => {
         `Cliccare Ok per iniziare...`))
         return; 
     reset();
-    hideExport.disabled = true;
     exportBtn.disabled = true;
     const oldUnload = window.onbeforeunload;
     //window.onbeforeunload = () => 'Sei sicuro di voler chiudere la pagina?\nL\'export in corso andrà perso.';
     Export();    
-    hideExport.disabled = false;
     exportBtn.disabled = false;
 };
 
 function ExportStarted(id)
 {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>#${id}</td> <td id="progress-${id}"></td> <td id="action-${id}"><button type="button" onclick="StopExport(${id})">X</button></td>`;
+    tr.innerHTML = `<td>#${id}</td> <td id="progress-${id}"></td> <td id="action-${id}"><button type="button" onclick="StopExport(${id})"> <i class="material-icons">close</i> </button></td>`;
     tr.id = 'sim-' + id;
     document.getElementById('export-body').appendChild(tr);
 }
@@ -150,13 +156,13 @@ function b64toBlob (b64Data, contentType='application/octet-stream', chunkSize =
       for (let i = 0; i < slice.length; i++)
       {
         byteNumbers[i] = slice.charCodeAt(i);
-      }
+      }      
   
       byteArrays.push( new Uint8Array(byteNumbers) );
     }
   
     return new Blob(byteArrays, { type: contentType });
-  }
+}
 
 function ReceiveFile(id, allRows)
 {
@@ -169,7 +175,7 @@ function ReceiveFile(id, allRows)
             1024);
         const a = document.createElement('a');
         a.download = 'export-' + id + '.xlsx';
-        a.innerHTML = 'Scarica';
+        a.innerHTML = 'Scarica <i class="material-icons">file_download</i>';
         a.href = window.URL.createObjectURL(blob);
         td.removeChild(td.children[0]);
         td.appendChild(a);
@@ -183,4 +189,14 @@ function ReceiveFile(id, allRows)
     } catch (err) {
         warn(err);
     }
+}
+function StopSimulation(id)
+{
+    if (!exportWorker)
+        return;
+    const obj = {
+        stopSimulation: 'yes',
+        id: id
+    };
+    exportWorker.postMessage(JSON.stringify(obj));
 }

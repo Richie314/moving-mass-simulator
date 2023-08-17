@@ -208,6 +208,8 @@ class ExportRunning
             timeMax = new Decimal(timeMax);
         }
         this.timeMax = timeMax;
+        this.isRunning = false;
+        this.stop = false;
     }
 
     Update(percentage)
@@ -292,6 +294,7 @@ class ExportRunning
             ],
             tableHeaders
         ].concat(array);
+        this.isRunning = false;
         this.GenerateAndSaveExcel(allRows);
     }
 
@@ -341,12 +344,18 @@ class ExportRunning
         //SendFile( this.id, allRows );
     }
 
+    Abort()
+    {
+        this.stop = true;
+    }
+
     async Calculate()
     {
         let arr = [
             getDataFunction(this.sim).map(mapDataFunction)
         ];
         SimulationStart(this.id);
+        this.isRunning = true;
         await this.Iterate(arr, this.timeMax, this.sim.dtCount);
     }
 
@@ -357,6 +366,11 @@ class ExportRunning
      */
     async Iterate(arr, timeMax, count)
     {
+        if (this.stop)
+        {
+            this.Error('Simulazione annullata!');
+            return;
+        }
         if (!this.sim.elapsedTime.lessThan(timeMax))
         {
             this.Success();
@@ -375,7 +389,7 @@ class ExportRunning
     }
 }
 let export_id = 1;
-
+const exports = {};
 function StartExport(obj)
 {
     const tableMass = new MassRotatingObject(
@@ -439,6 +453,7 @@ function StartExport(obj)
         new Vector3(), dtExportCount);
     const timeMax = obj.timeMax;
     const curr_export = new ExportRunning(export_id++, sim, timeMax);
+    exports[curr_export.id] = curr_export;
     curr_export.Calculate().then(() => console.log('Calcolo simulazione terminato'));
 }
 
@@ -447,6 +462,16 @@ self.onmessage = msg => {
     if ('startSimulation' in obj)
     {
         StartExport(obj);
+        return;
+    }
+    if ('stopSimulation' in obj)
+    {
+        const id = Number(obj.id);
+        if (exports[id] && exports[id].isRunning)
+        {
+            exports[id].Abort();
+            delete exports[id];
+        }
         return;
     }
 }
