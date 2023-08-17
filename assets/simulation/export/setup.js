@@ -26,48 +26,12 @@ function Export()
     RefreshSimulationParams(exportSim);
     if (!exportWorker)
     {
-        exportWorker = new Worker('./assets/simulation/export-worker.js', {
+        exportWorker = new Worker('./assets/simulation/export/worker.js', {
             type: 'classic',
-            name: 'Simulation-export'
+            name: 'Simulation Export Worker'
         });
-        exportWorker.addEventListener('message', msg => {
-            const obj = JSON.parse(msg.data);
-            if (!('simulation' in obj))
-                return;
-            const id = Number(obj.simulation);
-            switch (obj.action)
-            {
-                case 'simulation-start': {
-                    ExportStarted(id);
-                } break;
-                case 'simulation-end': {
-                    ExportEnded(id);
-                } break;
-                case 'error-report': {
-                    const message = String(obj.message);
-                    ExportError(id, message);
-                } break;
-                case 'status-update': {
-                    const message = String(obj.message);
-                    ExportUpdate(id, message);
-                } break;
-                case 'send-file': {
-                    const file = obj.file;
-                    ReceiveFile(id, file);
-                } break;
-                default: {
-                    console.log(obj);
-                }
-            }
-        });
-        exportWorker.addEventListener('error', msg => {
-            err(msg.message);
-            const old_text = exportBtn.innerHTML;
-            exportBtn.innerHTML = '<strong>Errore nel worker!</strong>';
-            setTimeout(() => exportBtn.innerHTML = old_text, 4000);
-            exportWorker.terminate();
-            exportWorker = null;
-        });
+        exportWorker.addEventListener('message', HandleWorkerMsg);
+        exportWorker.addEventListener('error', HandleWorkerError);
     }
     const sim = {
         startSimulation: 'yes',
@@ -98,9 +62,52 @@ function Export()
         timeMax: TimeMax,
         exportFreq: dtExportCount
     }
-    //This will start the export
+    // We start a simulation in the worker
     exportWorker.postMessage(JSON.stringify(sim));
 }
+
+function HandleWorkerMsg(msg)
+{
+    const obj = JSON.parse(msg.data);
+    if (!('simulation' in obj))
+        return;
+    const id = Number(obj.simulation);
+    switch (obj.action)
+    {
+        case 'simulation-start': {
+            ExportStarted(id);
+        } break;
+        case 'simulation-end': {
+            ExportEnded(id);
+        } break;
+        case 'error-report': {
+            const message = String(obj.message);
+            ExportError(id, message);
+        } break;
+        case 'status-update': {
+            const message = String(obj.message);
+            ExportUpdate(id, message);
+        } break;
+        case 'send-file': {
+            const file = obj.file;
+            ReceiveFile(id, file);
+        } break;
+        default: {
+            console.log(obj);
+        }
+    }
+}
+
+function HandleWorkerError(msg)
+{
+    err(msg.message);
+    const old_text = exportBtn.innerHTML;
+    exportBtn.innerHTML = '<strong>Errore nel worker!</strong>';
+    setTimeout(() => exportBtn.innerHTML = old_text, 4000);
+    exportWorker.terminate();
+    exportWorker = null;
+}
+
 exportBtn.onclick = () => {
     if (exportBtn.disabled) return;
     pause();
@@ -134,46 +141,47 @@ function ExportStarted(id)
 
 function ExportEnded(id)
 {
-    setTimeout(() => document.getElementById('progress-' + id).innerHTML = '<strong>Terminato</strong>', 500);
+    const progress = document.getElementById('progress-' + id);
+    if (!progress)
+        return;
+    setTimeout(() => progress.innerHTML = '<strong>Terminato</strong>', 500);
 }
 
 function ExportError(id, message)
 {
-    document.getElementById('progress-' + id).innerHTML = `<div class="error">${message}</div>`;
+    const progress = document.getElementById('progress-' + id);
+    if (!progress)
+        return;
+        progress.innerHTML = `<div class="error">${message}</div>`;
 }
 
 function ExportUpdate(id, message)
 {
-    document.getElementById('progress-' + String(id)).innerHTML = `<div class="message">${message}</div>`;
+    const progress = document.getElementById('progress-' + id);
+    if (!progress)
+        return;
+    progress.innerHTML = `<div class="message">${message}</div>`;
 }
 
-function b64toBlob (b64Data, contentType='application/octet-stream', chunkSize = 512) {
-    const byteCharacters = atob(b64Data);
-    const byteArrays = [];
-  
-    for (let offset = 0; offset < byteCharacters.length; offset += chunkSize)
-    {
-      const slice = byteCharacters.slice(offset, offset + chunkSize);
-  
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++)
-      {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }      
-  
-      byteArrays.push( new Uint8Array(byteNumbers) );
-    }
-  
-    return new Blob(byteArrays, { type: contentType });
+function ReceiveFileToGenerate(id, allRows)
+{
+    const workbook = GenerateWorkBook(allRows);
+    const file_string = WorkBookToString(workbook);
+    ReceiveFile(id, file_string);
 }
-
-function ReceiveFile(id, allRows)
+function ReceiveFile(id, file_string)
 {
     const td = document.getElementById('action-' + id);
-    
+    if (typeof file_string !== 'string')
+    {
+        // The file still needs to be generated,
+        // there has been an error in the worker
+        ReceiveFileToGenerate(id, file_string);
+        return;
+    }
     try {
         const blob = b64toBlob(
-            allRows, 
+            file_string, 
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
             1024);
         const a = document.createElement('a');
@@ -193,7 +201,7 @@ function ReceiveFile(id, allRows)
         warn(err);
     }
 }
-function StopSimulation(id)
+function StopExport(id)
 {
     if (!exportWorker)
         return;

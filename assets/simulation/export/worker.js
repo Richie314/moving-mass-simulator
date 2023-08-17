@@ -1,28 +1,19 @@
 self.importScripts(
     'https://unpkg.com/decimal.js@latest/decimal.js',
-    './vectors.js',
-    './masses.js',
-    './engine/base.js',
-    './engine/taylor.js',
-    './engine/runge-kutta-nistrom.js',
-    './simulation.js',
-    'https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js',
-    //'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.6/xlsx.full.min.js'
+    '../vectors.js',
+    '../masses.js',
+    '../engine/base.js',
+    '../engine/taylor.js',
+    '../engine/runge-kutta-nistrom.js',
+    '../simulation.js',
+    './utils.js'
 );
-
-/**
- * @param {any} obj the object to repeat
- * @param {number} count the times to repeat obj
- * @returns {any[]} an array like [obj, obj, ..., obj] count times
- */
-function repeat(obj, count)
-{
-    let arr = [];
-    for (let i = 0; i < count; i++)
-    {
-        arr.push(obj);
-    }
-    return arr;
+'use strict';
+try {
+    //This may causa a NetworkError
+    self.importScripts('https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js');
+} catch(err) {
+    console.warn(err);
 }
 
 function UpdateExport(id, string)
@@ -303,49 +294,19 @@ class ExportRunning
      */
     GenerateAndSaveExcel(allRows)
     {
-        /**
-         * @param {string} letter 
-         * @returns {string}
-         */
-        function matr(letter)
+        if (!hasXLSX()) //XLSX library failed to load
         {
-            return `${letter}3:${letter + String(allRows.length)}`;
+            SendFile(this.id, allRows);
+            return;
         }
-        
-        const worksheet = XLSX.utils.aoa_to_sheet(allRows);
-        worksheet[matr('K')] = {}
-        XLSX.utils.sheet_set_array_formula(worksheet, matr('K'), matr('B') + '-' + matr('H'));
-        XLSX.utils.sheet_set_array_formula(worksheet, matr('L'), `B1 * POWER(${matr('B')}, 2) * ${matr('F')}`);
-        
-        XLSX.utils.sheet_set_array_formula(worksheet, matr('M'), `0.5 * B1 * (POWER(${matr('C')}, 2) + POWER(${matr('B')}*${matr('F')}, 2))`);
-        XLSX.utils.sheet_set_array_formula(worksheet, matr('N'), `0.5 * D1 * POWER(${matr('I')}, 2)`);
-        XLSX.utils.sheet_set_array_formula(worksheet, matr('O'), `J1 * D1 * ${matr('H')}`);
-        XLSX.utils.sheet_set_array_formula(worksheet, matr('P'), `0.5 * H1 * POWER(${matr('K')} - F1, 2)`);
-        
-        XLSX.utils.sheet_set_array_formula(worksheet, matr('Q'), [matr('M'), matr('N'), matr('O'), matr('P')].join(" + "));
-        XLSX.utils.sheet_set_array_formula(worksheet, matr('R'), `${matr('M')}+${matr('N')}-${matr('O')}-${matr('P')}`);
-        
-        worksheet["!cols"] = repeat({
-            wch: 12
-        }, 18);//Enlarge width for a better view of the table
-
-        const workbook = XLSX.utils.book_new();
-
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Simulazione");
-        
-        if (!workbook.Props) 
-            workbook.Props = {};
-        
-            workbook.Props.Title = "Export dati simulazione";
-        SendFile(this.id, XLSX.writeXLSX(workbook, {
-            type: 'base64', compression: true
-        }));
-        
-        //SendFile( this.id, allRows );
+        const workbook = GenerateWorkBook(allRows)
+        const file_string = WorkBookToString(workbook);
+        SendFile(this.id, file_string);
     }
 
     Abort()
     {
+        console.log('Simulazione #' + this.id + ' annullata!')
         this.stop = true;
     }
 
@@ -364,7 +325,7 @@ class ExportRunning
      * @param {Decimal} timeMax 
      * @param {Decimal|number} count 
      */
-    async Iterate(arr, timeMax, count)
+    async Iterate(arr, timeMax, count, countDelay = 0)
     {
         if (this.stop)
         {
@@ -377,6 +338,13 @@ class ExportRunning
             this.End(arr);
             return;
         }
+        if (++countDelay === 5)
+        {
+            //Necessary for keeping the communication with the main thread open and not filled with junk updates
+            await this.delay(2);
+            this.Update( this.sim.elapsedTime.div(timeMax).toNumber() );
+            countDelay = 0;
+        }
         if (!this.sim.executeIterations(count))
         {
             this.Error('Errore avvenuto: simulazione terminata!');
@@ -384,8 +352,11 @@ class ExportRunning
             return;
         }
         arr.push( getDataFunction(this.sim).map(mapDataFunction) );
-        this.Update( this.sim.elapsedTime.div(timeMax).toNumber() );
-        await this.Iterate(arr, timeMax, count);
+        await this.Iterate(arr, timeMax, count, countDelay);
+    }
+    async delay(ms)
+    {
+        return new Promise(resolve => setTimeout(resolve, ms))
     }
 }
 let export_id = 1;
@@ -467,6 +438,7 @@ self.onmessage = msg => {
     if ('stopSimulation' in obj)
     {
         const id = Number(obj.id);
+        console.log('Stopping simulation #' + id)
         if (exports[id] && exports[id].isRunning)
         {
             exports[id].Abort();

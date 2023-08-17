@@ -237,6 +237,17 @@ hr {
 .exports tr {
   background-color: rgb(107, 118, 242);
 }
-.exports tr:nth-child(even) {
+.exports > tbody > tr:nth-child(odd) {
   background-color: rgb(40, 53, 243);
+}
+.exports a {
+  color: inherit;
+  text-decoration: none;
+  font-size: larger;
+}
+.exports a:hover {
+  text-decoration: underline;
+}
+.exports a i {
+  font-size: smaller;
 }/*# sourceMappingURL=index.css.map */
