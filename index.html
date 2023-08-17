@@ -16,7 +16,7 @@
 
     <!--Necessari per ridurre latency della mole di script-->
     <link rel="preconnect" href="https://unpkg.com/" crossorigin="anonymous" />
-    <link rel="dns-prefetch" href="https://unpkg.com/" />
+    <link rel="dns-prefetch" href="https://unpkg.com/" referrerpolicy="no-referrer"/>
     
     <!--Styles-->
 
@@ -59,6 +59,10 @@
     <script src="./assets/page/math-setup.js"></script>
     <script defer src="https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js" referrerpolicy="no-referrer"></script>
 
+    <!-- Cache the XLSX script -->
+    <!--
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.6/xlsx.full.min.js" referrerpolicy="no-referrer"></script>
+    -->
     <script defer src="./assets/simulation/export-setup.js"></script>
 </head>
 <body>

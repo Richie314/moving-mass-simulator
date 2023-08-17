@@ -1,4 +1,3 @@
-'use strict';
 self.importScripts(
     'https://unpkg.com/decimal.js@latest/decimal.js',
     './vectors.js',
@@ -7,7 +6,8 @@ self.importScripts(
     './engine/taylor.js',
     './engine/runge-kutta-nistrom.js',
     './simulation.js',
-    'https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js'
+    'https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js',
+    //'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.6/xlsx.full.min.js'
 );
 
 /**

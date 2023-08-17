@@ -26,7 +26,10 @@ function Export()
     RefreshSimulationParams(exportSim);
     if (!exportWorker)
     {
-        exportWorker = new Worker('./assets/simulation/export-worker.js');
+        exportWorker = new Worker('./assets/simulation/export-worker.js', {
+            type: 'classic',
+            name: 'Simulation-export'
+        });
         exportWorker.addEventListener('message', msg => {
             const obj = JSON.parse(msg.data);
             if (!('simulation' in obj))
@@ -60,7 +63,7 @@ function Export()
         exportWorker.addEventListener('error', msg => {
             err(msg.message);
             const old_text = exportBtn.innerHTML;
-            exportBtn.innerHTML = 'Errore in worker!!';
+            exportBtn.innerHTML = '<strong>Errore nel worker!</strong>';
             setTimeout(() => exportBtn.innerHTML = old_text, 4000);
             exportWorker.terminate();
             exportWorker = null;
