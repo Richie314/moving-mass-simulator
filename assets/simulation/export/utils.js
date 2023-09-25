@@ -68,7 +68,7 @@ function WorkBookToString(wb)
     {
         return '';
     }
-    console.log(XLSX);
+    // console.log(XLSX);
     return XLSX.writeXLSX(wb, { type: 'base64', compression: true });
 }
 

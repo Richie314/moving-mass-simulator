@@ -296,11 +296,13 @@ class ExportRunning
     {
         if (!hasXLSX()) //XLSX library failed to load
         {
+            console.log('Worder does not have XLSX library loaded. It will send the json to the main thread for file creation');
             SendFile(this.id, allRows);
             return;
         }
         const workbook = GenerateWorkBook(allRows)
         const file_string = WorkBookToString(workbook);
+        console.log('Worder will send the file as BASE64 to the main thread to save it');
         SendFile(this.id, file_string);
     }
 
