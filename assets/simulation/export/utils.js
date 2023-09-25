@@ -45,7 +45,7 @@ function GenerateWorkBook(allRows)
     XLSX.utils.sheet_set_array_formula(worksheet, matr('P'), `0.5 * H1 * POWER(${matr('K')} - F1, 2)`);
     
     XLSX.utils.sheet_set_array_formula(worksheet, matr('Q'), [matr('M'), matr('N'), matr('O'), matr('P')].join(" + "));
-    XLSX.utils.sheet_set_array_formula(worksheet, matr('R'), `${matr('M')}+${matr('N')}-${matr('O')}-${matr('P')}`);
+    XLSX.utils.sheet_set_array_formula(worksheet, matr('R'), `${matr('M')} + ${matr('N')} - ${matr('O')} - ${matr('P')}`);
     
     worksheet["!cols"] = repeat({
         wch: 12
