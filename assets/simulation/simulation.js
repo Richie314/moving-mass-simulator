@@ -44,6 +44,8 @@ class Simulation
         this.tableStaticFrequencyValue = 0;
         this.tableStaticFrequencyMax = 10;
 
+        this.Engine.calculate_and_set_acc(this.tableMass, this.fallingMass);
+
         //
         //    Canvas part
         //
@@ -296,8 +298,8 @@ class Simulation
                 return false; //An error was already caught but still happened
 
         } catch (err) {
-
-            warn(err); //Log the unexpected error
+            //Log the unexpected error
+            console.warn(err); 
             return false;
         }
 
@@ -344,7 +346,6 @@ class Simulation
         } catch(err) {
             warn(err);
         } finally {
-            //this.Engine.getNewAccelerations(tableMass, fallingMass);
             return this;
         }
     }
@@ -392,7 +393,9 @@ class Simulation
     changeEngine(newEngine)
     {
         this.Engine = newEngine;
-        return this.refresh();
+        this.refresh();
+        this.Engine.calculate_and_set_acc(this.tableMass, this.fallingMass);
+        return this;
     }
 
     /**

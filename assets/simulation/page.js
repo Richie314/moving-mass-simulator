@@ -88,6 +88,10 @@ const fallingMass = new MassFallingObject(
  */
 const SimpleEngine2 = new TaylorEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt, cavalieriWeight);
 const SimpleEngine3 = new TaylorEngine3(springRelaxLength, springConstant, dt, cavalieriWeight);
+
+const RKE_Engine2 = new EulerEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt);
+const RKE_Engine3 = new EulerEngine3(springRelaxLength, springConstant, dt);
+
 const RKN_Engine2 = new RungeKuttaNistromEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt);
 const RKN_Engine3 = new RungeKuttaNistromEngine3(springRelaxLength, springConstant, dt);
 
@@ -120,7 +124,7 @@ function RefreshSimulationParams(sim)
     
     sim.updateSpring(springConstant, springRelaxLength);
 
-    if (smoothRefresher++ == 4)
+    if (smoothRefresher++ % 4 == 0)
     {
         rHtml.innerHTML = sim.tableMass.r.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
         rpHtml.innerHTML = sim.tableMass.rPrime.toSignificantDigits(6, Decimal.ROUND_HALF_EVEN);
@@ -149,7 +153,7 @@ function RefreshSimulationParams(sim)
         itarationCountHtml.innerHTML = simulation.iterationCount.toExponential(8, Decimal.ROUND_DOWN);
         elapsedTimeHtml.innerHTML = simulation.elapsedTime.toExponential(9, Decimal.ROUND_DOWN);
 
-        smoothRefresher = 0;
+        smoothRefresher = 1;
     }
 }
 simulation.onRefresh(RefreshSimulationParams);
@@ -166,7 +170,17 @@ function UpdateEngine()
             simulation.changeEngine(SimpleEngine2);
         }
     }
-    function SetRungeKuttaEngine()
+    function SetRungeKuttaEulerEngine()
+    {
+        if (isNotFixedLength.checked)
+        {
+            simulation.changeEngine(RKE_Engine3);
+        } else {
+            RKN_Engine2.cableLength = simulation.cable;
+            simulation.changeEngine(RKE_Engine2);
+        }
+    }
+    function SetRungeKuttaNistromEngine()
     {
         if (isNotFixedLength.checked)
         {
@@ -181,8 +195,11 @@ function UpdateEngine()
         case "simple":
             SetSimpleEngine();
             break;
-        case "runge-kutta":
-            SetRungeKuttaEngine();
+        case "runge-kutta-euler":
+            SetRungeKuttaEulerEngine();
+            break;
+        case "runge-kutta-nystrom":
+            SetRungeKuttaNistromEngine();
             break;
     }
     

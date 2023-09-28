@@ -1,17 +1,14 @@
+
 //Base class of the engine
-class TaylorEngine extends EngineBase
+class EulerEngine extends EngineBase
 {
     /**
      * @param {Decimal|number} dt 
-     * @param {Decimal|number} cavalieriWeight 
      * @param {string} name The name of the engine
      */
-    constructor(dt, cavalieriWeight, name = 'Taylor-Second-Order')
+    constructor(dt, name = 'Euler-Partitioned')
     {
         super(dt, name);
-
-        //Sanitize the cavalieriWeight
-        cavalieriWeight = new Decimal(cavalieriWeight);
     }
 
     /**
@@ -22,10 +19,22 @@ class TaylorEngine extends EngineBase
     executeSingleIteration(tableMass, fallingMass)
     {
         try {
+            
+            //                  .
+            // Calculate f(y_n, y_n) but not use it yet
             this.calculate_and_set_acc(tableMass, fallingMass);
+
+            //                .
+            //y_n+1 = y_n + h y_n
+
+            //.       .       ..
+            //y_n+1 = y_n + h y_n
+            
+            //                          .
+            // Calculate y_n+1 and then y_n+1
             this.applySpeedsAndForces(tableMass, fallingMass);
         } catch (err) {
-            console.warn(err);
+            warn(err);
             return false;
         }
         return true;
@@ -40,8 +49,8 @@ class TaylorEngine extends EngineBase
     {
         
         //Apply speeds: update position
-        this.applySpeed(tableMass, tableMass.acceleration, tableMass.speed, this.dt, this.cavalieriWeight);
-        this.applySpeed(fallingMass, fallingMass.acceleration, fallingMass.speed, this.dt, this.cavalieriWeight);
+        this.applySpeed(tableMass, tableMass.acceleration, tableMass.speed, this.dt, 0);
+        this.applySpeed(fallingMass, fallingMass.acceleration, fallingMass.speed, this.dt, 0);
 
         //Apply accelerations: update speeds
         this.applyAcceleration(fallingMass, fallingMass.acceleration, this.dt);
@@ -51,19 +60,17 @@ class TaylorEngine extends EngineBase
     }
 }
 
-
 //Simple engine, two variables
-class TaylorEngine2 extends TaylorEngine
+class EulerEngine2 extends EulerEngine
 {
     /**
      * Builder
      * @param {Decimal|number} cableLength The cable length, in meters
      * @param {Decimal|number} dt The dt intervas, in seconds
-     * @param {Decimal|number} cavalieriWeight The weight of the acceleration movement during the numeric integration
      */
-    constructor (cableLength, dt, cavalieriWeight)
+    constructor (cableLength, dt)
     {
-        super(dt, cavalieriWeight, 'Taylor - 2 varibles');
+        super(dt, 'Euler - 2 varibles');
 
         //Sanitize the input
         if (!Decimal.isDecimal(cableLength))
@@ -71,22 +78,6 @@ class TaylorEngine2 extends TaylorEngine
             cableLength = new Decimal(cableLength);
         }
         this.cableLength = cableLength;
-    }
-
-    /**
-     * Function that rebounds the state values of the objects
-     * @param {MassRotatingObject} tableMass 
-     * @param {MassFallingObject} fallingMass 
-     */
-    correctValues(tableMass, fallingMass)
-    {
-        //Prevent values from diverging: we set them both to the medium value
-        tableMass.rPrime = fallingMass.heightPrime = ( tableMass.rPrime.plus(fallingMass.heightPrime) ).div(2);
-        
-        //Since cableLength = r + height, r + height - cableLength = error
-        const diff = (tableMass.r.plus( fallingMass.height.abs() ).minus( this.cableLength ) ).div(2);
-        tableMass.r = tableMass.r.minus( diff );
-        fallingMass.height = fallingMass.height.plus( diff );
     }
 
     /**
@@ -103,18 +94,17 @@ class TaylorEngine2 extends TaylorEngine
 }
 
 //More sophisticated engine, three variables
-class TaylorEngine3 extends TaylorEngine
+class EulerEngine3 extends EulerEngine
 {
     /**
      * Builder
      * @param {Decimal|number} cableStartLength Start length, zero of the spring energy, in meters
      * @param {Decimal|number} k The spring constant of hooke's law, N/m
      * @param {Decimal|number} dt The time interval, in seconds
-     * @param {Decimal|number} cavalieriWeight The weight of the acceleration movement during the numeric integration
      */
-    constructor (cableStartLength, k, dt, cavalieriWeight)
+    constructor (cableStartLength, k, dt)
     {
-        super(dt, cavalieriWeight, 'Taylor - 3 variables');
+        super(dt, 'Euler - 3 variables');
 
         //Sanitize the inputs
         if (!Decimal.isDecimal(cableStartLength))

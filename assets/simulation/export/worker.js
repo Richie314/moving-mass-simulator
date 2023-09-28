@@ -4,6 +4,7 @@ self.importScripts(
     '../masses.js',
     '../engine/base.js',
     '../engine/taylor.js',
+    '../engine/runge-kutta-euler.js',
     '../engine/runge-kutta-nistrom.js',
     '../simulation.js',
     './utils.js'
@@ -296,13 +297,13 @@ class ExportRunning
     {
         if (!hasXLSX()) //XLSX library failed to load
         {
-            console.log('Worder does not have XLSX library loaded. It will send the json to the main thread for file creation');
+            console.log('Worker does not have XLSX library loaded. It will send the json to the main thread for file creation');
             SendFile(this.id, allRows);
             return;
         }
         const workbook = GenerateWorkBook(allRows)
         const file_string = WorkBookToString(workbook);
-        console.log('Worder will send the file as BASE64 to the main thread to save it');
+        console.log('Worker will send the file as BASE64 to the main thread to save it');
         SendFile(this.id, file_string);
     }
 
@@ -399,6 +400,10 @@ function StartExport(obj)
     const Engines = [
         new TaylorEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt, cavalieriWeight),
         new TaylorEngine3(springRelaxLength, springConstant, dt, cavalieriWeight),
+
+        new EulerEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt),
+        new EulerEngine3(springRelaxLength, springConstant, dt),
+
         new RungeKuttaNistromEngine2(tableMass.r.plus( fallingMass.height.abs() ), dt),
         new RungeKuttaNistromEngine3(springRelaxLength, springConstant, dt)
     ];
@@ -415,6 +420,7 @@ function StartExport(obj)
 
     if (!Engine)
     {
+        console.warn('Engine not found!');
         return;
     }
 
@@ -424,6 +430,7 @@ function StartExport(obj)
         tableMass, fallingMass, 
         null, null,
         new Vector3(), dtExportCount);
+        
     const timeMax = obj.timeMax;
     const curr_export = new ExportRunning(export_id++, sim, timeMax);
     exports[curr_export.id] = curr_export;
