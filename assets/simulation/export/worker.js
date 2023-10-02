@@ -366,6 +366,7 @@ let export_id = 1;
 const exports = {};
 function StartExport(obj)
 {
+    console.log(obj);
     const tableMass = new MassRotatingObject(
         obj.table.mass,
         new PolarVector(

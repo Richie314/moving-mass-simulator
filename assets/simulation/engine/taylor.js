@@ -112,7 +112,7 @@ class TaylorEngine3 extends TaylorEngine
      * @param {Decimal|number} dt The time interval, in seconds
      * @param {Decimal|number} cavalieriWeight The weight of the acceleration movement during the numeric integration
      */
-    constructor (cableStartLength, k, dt, cavalieriWeight, override_name = 'Taylor - 2 varibles')
+    constructor (cableStartLength, k, dt, cavalieriWeight, override_name = 'Taylor - 3 varibles')
     {
         super(dt, cavalieriWeight, override_name);
 

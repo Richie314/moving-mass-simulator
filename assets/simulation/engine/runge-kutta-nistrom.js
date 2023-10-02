@@ -23,7 +23,7 @@ class RungeKuttaNistromEngine extends EngineBase
         const y0 = new Vector3(tableMass.r, tableMass.theta, fallingMass.height);
         
         this.calculate_and_set_acc(tableMass, fallingMass);
-        const k1 = new vector3(tableMass.rDoublePrime, tableMass.thetaDoublePrime, fallingMass.heightDoublePrime);
+        const k1 = new Vector3(tableMass.rDoublePrime, tableMass.thetaDoublePrime, fallingMass.heightDoublePrime);
 
         /*
 

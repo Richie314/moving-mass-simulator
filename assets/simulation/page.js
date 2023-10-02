@@ -176,7 +176,7 @@ function UpdateEngine()
         {
             simulation.changeEngine(RKE_Engine3);
         } else {
-            RKN_Engine2.cableLength = simulation.cable;
+            RKE_Engine2.cableLength = simulation.cable;
             simulation.changeEngine(RKE_Engine2);
         }
     }
