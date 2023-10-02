@@ -61,9 +61,9 @@ class TaylorEngine2 extends TaylorEngine
      * @param {Decimal|number} dt The dt intervas, in seconds
      * @param {Decimal|number} cavalieriWeight The weight of the acceleration movement during the numeric integration
      */
-    constructor (cableLength, dt, cavalieriWeight)
+    constructor (cableLength, dt, cavalieriWeight, override_name = 'Taylor - 2 varibles')
     {
-        super(dt, cavalieriWeight, 'Taylor - 2 varibles');
+        super(dt, cavalieriWeight, override_name);
 
         //Sanitize the input
         if (!Decimal.isDecimal(cableLength))
@@ -112,9 +112,9 @@ class TaylorEngine3 extends TaylorEngine
      * @param {Decimal|number} dt The time interval, in seconds
      * @param {Decimal|number} cavalieriWeight The weight of the acceleration movement during the numeric integration
      */
-    constructor (cableStartLength, k, dt, cavalieriWeight)
+    constructor (cableStartLength, k, dt, cavalieriWeight, override_name = 'Taylor - 2 varibles')
     {
-        super(dt, cavalieriWeight, 'Taylor - 3 variables');
+        super(dt, cavalieriWeight, override_name);
 
         //Sanitize the inputs
         if (!Decimal.isDecimal(cableStartLength))
