@@ -15,7 +15,80 @@ class RungeKuttaNistromEngine extends EngineBase
      * @param {MassFallingObject} fallingMass
      * @param {Decimal} h
      * @returns {Vector3[]} the new y and yPrime to apply
-     */
+    */ 
+    rkn4Integration(tableMass, fallingMass, h)
+    {
+        //    Step 0: get initial values
+        const yPrime0 = new Vector3(tableMass.rPrime, tableMass.thetaPrime, fallingMass.heightPrime);
+        const y0 = new Vector3(tableMass.r, tableMass.theta, fallingMass.height);
+        this.calculate_and_set_acc(tableMass, fallingMass);
+        
+
+        // Shorthands for later: it speeds the computation
+        const hOver3 = h.div(3);
+        const hOver8 = h.div(8);
+        
+        //    Step 1: t = t0 + h / 3
+
+        //            .
+        // k1 = f(y0, y0)
+        const k1 = new Vector3(tableMass.rDoublePrime, tableMass.thetaDoublePrime, fallingMass.heightDoublePrime);
+        //           .
+        // y1 = y0 + y0 * h / 3 
+        const y1 = y0.plus( yPrime0.times( hOver3 ) );
+        // .    .
+        // y1 = y0 + k1 * h / 3
+        const yPrime1 = yPrime0.plus( k1.times( hOver3 ) );
+
+
+        //    Step 2: t = t0 + 2 h / 3
+
+        //            .
+        // k2 = f(y1, y1)
+        const k2 = this.calculateAccelerationsClone(tableMass, fallingMass, y1, yPrime1);
+        //           .
+        // y2 = y1 + y1 * h / 3 
+        const y2 = y1.plus( yPrime1.times( hOver3 ) );
+        // .    .
+        // y2 = y1 + k2 * h / 3
+        const yPrime2 = yPrime1.plus( k2.times( hOver3 ) );
+
+
+        //    Step 3: t = t0 + h
+
+        //            .
+        // k3 = f(y2, y2)
+        const k3 = this.calculateAccelerationsClone(tableMass, fallingMass, y2, yPrime2);
+        //            .    .    .
+        // y3 = y0 + (y0 - y1 + y2) * h
+        const y3 = y0.plus( yPrime0.minus(yPrime1).plus(yPrime2).times(h) );
+        // .    .
+        // y3 = y0 + (k1 - k2 + k3) * h
+        const yPrime3 = yPrime0.plus( k1.minus(k2).plus(k3).times(h) );
+
+        
+        //    Step 4: t = t0 + h
+        //    It's a sort of weighted average of the values calculated before
+
+        //            .
+        // k4 = f(y3, y3)
+        const k4 = this.calculateAccelerationsClone(tableMass, fallingMass, y3, yPrime3);
+        //            .        .        .    .                  .         .     .     .
+        // y4 = y0 + (y1 + 3 * y2 + 3 * y3 + y4) * h / 8 = y0 + (y1 + 3 * (y2 + y3) + y4) * h / 8
+        const y4 = y0.plus( yPrime0.plus( yPrime1.plus(yPrime2).times(3) ).plus(yPrime3).times(hOver8) );
+        // .    .                                          .
+        // y4 = y0 + (k1 + 3 * k2 + 3 * k3 + k4) * h / 8 = y0 + (k1 + 3 * (k2 + k3) + k4) * h / 8
+        const yPrime4 = yPrime0.plus( k1.plus( k2.plus(k3).times(3) ).plus(k4).times(hOver8) );
+
+
+        // Return final values that will be applied to tableMass and fallingMass
+        return [y4, yPrime4];
+    }
+    
+
+
+    /*
+    //Old version of the function, accumultaes error
     rkn4Integration(tableMass, fallingMass, h)
     {
         //Step 0
@@ -25,60 +98,18 @@ class RungeKuttaNistromEngine extends EngineBase
         this.calculate_and_set_acc(tableMass, fallingMass);
         const k1 = new Vector3(tableMass.rDoublePrime, tableMass.thetaDoublePrime, fallingMass.heightDoublePrime);
 
-        /*
-
-        //    Step 1
-        // .    .
-        // y1 = y0 + k1 * h / 2
-        const yPrime1 = yPrime0.plus( k1.times( h.div(2) ) );
-        //            .    .
-        // y1 = y0 + (y0 + y1) * h / 4
-        const y1 = y0.plus( yPrime0.plus(yPrime1).times( h.div(4) ) );
-        //            .
-        // k2 = f(y1, y1)
-        const k2 = this.calculateAccelerationsClone(tableMass, fallingMass, y1, yPrime1);
-        
-        //    Step 2
-        // .    .
-        // y2 = y0 + k2 * h / 2
-        const yPrime2 = yPrime0.plus( k2.times( h.div(2) ) );
-        //            .    .
-        // y2 = y0 + (y0 + y2) * h / 4
-        const y2 = y0.plus( yPrime0.plus(yPrime2).times( h.div(4) ) );
-        //            .
-        // k3 = f(y2, y2)
-        const k3 = this.calculateAccelerationsClone(tableMass, fallingMass, y2, yPrime2);
-        
-        //    Step 3
-        // .    .
-        // y3 = y0 + k3 * h
-        const yPrime3 = yPrime0.plus( k3.times( h ) );
-        //            .    .
-        // y3 = y0 + (y0 + y3) * h / 2
-        const y3 = y0.plus( yPrime0.plus(yPrime3).times( h.div(2) ) );
-        //            .
-        // k4 = f(y3, y3)
-        const k4 = this.calculateAccelerationsClone(tableMass, fallingMass, y3, yPrime3);
-
-        //    Retrieve final values
-        // .    .
-        // y4 = y0 + (k1 + 2 * k2 + 2* k3 + k4) * h / 6
-        const yPrime4 = yPrime0.plus( k1.plus( k2.times(2) ).plus( k3.times(2) ).plus( k4 ).times( h.div(6) ) );
-        //            .        .        .    .
-        // y4 = y0 + (y1 + 2 * y2 + 2 * y3 + y4) * h / 6
-        const y4 = y0.plus( yPrime1.plus( yPrime2.times(2) ).plus( yPrime3.times(2) ).plus( yPrime4 ).times( h.div(6) ) );
-
-        */
-        // Shorthand for later
+        // Shorthands for later
         const k1h = k1.times( h );
+        const hOver6 = h.div(6);
+        
         //    Step 1
         // .    .
         // y1 = y0 + k1 * h / 2
-        const yPrime1 = yPrime0.plus( k1.times( h.div(2) ) );
-        //                .        .
-        // y1 = y0 + (4 * y0 + 2 * y1 + k1 * h / 2) * h / 12
+        const yPrime1 = yPrime0.plus( k1h.times(0.5) );
+        //                .        .                                     .    .
+        // y1 = y0 + (4 * y0 + 2 * y1 + k1 * h / 2) * h / 12 = y0 + (2 * y0 + y1 + k1 * h / 4) * h / 6 
         const y1 = y0.plus( 
-            yPrime0.times(4).plus( yPrime1.times(2) ).plus( k1h.times(0.5) ).times( h.div(12) ) 
+            yPrime0.times(2).plus( yPrime1 ).plus( k1h.times(0.25) ).times( hOver6 ) 
         );
         //            .
         // k2 = f(y1, y1)
@@ -89,9 +120,9 @@ class RungeKuttaNistromEngine extends EngineBase
         // y2 = y0 + k2 * h / 2
         const yPrime2 = yPrime0.plus( k2.times( h.div(2) ) );
         //                .        .
-        // y2 = y0 + (4 * y0 + 2 * y2 + k1 * h / 2) * h / 12
+        // y2 = y0 + (4 * y0 + 2 * y2 + k1 * h / 2) * h / 12 = y0 + (2 * y0 + y2 + k1 * h / 4) * h / 6
         const y2 = y0.plus( 
-            yPrime0.times(4).plus( yPrime2.times(2) ).plus( k1h.times(0.5) ).times( h.div(12) ) 
+            yPrime0.times(2).plus( yPrime2 ).plus( k1h.times(0.25) ).times( hOver6 ) 
         );
         //            .
         // k3 = f(y2, y2)
@@ -104,7 +135,7 @@ class RungeKuttaNistromEngine extends EngineBase
         //                .        .
         // y2 = y0 + (4 * y0 + 2 * y3 + k1 * h) * h / 6
         const y3 = y0.plus( 
-            yPrime0.times(4).plus( yPrime3.times(2) ).plus( k1h ).times( h.div(6) ) 
+            yPrime0.times(4).plus( yPrime3.times(2) ).plus( k1h ).times( hOver6 ) 
         );
         //            .
         // k4 = f(y3, y3)
@@ -113,15 +144,16 @@ class RungeKuttaNistromEngine extends EngineBase
         //    Retrieve final values
         // .    .
         // y4 = y0 + (k1 + 2 * k2 + 2* k3 + k4) * h / 6
-        const yPrime4 = yPrime0.plus( k1.plus( k2.times(2) ).plus( k3.times(2) ).plus( k4 ).times( h.div(6) ) );
+        const yPrime4 = yPrime0.plus( k1.plus( k2.times(2) ).plus( k3.times(2) ).plus( k4 ).times( hOver6 ) );
         //            .        .        .    .
         // y4 = y0 + (y1 + 2 * y2 + 2 * y3 + y4) * h / 6
-        const y4 = y0.plus( yPrime1.plus( yPrime2.times(2) ).plus( yPrime3.times(2) ).plus( yPrime4 ).times( h.div(6) ) );
+        const y4 = y0.plus( yPrime1.plus( yPrime2.times(2) ).plus( yPrime3.times(2) ).plus( yPrime4 ).times( hOver6 ) );
 
 
         //Return final values that will be applied to tableMass and fallingMass
         return [y4, yPrime4];
     }
+    */
 
     /**
      * @param {MassRotatingObject} tableMass
