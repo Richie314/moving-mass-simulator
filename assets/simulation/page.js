@@ -157,57 +157,64 @@ function RefreshSimulationParams(sim)
     }
 }
 simulation.onRefresh(RefreshSimulationParams);
-
-function UpdateEngine()
+function SetSimpleEngine()
 {
-    function SetSimpleEngine()
+    if (isNotFixedLength.checked)
     {
-        if (isNotFixedLength.checked)
+        simulation.changeEngine(SimpleEngine3);
+    } else {
+        SimpleEngine2.cableLength = simulation.cable;
+        simulation.changeEngine(SimpleEngine2);
+    }
+}
+function SetRungeKuttaEulerEngine()
+{
+    if (isNotFixedLength.checked)
+    {
+        simulation.changeEngine(RKE_Engine3);
+    } else {
+        RKE_Engine2.cableLength = simulation.cable;
+        simulation.changeEngine(RKE_Engine2);
+    }
+}
+function SetRungeKuttaNistromEngine()
+{
+    if (isNotFixedLength.checked)
+    {
+        simulation.changeEngine(RKN_Engine3);
+    } else {
+        RKN_Engine2.cableLength = simulation.cable;
+        simulation.changeEngine(RKN_Engine2);
+    }
+}
+const engine_handlers = {
+    'simple': SetSimpleEngine,
+    'runge-kutta-euler': SetRungeKuttaEulerEngine,
+    'runge-kutta-nystrom': SetRungeKuttaNistromEngine
+}
+function UpdateEngine(name = null)
+{
+    if (!name || typeof name !== 'string')
+    {
+        UpdateEngine(engineFamily.value);
+        return;
+    }
+    for (const [key, handler] of Object.entries(engine_handlers))
+    {
+        if (key === name)
         {
-            simulation.changeEngine(SimpleEngine3);
-        } else {
-            SimpleEngine2.cableLength = simulation.cable;
-            simulation.changeEngine(SimpleEngine2);
+            engineFamily.value = key;
+            handler();
+            log(`Engine set to '${key}'`);
+            Cookies.set('engine', key);
+            return;
         }
     }
-    function SetRungeKuttaEulerEngine()
-    {
-        if (isNotFixedLength.checked)
-        {
-            simulation.changeEngine(RKE_Engine3);
-        } else {
-            RKE_Engine2.cableLength = simulation.cable;
-            simulation.changeEngine(RKE_Engine2);
-        }
-    }
-    function SetRungeKuttaNistromEngine()
-    {
-        if (isNotFixedLength.checked)
-        {
-            simulation.changeEngine(RKN_Engine3);
-        } else {
-            RKN_Engine2.cableLength = simulation.cable;
-            simulation.changeEngine(RKN_Engine2);
-        }
-    }
-    switch (engineFamily.value)
-    {
-        case "simple":
-            SetSimpleEngine();
-            break;
-        case "runge-kutta-euler":
-            SetRungeKuttaEulerEngine();
-            break;
-        case "runge-kutta-nystrom":
-            SetRungeKuttaNistromEngine();
-            break;
-    }
-    
 }
 isNotFixedLength.addEventListener('change', UpdateEngine);
 engineFamily.addEventListener('change', UpdateEngine);
-
-UpdateEngine();
+const cookie_engine = Cookies.get('engine');
+UpdateEngine(cookie_engine);
 
 function reset()
 {
