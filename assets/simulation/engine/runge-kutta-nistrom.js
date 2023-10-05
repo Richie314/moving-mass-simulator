@@ -177,19 +177,19 @@ class RungeKuttaNistromEngine extends EngineBase
 class RungeKuttaNistromEngine2 extends RungeKuttaNistromEngine
 {
     /**
-     * @param {Decimal|number} cableStartLength
+     * @param {Decimal|number} cableLength
      * @param {Decimal|number} dt 
      */
-    constructor(cableStartLength, dt)
+    constructor(cableLength, dt)
     {
         super(dt, 'Runge-Kutta-Nistrom - 2 variables');
 
-        //Sanitize the inputs
-        if (!Decimal.isDecimal(cableStartLength))
+        //Sanitize the input
+        if (!Decimal.isDecimal(cableLength))
         {
-            cableStartLength = new Decimal(cableStartLength);
+            cableLength = new Decimal(cableLength);
         }
-        this.cableStartLength = cableStartLength;
+        this.cableLength = cableLength;
     }
 
     /**
