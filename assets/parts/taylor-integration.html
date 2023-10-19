@@ -11,18 +11,22 @@
 </p>
 
 <h3>
-    Metodo delle tangenti
+    Metodo delle tangenti (di Eulero)
 </h3>
 <img src="./assets/page/integral-with-tangents.svg" class="full-w"
     title="Integrazione con tangenti" alt="Integrzione funzione q da tangenti" />
 <p>
-    Dalla variabile <i>q<sub>t</sub></i> si ricava <i>q<sub>t+1</sub></i> sfruttando un <i>dt</i> molto piccolo
+    Dalla variabile (posizione) <em>q<sub>t</sub></em> si ricava <em>q<sub>t+1</sub></em> sfruttando un <em>dt</em> molto piccolo e le velocit&agrave; <br>
+    Le velocit&agrave; saranno invece aggiornate dal medisimo <em>dt</em> e le accelerazioni, che saranno poi ricalcolate tramite <em>f</em>.
 </p>
 <span class="math">
     $$ q_{t+1} = q_t + \dot{q}  \mathrm{d}t $$
     $$ \dot{q}_{t+1} = \dot{q}_t + \ddot{q}  \mathrm{d}t $$
     $$ \ddot{q}_{t+1} = f(q_{t+1}, \dot{q}_{t+1}) $$
 </span>
+<p>
+    Questa approssimazione (anche se ricavata da un punto di vista fisico) &egrave; uguale, in pratica, al metodo di Eulero gi&agrave; enunciato
+</p>
 
 <h3>
     Metodo Cavalieri Simpson (delle parabole)
@@ -46,7 +50,8 @@
 <p>
     Per ottimizzare i calcoli in base ai parametri scelti &egrave; possibile quanto approssimare il moto
     ad uniformemente accelerato e quanto a lineare uniforme facendo una media ponderata tra essi.<br />
-    Scelti due pesi (numeri tra 0 e 1, la cui somma &egrave; 1) <i>w<sub>L</sub></i> e <i>w<sub>A</sub></i>, &egrave; possibile approssimare il moto in questo modo
+    Scelti due pesi (numeri tra 0 e 1, la cui somma &egrave; 1) <em>w<sub>L</sub></em> e <em>w<sub>A</sub></em>, 
+    &egrave; possibile approssimare il moto in questo modo
 </p>
 <span class="math">
     $$ \Delta q_L = \dot{q} \mathrm{d}t $$
@@ -71,7 +76,7 @@
     $$ q_{t+1} = q_t + \dot{q} \mathrm{d}t + w_A \frac{1}{2} \ddot{q} {\mathrm{d}t}^2  $$
 </span>
 <p>
-    Il parametro <i>w<sub>A</sub></i> controlla quindi quanto il moto &egrave; approssimato ad uniformemente accelerato:
-    pi&ugrave; basso <i>w<sub>A</sub></i>, pi&ugrave; il moto sar&agrave; lineare, 
-    pi&ugrave; alto <i>w<sub>A</sub></i>,  pi&ugrave; il moto sar&agrave; uniformemente accelerato 
+    Il parametro <em>w<sub>A</sub></em> controlla quindi quanto il moto &egrave; approssimato ad uniformemente accelerato:
+    pi&ugrave; basso <em>w<sub>A</sub></em>, pi&ugrave; il moto sar&agrave; lineare, 
+    pi&ugrave; alto <em>w<sub>A</sub></em>,  pi&ugrave; il moto sar&agrave; uniformemente accelerato 
 </p>
