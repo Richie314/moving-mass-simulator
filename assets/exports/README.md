@@ -3,7 +3,7 @@ Qui troverai esempi di export sia per il metodo [Runge Kutta Nyström](#runge-ku
 
 ## Eulero Partizionato
 Export scaricabili:
-- [euler/default-values.xlsx](./euler/default-values.xlsx?raw=true)
+- [euler/default-values.xlsx](../../../raw/master/assets/exports/euler/default-values.xlsx)
 - [euler/default-values-small-dt.xlsx](./euler/default-values-small-dt.xlsx?raw=true)
 - [euler/no-spring.xlsx](./euler/no-spring.xlsx?raw=true)
 
