@@ -1,7 +1,46 @@
-$
-    y^{(N + 1)}(t) = f(t, y(t), \dot{y}(t), ... , y^{(N)}(t))
-    $
-    \newline
-    $
-    \Vec{y}_{i+1} = \begin{pmatrix} y_{i+1} \\ \dot{y}_{i+1} \\ . \\ . \\ . \\ y^{(N-1)}_{i+1} \\ y^{(N)}_{i+1} \end{pmatrix} = \begin{pmatrix} y_{i} + h * \dot{y}_i\\ \dot{y}_{i} + h * \ddot{y}_i\\ . \\ . \\ . \\ y^{(N-1)}_{i} + h * y^{(N)}_{i} \\ y^{(N)}_{i} + f(t_i, y_i, \dot{y}_i, ... , y^{(N)_i}) \end{pmatrix} =
-    $
+<p>
+    Sebbene il metodo di Eulero classico permetta di integrare equazioni differenziali del tipo
+</p>
+<span class="math">
+    $$ \dot{y}(t) = f(t, y(t)) $$
+</span>
+<p>
+    Una sua generalizzazione, che chiameremo metodo partizionato, permette di integrare equazioni del tipo
+</p>
+<span class="math">
+    $$ y^{(N + 1)}(t) = f(t, y(t), \dot{y}(t), ... , y^{(N)}(t)) $$
+</span>
+<p>
+    O nel nostro caso (dipendente solo dalle posizioni)
+</p>
+<span class="math">
+    $$ y^{(N + 1)}(t) = f(y(t), \dot{y}(t), ... , y^{(N)}(t)) $$
+</span>
+<p>
+    Questo è possibile riscrivendo l'equazione nella forma seguente, sfruttando il vettore ausialiario <em>z</em>
+</p>
+<span class="math">
+    $$ z_1 = y, z_2 = \dot{y}, ..., z_N = y^{(N-1)} $$
+    $$ 
+        z = \begin{pmatrix} y \\ \dot{y} \\ . \\ . \\ . \\ y^{(N-1)} \end{pmatrix}, 
+        \dot{z} = \begin{pmatrix} \dot{y} \\ \ddot{y} \\ . \\ . \\ . \\ f(y, \dot{y}, ... , y^{(N)}) \end{pmatrix}
+    $$
+</span>
+<p>
+    A questo punto si pu&ograve; applicare il metodo di Eulero standard sul vettore <em>z</em>
+</p>
+<span class="math">
+    $$ z(t + h) = z(t) + h \dot{z}(t) $$
+</span>
+<p>
+    Arrivando ad un'integrazione (per <em>y</em>) nel seguente modo:
+</p>
+<span class="math">
+    $$
+    \begin{pmatrix} y(t +h) \\ \dot{y}(t +h) \\ . \\ . \\ . \\ y^{(N-1)}(t +h) \\ y^{(N)}(t +h) \end{pmatrix} = 
+    \begin{pmatrix} y(t) + h \dot{y}(t)\\ \dot{y}(t) + h \ddot{y}(t)\\ . \\ . \\ . \\ y^{(N-1)}(t) + h y^{(N)}(t) \\ y^{(N)}(t) + f(y(t), \dot{y}(t), ... , y^{(N)(t)}) \end{pmatrix}
+    $$
+</span>
+<p>
+    Questo procedimento permette 
+</p>
