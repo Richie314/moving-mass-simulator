@@ -383,7 +383,7 @@ function StartExport(obj)
         )
     );
     const fallingMass = new MassFallingObject(
-        obj.table.mass,
+        obj.falling.mass,
         new Vector3(
             0, 0, obj.falling.h
         ),

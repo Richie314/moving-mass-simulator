@@ -493,7 +493,7 @@ class Simulation
         {
             return this.Engine.cableStartLength;
         }
-        return new Decimal(0);
+        return this.cable;
     }
 
     //Sets the spring constant, only if there is already one

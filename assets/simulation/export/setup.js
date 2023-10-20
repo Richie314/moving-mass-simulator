@@ -57,7 +57,7 @@ function Export()
         dt: exportSim.dt,
         dtCount: exportSim.dtCount,
         k: exportSim.k,
-        cable: exportSim.cable,
+        cable: exportSim.springRelaxLenght,
         cavalieriWeight: exportSim.cavalieriWeight,
         timeMax: TimeMax,
         exportFreq: dtExportCount
